@@ -8,6 +8,7 @@ import Dashboard from '@/pages/Dashboard';
 import Orders from '@/pages/Orders';
 import Inventory from '@/pages/Inventory';
 import Customers from '@/pages/Customers';
+import Employees from '@/pages/Employees';
 import Analytics from '@/pages/Analytics';
 import Settings from '@/pages/Settings';
 import '@/App.css';
