@@ -94,6 +94,22 @@ export default function Inventory() {
     }
   };
 
+  const handleUpdateProduct = async (productId, updates) => {
+    try {
+      const params = new URLSearchParams();
+      if (updates.stock !== undefined) params.append('stock', updates.stock);
+      if (updates.category !== undefined) params.append('category', updates.category);
+      
+      await axios.put(`${API}/products/${productId}?${params.toString()}`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Product updated');
+      fetchProducts();
+    } catch (error) {
+      toast.error('Failed to update product');
+    }
+  };
+
   const getStockStatus = (stock) => {
     if (stock === 0) return { label: 'Out of Stock', color: 'hsl(var(--destructive))' };
     if (stock < 10) return { label: 'Low Stock', color: 'hsl(var(--warning))' };
