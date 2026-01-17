@@ -111,61 +111,79 @@ export default function Customers() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {customers.map((customer) => (
-              <div key={customer.id} className="bg-secondary border border-border/50 rounded-lg p-6 hover:border-border hover:shadow-lg transition-all duration-200" data-testid={`customer-card-${customer.id}`}>
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="font-heading text-xl font-semibold text-foreground mb-1">{customer.name}</h3>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Mail size={14} />
-                        <span className="font-body">{customer.email}</span>
-                      </div>
-                      {customer.phone && (
+            {customers.map((customer) => {
+              const orders = customerOrders[customer.id] || [];
+              const recentOrders = orders.slice(0, 3);
+              
+              return (
+                <div key={customer.id} className="bg-secondary border border-border/50 rounded-lg p-6 hover:border-border hover:shadow-lg transition-all duration-200" data-testid={`customer-card-${customer.id}`}>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 className="font-heading text-xl font-semibold text-foreground mb-1">{customer.name}</h3>
+                      <div className="space-y-1">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Phone size={14} />
-                          <span className="font-body">{customer.phone}</span>
+                          <Mail size={14} />
+                          <span className="font-body">{customer.email}</span>
                         </div>
-                      )}
+                        {customer.phone && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Phone size={14} />
+                            <span className="font-body">{customer.phone}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-heading font-bold text-lg">
+                      {customer.name.charAt(0).toUpperCase()}
                     </div>
                   </div>
-                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-heading font-bold text-lg">
-                    {customer.name.charAt(0).toUpperCase()}
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/50">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <ShoppingBag size={16} className="text-chart-3" />
-                      <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">Orders</p>
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/50">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <ShoppingBag size={16} className="text-chart-3" />
+                        <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">Orders</p>
+                      </div>
+                      <p className="text-2xl font-heading font-bold text-foreground">{customer.total_orders}</p>
                     </div>
-                    <p className="text-2xl font-heading font-bold text-foreground">{customer.total_orders}</p>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <DollarSign size={16} className="text-success" />
-                      <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">LTV</p>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <DollarSign size={16} className="text-success" />
+                        <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">LTV</p>
+                      </div>
+                      <p className="text-2xl font-heading font-bold text-foreground">SAR {customer.lifetime_value.toFixed(0)}</p>
                     </div>
-                    <p className="text-2xl font-heading font-bold text-foreground">SAR {customer.lifetime_value.toFixed(0)}</p>
                   </div>
-                </div>
 
-                <div className="mt-4 pt-4 border-t border-border/50">
-                  <p className="text-xs text-muted-foreground font-body mb-3">
-                    Customer since {new Date(customer.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                  </p>
-                  <button
-                    onClick={() => navigate(`/invoice/${customer.id}`)}
-                    className="w-full flex items-center justify-center gap-2 bg-chart-1 text-white hover:bg-chart-1/90 px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200"
-                    data-testid={`view-invoice-${customer.id}`}
-                  >
-                    <FileText size={16} />
-                    View Invoice
-                  </button>
+                  {recentOrders.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-border/50">
+                      <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground mb-2">Recent Orders:</p>
+                      <div className="space-y-1">
+                        {recentOrders.map((order) => (
+                          <p key={order.id} className="text-xs font-mono text-foreground">
+                            {order.order_number}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mt-4 pt-4 border-t border-border/50">
+                    <p className="text-xs text-muted-foreground font-body mb-3">
+                      Customer since {new Date(customer.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                    </p>
+                    <button
+                      onClick={() => navigate(`/invoice/${customer.id}`)}
+                      className="w-full flex items-center justify-center gap-2 bg-chart-1 text-white hover:bg-chart-1/90 px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200"
+                      data-testid={`view-invoice-${customer.id}`}
+                    >
+                      <FileText size={16} />
+                      View Invoice
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
