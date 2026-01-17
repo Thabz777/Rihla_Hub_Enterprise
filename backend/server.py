@@ -348,18 +348,39 @@ async def get_orders(brand_id: Optional[str] = None, status: Optional[str] = Non
 
 @api_router.post("/orders", response_model=Order)
 async def create_order(order_data: OrderCreate, _: dict = Depends(verify_token)):
+    if not order_data.customer_email and not order_data.customer_phone:
+        raise HTTPException(status_code=400, detail="Either email or phone number is required")
+    
     brand = await db.brands.find_one({"id": order_data.brand_id}, {"_id": 0})
     brand_name = brand["name"] if brand else "Unknown"
+    
+    product_name = None
+    if order_data.product_id:
+        product = await db.products.find_one({"id": order_data.product_id}, {"_id": 0})
+        product_name = product["name"] if product else None
+    
+    vat_rate = 0.15 if order_data.currency == "SAR" else 0.18
+    vat_amount = order_data.subtotal * vat_rate
+    total = order_data.subtotal + vat_amount
     
     order_number = f"ORD-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}"
     order = Order(
         order_number=order_number,
         customer_name=order_data.customer_name,
         customer_email=order_data.customer_email,
+        customer_phone=order_data.customer_phone,
+        customer_address=order_data.customer_address,
         brand_id=order_data.brand_id,
         brand_name=brand_name,
+        product_id=order_data.product_id,
+        product_name=product_name,
+        category=order_data.category,
         items_count=order_data.items_count,
-        total=order_data.total,
+        currency=order_data.currency,
+        subtotal=order_data.subtotal,
+        vat_rate=vat_rate,
+        vat_amount=vat_amount,
+        total=total,
         status=order_data.status
     )
     
@@ -367,18 +388,22 @@ async def create_order(order_data: OrderCreate, _: dict = Depends(verify_token))
     order_dict['created_at'] = order_dict['created_at'].isoformat()
     await db.orders.insert_one(order_dict)
     
-    customer = await db.customers.find_one({"email": order_data.customer_email}, {"_id": 0})
+    customer_identifier = order_data.customer_email or order_data.customer_phone
+    customer_query = {"email": order_data.customer_email} if order_data.customer_email else {"phone": order_data.customer_phone}
+    customer = await db.customers.find_one(customer_query, {"_id": 0})
+    
     if customer:
         await db.customers.update_one(
-            {"email": order_data.customer_email},
-            {"$inc": {"total_orders": 1, "lifetime_value": order_data.total}}
+            customer_query,
+            {"$inc": {"total_orders": 1, "lifetime_value": total}}
         )
-    else:
+    elif order_data.customer_email:
         new_customer = Customer(
             name=order_data.customer_name,
             email=order_data.customer_email,
+            phone=order_data.customer_phone,
             total_orders=1,
-            lifetime_value=order_data.total
+            lifetime_value=total
         )
         customer_dict = new_customer.model_dump()
         customer_dict['created_at'] = customer_dict['created_at'].isoformat()
