@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Shield, User } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, register } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    full_name: ''
+    password: ''
   });
   const [loading, setLoading] = useState(false);
 
@@ -21,12 +19,25 @@ export default function Login() {
     setLoading(true);
 
     try {
-      if (isLogin) {
-        await login(formData.email, formData.password);
-        toast.success('Login successful!');
+      await login(formData.email, formData.password);
+      toast.success('Login successful!');
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Invalid credentials');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleQuickLogin = async (type) => {
+    setLoading(true);
+    try {
+      if (type === 'admin') {
+        await login('admin@rihla.com', 'admin123');
+        toast.success('Logged in as Admin!');
       } else {
-        await register(formData.email, formData.password, formData.full_name);
-        toast.success('Account created successfully!');
+        await login('user@rihla.com', 'user123');
+        toast.success('Logged in as User!');
       }
       navigate('/dashboard');
     } catch (error) {
