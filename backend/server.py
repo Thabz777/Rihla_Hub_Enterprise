@@ -390,6 +390,97 @@ async def get_customers(_: dict = Depends(verify_token)):
             customer['created_at'] = datetime.fromisoformat(customer['created_at'])
     return customers
 
+@api_router.get("/employees", response_model=List[Employee])
+async def get_employees(brand_id: Optional[str] = None, department: Optional[str] = None, status: Optional[str] = None, _: dict = Depends(verify_token)):
+    filter_query = {}
+    if brand_id:
+        filter_query["brand_id"] = brand_id
+    if department:
+        filter_query["department"] = department
+    if status:
+        filter_query["status"] = status
+    
+    employees = await db.employees.find(filter_query, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    for employee in employees:
+        if isinstance(employee['created_at'], str):
+            employee['created_at'] = datetime.fromisoformat(employee['created_at'])
+        if isinstance(employee.get('hire_date'), str):
+            employee['hire_date'] = datetime.fromisoformat(employee['hire_date'])
+    return employees
+
+@api_router.post("/employees", response_model=Employee)
+async def create_employee(employee_data: EmployeeCreate, _: dict = Depends(verify_token)):
+    brands = await get_brands()
+    brand = next((b for b in brands if b['id'] == employee_data.brand_id), None)
+    brand_name = brand['name'] if brand else "Unknown"
+    
+    employee = Employee(
+        name=employee_data.name,
+        email=employee_data.email,
+        phone=employee_data.phone,
+        position=employee_data.position,
+        department=employee_data.department,
+        brand_id=employee_data.brand_id,
+        brand_name=brand_name,
+        salary=employee_data.salary,
+        bonus=employee_data.bonus,
+        target=employee_data.target,
+        status=employee_data.status
+    )
+    
+    employee_dict = employee.model_dump()
+    employee_dict['created_at'] = employee_dict['created_at'].isoformat()
+    employee_dict['hire_date'] = employee_dict['hire_date'].isoformat()
+    await db.employees.insert_one(employee_dict)
+    
+    return employee
+
+@api_router.put("/employees/{employee_id}", response_model=Employee)
+async def update_employee(employee_id: str, employee_update: EmployeeUpdate, _: dict = Depends(verify_token)):
+    employee = await db.employees.find_one({"id": employee_id}, {"_id": 0})
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    
+    update_data = {k: v for k, v in employee_update.model_dump().items() if v is not None}
+    
+    if update_data:
+        await db.employees.update_one({"id": employee_id}, {"$set": update_data})
+        employee.update(update_data)
+    
+    if isinstance(employee['created_at'], str):
+        employee['created_at'] = datetime.fromisoformat(employee['created_at'])
+    if isinstance(employee.get('hire_date'), str):
+        employee['hire_date'] = datetime.fromisoformat(employee['hire_date'])
+    
+    return Employee(**employee)
+
+@api_router.delete("/employees/{employee_id}")
+async def delete_employee(employee_id: str, _: dict = Depends(verify_token)):
+    result = await db.employees.delete_one({"id": employee_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    return {"message": "Employee deleted successfully"}
+
+@api_router.get("/employees/stats")
+async def get_employee_stats(brand_id: Optional[str] = None, _: dict = Depends(verify_token)):
+    filter_query = {"brand_id": brand_id} if brand_id else {}
+    
+    employees = await db.employees.find(filter_query, {"_id": 0}).to_list(10000)
+    
+    total_employees = len(employees)
+    active_employees = len([e for e in employees if e.get('status') == 'active'])
+    total_salary = sum(e.get('salary', 0) for e in employees if e.get('status') == 'active')
+    total_bonus = sum(e.get('bonus', 0) for e in employees)
+    avg_achievement = sum(e.get('achieved', 0) / e.get('target', 1) * 100 for e in employees if e.get('target', 0) > 0) / max(len([e for e in employees if e.get('target', 0) > 0]), 1)
+    
+    return {
+        "total_employees": total_employees,
+        "active_employees": active_employees,
+        "total_salary": total_salary,
+        "total_bonus": total_bonus,
+        "avg_achievement_rate": round(avg_achievement, 2)
+    }
+
 app.include_router(api_router)
 
 app.add_middleware(
