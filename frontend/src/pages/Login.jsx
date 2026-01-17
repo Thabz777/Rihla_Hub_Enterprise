@@ -117,6 +117,43 @@ export default function Login() {
               <p><strong>User:</strong> user@rihla.com / user123</p>
             </div>
           </div>
+
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={async () => {
+                const LOADING_TOAST = toast.loading('Testing connection...');
+                try {
+                  const API = process.env.REACT_APP_BACKEND_URL ? `${process.env.REACT_APP_BACKEND_URL}/api` : '/api';
+                  console.log(`Testing connection to: ${API}/auth/login`);
+
+                  const response = await fetch(`${API}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'debug', password: 'debug' })
+                  });
+
+                  const data = await response.json();
+                  toast.dismiss(LOADING_TOAST);
+
+                  if (response.ok) {
+                    toast.success(`Connection OK! Status: ${response.status}`);
+                    alert(`Server Says: ${JSON.stringify(data, null, 2)}`);
+                  } else {
+                    toast.error(`Connection Failed: ${response.status}`);
+                    alert(`Error Details: ${JSON.stringify(data, null, 2)}`);
+                  }
+                } catch (e) {
+                  toast.dismiss(LOADING_TOAST);
+                  toast.error(`Network Error: ${e.message}`);
+                  alert(`Network Error: ${e.message}`);
+                }
+              }}
+              className="text-xs text-muted-foreground hover:text-primary underline"
+            >
+              Test Server Connection
+            </button>
+          </div>
         </div>
       </div>
     </div>
