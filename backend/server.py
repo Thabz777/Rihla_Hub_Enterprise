@@ -115,6 +115,47 @@ class CustomerCreate(BaseModel):
     email: EmailStr
     phone: Optional[str] = None
 
+class Employee(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    position: str
+    department: str
+    brand_id: str
+    brand_name: str
+    salary: float
+    bonus: float = 0.0
+    target: float = 0.0
+    achieved: float = 0.0
+    status: str = "active"
+    hire_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class EmployeeCreate(BaseModel):
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    position: str
+    department: str
+    brand_id: str
+    salary: float
+    bonus: float = 0.0
+    target: float = 0.0
+    status: str = "active"
+
+class EmployeeUpdate(BaseModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    position: Optional[str] = None
+    department: Optional[str] = None
+    salary: Optional[float] = None
+    bonus: Optional[float] = None
+    target: Optional[float] = None
+    achieved: Optional[float] = None
+    status: Optional[str] = None
+
 class DashboardMetrics(BaseModel):
     total_revenue: float
     total_orders: int
