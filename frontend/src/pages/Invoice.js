@@ -151,6 +151,7 @@ export default function Invoice() {
                   <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Products</th>
                   <th className="text-center py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Payment</th>
                   <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Date</th>
+                  <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Created By</th>
                   <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Status</th>
                   <th className="text-right py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Amount</th>
                 </tr>
@@ -158,7 +159,7 @@ export default function Invoice() {
               <tbody>
                 {orders.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-8 text-gray-500">No orders found</td>
+                    <td colSpan="8" className="text-center py-8 text-gray-500">No orders found</td>
                   </tr>
                 ) : (
                   orders.map((order) => (
@@ -170,7 +171,7 @@ export default function Invoice() {
                           <div className="space-y-1">
                             {order.items.map((item, idx) => (
                               <p key={idx} className="text-xs">
-                                {item.product_name} (x{item.quantity})
+                                {item.product_name} (x{item.quantity}) - {order.currency} {item.total.toFixed(2)}
                               </p>
                             ))}
                           </div>
@@ -184,6 +185,7 @@ export default function Invoice() {
                           year: 'numeric'
                         })}
                       </td>
+                      <td className="py-3 px-2 text-xs text-gray-600">{order.created_by || 'System'}</td>
                       <td className="py-3 px-2">
                         <span className={`text-xs font-semibold uppercase px-2 py-1 rounded ${
                           order.status === 'completed' ? 'bg-green-100 text-green-800' :
@@ -194,10 +196,13 @@ export default function Invoice() {
                           {order.status}
                         </span>
                       </td>
-                      <td className="py-3 px-2 text-right font-semibold text-gray-900">
-                        {order.currency} {order.total.toFixed(2)}
+                      <td className="py-3 px-2 text-right">
+                        <p className="font-semibold text-gray-900">{order.currency} {order.total.toFixed(2)}</p>
                         {order.vat_amount > 0 && (
                           <p className="text-xs text-gray-500">VAT: {order.currency} {order.vat_amount.toFixed(2)}</p>
+                        )}
+                        {order.shipping_charges > 0 && (
+                          <p className="text-xs text-gray-500">Shipping: {order.currency} {order.shipping_charges.toFixed(2)}</p>
                         )}
                       </td>
                     </tr>
