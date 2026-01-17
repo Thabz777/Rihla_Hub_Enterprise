@@ -82,6 +82,12 @@ export default function Orders() {
 
   const handleCreateOrder = async (e) => {
     e.preventDefault();
+    
+    if (!formData.customer_email && !formData.customer_phone) {
+      toast.error('Please provide either email or phone number');
+      return;
+    }
+    
     try {
       await axios.post(`${API}/orders`, formData, {
         headers: { Authorization: `Bearer ${token}` }
@@ -91,14 +97,41 @@ export default function Orders() {
       setFormData({
         customer_name: '',
         customer_email: '',
+        customer_phone: '',
+        customer_address: '',
         brand_id: '',
+        product_id: '',
+        category: '',
         items_count: 1,
-        total: 0,
+        currency: 'SAR',
+        subtotal: 0,
         status: 'pending'
       });
       fetchOrders();
     } catch (error) {
-      toast.error('Failed to create order');
+      toast.error(error.response?.data?.detail || 'Failed to create order');
+    }
+  };
+
+  const calculateTotal = () => {
+    const vatRate = formData.currency === 'SAR' ? 0.15 : 0.18;
+    const vat = formData.subtotal * vatRate;
+    const total = formData.subtotal + vat;
+    return { vat, total, vatRate };
+  };
+
+  const { vat, total, vatRate } = calculateTotal();
+
+  const handleProductSelect = (productId) => {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      setFormData({
+        ...formData,
+        product_id: productId,
+        brand_id: product.brand_id,
+        category: product.category,
+        subtotal: product.price * formData.items_count
+      });
     }
   };
 
