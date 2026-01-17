@@ -123,6 +123,14 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/invoice/:customerId"
+        element={
+          <ProtectedRoute>
+            <Invoice />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 };
