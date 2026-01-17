@@ -213,6 +213,23 @@ export default function Dashboard() {
             </table>
           </div>
         </div>
+
+        {isAdmin && ordersByUser && (
+          <div className="bg-secondary border border-border/50 rounded-lg p-6">
+            <h2 className="font-heading text-2xl font-semibold text-foreground mb-6">Orders by User (Admin View)</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries(ordersByUser).map(([user, stats]) => (
+                <div key={user} className="bg-background rounded-lg p-4 border border-border/50">
+                  <p className="font-heading font-semibold text-foreground mb-2">{user}</p>
+                  <div className="space-y-1 text-sm">
+                    <p className="text-muted-foreground">Orders: <span className="font-bold text-foreground">{stats.count}</span></p>
+                    <p className="text-muted-foreground">Total Value: <span className="font-bold text-success">SAR {stats.total_value.toFixed(2)}</span></p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
