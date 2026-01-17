@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { Printer, Download, ArrowLeft } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
-import { toast } from 'sonner';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+const LOGO_URL = 'https://customer-assets.emergentagent.com/job_ecomm-command/artifacts/qa8d1hm5_RIHLA%20%281%29.png';
 
 export default function Invoice() {
   const { customerId } = useParams();
   const navigate = useNavigate();
-  const { token } = useAuth();
   const [invoiceData, setInvoiceData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,12 +21,9 @@ export default function Invoice() {
   const fetchInvoiceData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API}/customers/${customerId}/invoice`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.get(`${API}/public/invoice/${customerId}`);
       setInvoiceData(response.data);
     } catch (error) {
-      toast.error('Failed to load invoice');
       console.error(error);
     } finally {
       setLoading(false);
@@ -36,10 +31,6 @@ export default function Invoice() {
   };
 
   const handlePrint = () => {
-    window.print();
-  };
-
-  const handleDownloadPDF = () => {
     window.print();
   };
 
@@ -66,12 +57,11 @@ export default function Invoice() {
   const invoiceUrl = `${window.location.origin}/invoice/${customerId}`;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Print/Download Buttons - Hidden on print */}
+    <div className="min-h-screen bg-gray-100">
       <div className="no-print fixed top-4 right-4 z-50 flex gap-2">
         <button
           onClick={() => navigate('/customers')}
-          className="flex items-center gap-2 bg-secondary text-foreground hover:bg-secondary/80 px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200 border border-border"
+          className="flex items-center gap-2 bg-gray-800 text-white hover:bg-gray-700 px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200"
           data-testid="back-button"
         >
           <ArrowLeft size={20} />
@@ -79,31 +69,24 @@ export default function Invoice() {
         </button>
         <button
           onClick={handlePrint}
-          className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200"
+          className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200"
           data-testid="print-button"
         >
           <Printer size={20} />
-          Print
-        </button>
-        <button
-          onClick={handleDownloadPDF}
-          className="flex items-center gap-2 bg-chart-3 text-white hover:bg-chart-3/90 px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200"
-          data-testid="download-button"
-        >
-          <Download size={20} />
-          Download PDF
+          Print / Download PDF
         </button>
       </div>
 
-      {/* Invoice Content */}
       <div className="max-w-4xl mx-auto p-8 print:p-0">
         <div className="bg-white text-black p-12 rounded-lg shadow-lg print:shadow-none" data-testid="invoice-content">
-          {/* Header */}
           <div className="flex justify-between items-start mb-8 border-b-2 border-gray-300 pb-6">
-            <div>
-              <h1 className="font-display text-5xl font-bold text-gray-900 mb-2">Rihla</h1>
-              <p className="font-heading text-lg text-gray-600">Enterprise Cloud Platform</p>
-              <p className="text-sm text-gray-500 mt-2">Multi-brand E-commerce</p>
+            <div className="flex items-center gap-4">
+              <img src={LOGO_URL} alt="Rihla Logo" className="h-16 w-16 object-contain" />
+              <div>
+                <h1 className="font-display text-4xl font-bold text-gray-900">Rihla</h1>
+                <p className="font-body text-sm text-gray-600 italic mt-1">Where every journey becomes a story worth telling</p>
+                <p className="text-xs text-gray-500 mt-1">Email: info@rihlatech.info</p>
+              </div>
             </div>
             <div className="text-right">
               <h2 className="font-heading text-3xl font-bold text-gray-900 mb-2">INVOICE</h2>
@@ -118,7 +101,6 @@ export default function Invoice() {
             </div>
           </div>
 
-          {/* Customer & Company Info */}
           <div className="grid grid-cols-2 gap-8 mb-8">
             <div>
               <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">Bill To:</h3>
@@ -137,15 +119,13 @@ export default function Invoice() {
             <div>
               <h3 className="font-heading text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">From:</h3>
               <div className="space-y-1">
-                <p className="font-heading text-lg font-semibold text-gray-900">Rihla Enterprise</p>
-                <p className="text-sm text-gray-600">Riyadh, Saudi Arabia</p>
-                <p className="text-sm text-gray-600">info@rihla.com</p>
-                <p className="text-sm text-gray-600">+966 50 XXX XXXX</p>
+                <p className="font-heading text-lg font-semibold text-gray-900">Rihla</p>
+                <p className="text-sm text-gray-600 italic">Where every journey becomes a story worth telling</p>
+                <p className="text-sm text-gray-600 mt-2">Email: info@rihlatech.info</p>
               </div>
             </div>
           </div>
 
-          {/* Customer Summary */}
           <div className="grid grid-cols-3 gap-4 mb-8 bg-gray-50 p-6 rounded-lg">
             <div className="text-center">
               <p className="text-xs font-heading font-semibold uppercase tracking-wide text-gray-500 mb-1">Total Orders</p>
@@ -161,7 +141,6 @@ export default function Invoice() {
             </div>
           </div>
 
-          {/* Orders Table */}
           <div className="mb-8">
             <h3 className="font-heading text-lg font-semibold text-gray-900 mb-4">Order Details</h3>
             <table className="w-full">
@@ -169,7 +148,8 @@ export default function Invoice() {
                 <tr className="border-b-2 border-gray-300">
                   <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Order #</th>
                   <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Brand</th>
-                  <th className="text-center py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Items</th>
+                  <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Products</th>
+                  <th className="text-center py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Payment</th>
                   <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Date</th>
                   <th className="text-left py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Status</th>
                   <th className="text-right py-3 px-2 font-heading text-xs font-semibold uppercase tracking-wide text-gray-600">Amount</th>
@@ -178,14 +158,25 @@ export default function Invoice() {
               <tbody>
                 {orders.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-8 text-gray-500">No orders found</td>
+                    <td colSpan="7" className="text-center py-8 text-gray-500">No orders found</td>
                   </tr>
                 ) : (
-                  orders.map((order, index) => (
+                  orders.map((order) => (
                     <tr key={order.id} className="border-b border-gray-200">
                       <td className="py-3 px-2 font-mono text-sm text-gray-700">{order.order_number}</td>
                       <td className="py-3 px-2 text-sm text-gray-700">{order.brand_name}</td>
-                      <td className="py-3 px-2 text-center text-sm text-gray-700">{order.items_count}</td>
+                      <td className="py-3 px-2 text-sm text-gray-700">
+                        {order.items && order.items.length > 0 ? (
+                          <div className="space-y-1">
+                            {order.items.map((item, idx) => (
+                              <p key={idx} className="text-xs">
+                                {item.product_name} (x{item.quantity})
+                              </p>
+                            ))}
+                          </div>
+                        ) : '-'}
+                      </td>
+                      <td className="py-3 px-2 text-center text-xs text-gray-700">{order.payment_method || 'N/A'}</td>
                       <td className="py-3 px-2 text-sm text-gray-700">
                         {new Date(order.created_at).toLocaleDateString('en-US', { 
                           month: 'short', 
@@ -203,7 +194,12 @@ export default function Invoice() {
                           {order.status}
                         </span>
                       </td>
-                      <td className="py-3 px-2 text-right font-semibold text-gray-900">SAR {order.total.toFixed(2)}</td>
+                      <td className="py-3 px-2 text-right font-semibold text-gray-900">
+                        {order.currency} {order.total.toFixed(2)}
+                        {order.vat_amount > 0 && (
+                          <p className="text-xs text-gray-500">VAT: {order.currency} {order.vat_amount.toFixed(2)}</p>
+                        )}
+                      </td>
                     </tr>
                   ))
                 )}
@@ -211,7 +207,6 @@ export default function Invoice() {
             </table>
           </div>
 
-          {/* Total */}
           <div className="flex justify-end mb-8">
             <div className="w-64">
               <div className="flex justify-between py-2 border-t border-gray-300">
@@ -229,7 +224,6 @@ export default function Invoice() {
             </div>
           </div>
 
-          {/* QR Code & Footer */}
           <div className="flex justify-between items-end border-t-2 border-gray-300 pt-6">
             <div className="flex-1">
               <p className="text-xs text-gray-500 mb-2">Scan QR code to view this invoice online:</p>
@@ -245,13 +239,12 @@ export default function Invoice() {
             <div className="text-right">
               <p className="text-xs text-gray-500 mb-1">Thank you for your business!</p>
               <p className="text-xs text-gray-400">This is a computer-generated invoice.</p>
-              <p className="text-xs text-gray-400 mt-2">Rihla Enterprise © 2024</p>
+              <p className="text-xs text-gray-400 mt-2">Rihla Enterprise © 2025</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Print Styles */}
       <style>{`
         @media print {
           body {
