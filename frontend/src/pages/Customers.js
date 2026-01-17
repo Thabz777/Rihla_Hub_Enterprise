@@ -95,9 +95,17 @@ export default function Customers() {
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-border/50">
-                  <p className="text-xs text-muted-foreground font-body">
+                  <p className="text-xs text-muted-foreground font-body mb-3">
                     Customer since {new Date(customer.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                   </p>
+                  <button
+                    onClick={() => navigate(`/invoice/${customer.id}`)}
+                    className="w-full flex items-center justify-center gap-2 bg-chart-1 text-white hover:bg-chart-1/90 px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200"
+                    data-testid={`view-invoice-${customer.id}`}
+                  >
+                    <FileText size={16} />
+                    View Invoice
+                  </button>
                 </div>
               </div>
             ))}
