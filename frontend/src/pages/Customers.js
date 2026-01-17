@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout/Layout';
-import { Mail, Phone, ShoppingBag, DollarSign } from 'lucide-react';
+import { Mail, Phone, ShoppingBag, DollarSign, FileText } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 
