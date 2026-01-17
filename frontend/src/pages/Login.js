@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Eye, EyeOff, Shield, User } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Login() {
@@ -24,24 +24,6 @@ export default function Login() {
       navigate('/dashboard');
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Invalid credentials');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleQuickLogin = async (type) => {
-    setLoading(true);
-    try {
-      if (type === 'admin') {
-        await login('admin@rihla.com', 'admin123');
-        toast.success('Logged in as Admin!');
-      } else {
-        await login('user@rihla.com', 'user123');
-        toast.success('Logged in as User!');
-      }
-      navigate('/dashboard');
-    } catch (error) {
-      toast.error(error.response?.data?.detail || 'Authentication failed');
     } finally {
       setLoading(false);
     }
