@@ -56,40 +56,6 @@ export default function Login() {
             </p>
           </div>
 
-          {/* Quick Login Buttons */}
-          <div className="mb-6 space-y-3">
-            <p className="text-sm font-heading font-medium text-muted-foreground mb-3">Quick Login:</p>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('admin')}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-3 bg-chart-1 text-white hover:bg-chart-1/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              data-testid="quick-login-admin"
-            >
-              <Shield size={20} />
-              Login as Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('user')}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-3 bg-chart-3 text-white hover:bg-chart-3/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              data-testid="quick-login-user"
-            >
-              <User size={20} />
-              Login as User
-            </button>
-          </div>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-background text-muted-foreground font-body">Or login with credentials</span>
-            </div>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-6" data-testid="login-form">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-heading font-medium text-foreground">
