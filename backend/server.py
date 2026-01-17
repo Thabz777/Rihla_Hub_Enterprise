@@ -443,6 +443,29 @@ async def get_customers(_: dict = Depends(verify_token)):
             customer['created_at'] = datetime.fromisoformat(customer['created_at'])
     return customers
 
+@api_router.get("/customers/{customer_id}/invoice")
+async def get_customer_invoice(customer_id: str, _: dict = Depends(verify_token)):
+    customer = await db.customers.find_one({"id": customer_id}, {"_id": 0})
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    
+    orders = await db.orders.find({"customer_email": customer["email"]}, {"_id": 0}).to_list(1000)
+    
+    for order in orders:
+        if isinstance(order.get('created_at'), str):
+            order['created_at'] = datetime.fromisoformat(order['created_at'])
+    
+    if isinstance(customer.get('created_at'), str):
+        customer['created_at'] = datetime.fromisoformat(customer['created_at'])
+    
+    return {
+        "customer": customer,
+        "orders": orders,
+        "invoice_id": f"INV-{customer_id[:8].upper()}",
+        "invoice_date": datetime.now(timezone.utc).isoformat(),
+        "total_amount": sum(o.get('total', 0) for o in orders)
+    }
+
 @api_router.get("/employees", response_model=List[Employee])
 async def get_employees(brand_id: Optional[str] = None, department: Optional[str] = None, status: Optional[str] = None, _: dict = Depends(verify_token)):
     filter_query = {}
