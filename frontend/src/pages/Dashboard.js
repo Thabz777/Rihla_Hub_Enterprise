@@ -31,7 +31,7 @@ export default function Dashboard() {
     try {
       const brandParam = selectedBrand !== 'all' ? `?brand_id=${selectedBrand}` : '';
       
-      const [metricsRes, trendRes, ordersRes] = await Promise.all([
+      const requests = [
         axios.get(`${API}/dashboard/metrics${brandParam}`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
@@ -41,11 +41,25 @@ export default function Dashboard() {
         axios.get(`${API}/orders?${new URLSearchParams({ ...(selectedBrand !== 'all' && { brand_id: selectedBrand }) })}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
-      ]);
+      ];
 
-      setMetrics(metricsRes.data);
-      setRevenueTrend(trendRes.data);
-      setRecentOrders(ordersRes.data.slice(0, 5));
+      if (isAdmin) {
+        requests.push(
+          axios.get(`${API}/admin/orders-by-user`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        );
+      }
+
+      const responses = await Promise.all(requests);
+
+      setMetrics(responses[0].data);
+      setRevenueTrend(responses[1].data);
+      setRecentOrders(responses[2].data.slice(0, 5));
+      
+      if (isAdmin && responses[3]) {
+        setOrdersByUser(responses[3].data);
+      }
     } catch (error) {
       toast.error('Failed to load dashboard data');
       console.error(error);
