@@ -177,7 +177,7 @@ export default function Orders() {
                 New Order
               </button>
             </DialogTrigger>
-            <DialogContent className="bg-popover border-border">
+            <DialogContent className="bg-popover border-border max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="font-heading text-2xl">Create New Order</DialogTitle>
               </DialogHeader>
