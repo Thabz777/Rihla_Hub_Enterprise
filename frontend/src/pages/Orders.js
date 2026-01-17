@@ -334,6 +334,35 @@ export default function Orders() {
                       </Select>
                     </div>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-3 p-4 bg-background rounded-lg border border-border">
+                      <input
+                        type="checkbox"
+                        id="apply_vat"
+                        checked={formData.apply_vat}
+                        onChange={(e) => setFormData({ ...formData, apply_vat: e.target.checked })}
+                        className="w-5 h-5 rounded border-border"
+                        data-testid="apply-vat-checkbox"
+                      />
+                      <label htmlFor="apply_vat" className="text-sm font-heading font-medium text-foreground cursor-pointer">
+                        Apply VAT ({formData.currency === 'SAR' ? '15%' : '18%'})
+                      </label>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-heading font-medium text-foreground mb-2">Shipping Charges</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={formData.shipping_charges}
+                        onChange={(e) => setFormData({ ...formData, shipping_charges: parseFloat(e.target.value) || 0 })}
+                        className="w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
+                        data-testid="shipping-charges-input"
+                        placeholder="0.00"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Order Summary Section */}
@@ -343,10 +372,18 @@ export default function Orders() {
                     <span className="font-body text-sm text-foreground">Subtotal:</span>
                     <span className="font-mono font-medium text-foreground">{formData.currency} {formData.subtotal.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-body text-sm text-foreground">VAT ({(vatRate * 100).toFixed(0)}%):</span>
-                    <span className="font-mono font-medium text-foreground">{formData.currency} {vat.toFixed(2)}</span>
-                  </div>
+                  {formData.apply_vat && (
+                    <div className="flex justify-between items-center">
+                      <span className="font-body text-sm text-foreground">VAT ({(vatRate * 100).toFixed(0)}%):</span>
+                      <span className="font-mono font-medium text-foreground">{formData.currency} {vat.toFixed(2)}</span>
+                    </div>
+                  )}
+                  {formData.shipping_charges > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="font-body text-sm text-foreground">Shipping:</span>
+                      <span className="font-mono font-medium text-foreground">{formData.currency} {formData.shipping_charges.toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between items-center pt-2 border-t-2 border-border">
                     <span className="font-heading text-lg font-bold text-foreground">Total:</span>
                     <span className="font-mono text-lg font-bold text-foreground">{formData.currency} {total.toFixed(2)}</span>
