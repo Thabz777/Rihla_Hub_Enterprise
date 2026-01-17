@@ -13,7 +13,6 @@ export default function Customers() {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
-  const [customerOrders, setCustomerOrders] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [searching, setSearching] = useState(false);
@@ -25,19 +24,10 @@ export default function Customers() {
   const fetchCustomers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API}/customers`, {
+      const response = await axios.get(`${API}/customers/with-orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCustomers(response.data);
-      
-      const ordersMap = {};
-      for (const customer of response.data) {
-        const ordersRes = await axios.get(`${API}/orders?${new URLSearchParams({ customer_email: customer.email || '' })}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        ordersMap[customer.id] = ordersRes.data;
-      }
-      setCustomerOrders(ordersMap);
     } catch (error) {
       toast.error('Failed to load customers');
     } finally {
