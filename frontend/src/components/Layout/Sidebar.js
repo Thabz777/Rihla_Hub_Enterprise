@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Package, Users, BarChart3, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, Users, BarChart3, Settings, LogOut, UserCog } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export const Sidebar = () => {
@@ -12,6 +12,7 @@ export const Sidebar = () => {
     { name: 'Orders', href: '/orders', icon: ShoppingCart },
     { name: 'Inventory', href: '/inventory', icon: Package },
     { name: 'Customers', href: '/customers', icon: Users },
+    { name: 'Employees', href: '/employees', icon: UserCog },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];
