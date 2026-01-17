@@ -260,13 +260,22 @@ export default function Inventory() {
                         <td className="px-4 py-3 text-sm font-mono text-foreground">{product.sku}</td>
                         <td className="px-4 py-3 text-sm font-body font-medium text-foreground">{product.name}</td>
                         <td className="px-4 py-3 text-sm font-body text-foreground">{product.brand_name}</td>
-                        <td className="px-4 py-3 text-sm font-body text-foreground">{product.category}</td>
+                        <td className="px-4 py-3">
+                          <input
+                            type="text"
+                            value={product.category}
+                            onChange={(e) => handleUpdateProduct(product.id, { category: e.target.value })}
+                            onBlur={(e) => handleUpdateProduct(product.id, { category: e.target.value })}
+                            className="w-full bg-background border border-border rounded px-2 py-1 text-sm font-body text-foreground focus:border-ring focus:ring-1 focus:ring-ring/20"
+                            data-testid={`category-input-${product.id}`}
+                          />
+                        </td>
                         <td className="px-4 py-3">
                           <input
                             type="number"
                             min="0"
                             value={product.stock}
-                            onChange={(e) => handleUpdateStock(product.id, parseInt(e.target.value))}
+                            onChange={(e) => handleUpdateProduct(product.id, { stock: parseInt(e.target.value) })}
                             className="w-20 bg-background border border-border rounded px-2 py-1 text-sm font-body text-foreground focus:border-ring focus:ring-1 focus:ring-ring/20"
                             data-testid={`stock-input-${product.id}`}
                           />
