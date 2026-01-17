@@ -33,6 +33,19 @@ class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     email: EmailStr
     full_name: str
+    role: str = "user"
+    permissions: dict = Field(default_factory=lambda: {
+        "dashboard": True,
+        "orders": True,
+        "inventory": True,
+        "customers": True,
+        "employees": True,
+        "analytics": True,
+        "settings": True,
+        "can_create": False,
+        "can_edit": False,
+        "can_delete": False
+    })
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class UserCreate(BaseModel):
