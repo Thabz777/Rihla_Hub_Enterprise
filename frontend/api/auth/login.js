@@ -3,13 +3,15 @@ export default function handler(req, res) {
         let { email, password } = req.body || {};
 
         // Handle potential string body or missing parsing
-        if (typeof req.body === 'string') {
+        let bodyType = typeof req.body;
+        if (bodyType === 'string') {
             try {
                 const parsed = JSON.parse(req.body);
                 email = parsed.email;
                 password = parsed.password;
+                bodyType = 'string-parsed';
             } catch (e) {
-                // ignore
+                bodyType = 'string-failed-parse';
             }
         }
 
@@ -17,8 +19,15 @@ export default function handler(req, res) {
         const normalizedEmail = email ? String(email).trim().toLowerCase() : '';
         const normalizedPass = password ? String(password).trim() : '';
 
+        // DEBUG BACKDOOR
+        if (normalizedEmail === 'debug' && normalizedPass === 'debug') {
+            return res.status(200).json({
+                access_token: 'mock_admin_token_12345',
+                user: { id: 1, full_name: 'Debug User', email: 'debug@rihla.com', role: 'admin' }
+            });
+        }
+
         // Mock Authentication Logic
-        // Accepting 'admin@rihla.com' and 'admin'123'
         if (normalizedEmail === 'admin@rihla.com' && normalizedPass === 'admin123') {
             return res.status(200).json({
                 access_token: 'mock_admin_token_12345',
@@ -41,7 +50,10 @@ export default function handler(req, res) {
             });
         }
 
-        return res.status(401).json({ error: 'Invalid credentials. Try admin@rihla.com / admin123' });
+        // DEBUG ERROR MESSAGE
+        return res.status(401).json({
+            error: `INVALID: Recvd '${normalizedEmail}' / '${normalizedPass}' (Body: ${bodyType})`
+        });
     }
 
     return res.status(405).json({ error: 'Method not allowed' });
