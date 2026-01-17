@@ -116,9 +116,9 @@ export default function Orders() {
   };
 
   const calculateTotal = () => {
-    const vatRate = formData.currency === 'SAR' ? 0.15 : 0.18;
+    const vatRate = formData.apply_vat ? (formData.currency === 'SAR' ? 0.15 : 0.18) : 0;
     const vat = formData.subtotal * vatRate;
-    const total = formData.subtotal + vat;
+    const total = formData.subtotal + vat + formData.shipping_charges;
     return { vat, total, vatRate };
   };
 
