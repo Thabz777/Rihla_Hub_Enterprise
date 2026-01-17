@@ -306,9 +306,9 @@ async def create_product(product_data: ProductCreate, _: dict = Depends(verify_t
     brand = await db.brands.find_one({"id": product_data.brand_id}, {"_id": 0})
     if not brand:
         brands = await get_brands()
-        brand = next((b for b in brands if b.id == product_data.brand_id), None)
+        brand = next((b for b in brands if b['id'] == product_data.brand_id), None)
     
-    brand_name = brand.name if brand else "Unknown"
+    brand_name = brand['name'] if brand and isinstance(brand, dict) else (brand.name if brand else "Unknown")
     
     product = Product(
         sku=product_data.sku,
