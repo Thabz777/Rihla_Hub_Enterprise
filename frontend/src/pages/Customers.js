@@ -16,6 +16,8 @@ export default function Customers() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [searching, setSearching] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const customersPerPage = 25;
 
   useEffect(() => {
     fetchCustomers();
