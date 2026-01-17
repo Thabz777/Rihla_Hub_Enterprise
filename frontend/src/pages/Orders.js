@@ -16,22 +16,40 @@ export default function Orders() {
   const { selectedBrand } = useTheme();
   const [orders, setOrders] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
+    customer_phone: '',
+    customer_address: '',
     brand_id: '',
+    product_id: '',
+    category: '',
     items_count: 1,
-    total: 0,
+    currency: 'SAR',
+    subtotal: 0,
     status: 'pending'
   });
 
   useEffect(() => {
     fetchBrands();
+    fetchProducts();
     fetchOrders();
   }, [selectedBrand, statusFilter]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${API}/products`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  };
 
   const fetchBrands = async () => {
     try {
