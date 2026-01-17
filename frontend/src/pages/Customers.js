@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout/Layout';
-import { Mail, Phone, ShoppingBag, DollarSign, FileText } from 'lucide-react';
+import { Mail, Phone, ShoppingBag, DollarSign, FileText, Search } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -13,7 +13,10 @@ export default function Customers() {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
+  const [customerOrders, setCustomerOrders] = useState({});
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     fetchCustomers();
@@ -26,10 +29,39 @@ export default function Customers() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCustomers(response.data);
+      
+      const ordersMap = {};
+      for (const customer of response.data) {
+        const ordersRes = await axios.get(`${API}/orders?${new URLSearchParams({ customer_email: customer.email || '' })}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        ordersMap[customer.id] = ordersRes.data;
+      }
+      setCustomerOrders(ordersMap);
     } catch (error) {
       toast.error('Failed to load customers');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSearchInvoice = async () => {
+    if (!searchQuery.trim()) {
+      toast.error('Please enter an order number');
+      return;
+    }
+
+    setSearching(true);
+    try {
+      const response = await axios.get(`${API}/search/invoice?order_number=${searchQuery}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success(`Found: ${response.data.customer_name}`);
+      navigate(`/invoice/${response.data.customer_id}`);
+    } catch (error) {
+      toast.error('Order number not found');
+    } finally {
+      setSearching(false);
     }
   };
 
