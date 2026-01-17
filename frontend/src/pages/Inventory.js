@@ -96,11 +96,7 @@ export default function Inventory() {
 
   const handleUpdateProduct = async (productId, updates) => {
     try {
-      const params = new URLSearchParams();
-      if (updates.stock !== undefined) params.append('stock', updates.stock);
-      if (updates.category !== undefined) params.append('category', updates.category);
-      
-      await axios.put(`${API}/products/${productId}?${params.toString()}`, {}, {
+      await axios.put(`${API}/products/${productId}`, updates, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Product updated');
