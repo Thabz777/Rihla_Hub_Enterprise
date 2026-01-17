@@ -107,6 +107,8 @@ export default function Orders() {
         items_count: 1,
         currency: 'SAR',
         subtotal: 0,
+        apply_vat: true,
+        shipping_charges: 0,
         status: 'pending'
       });
       fetchOrders();
