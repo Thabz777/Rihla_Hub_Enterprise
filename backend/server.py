@@ -357,7 +357,22 @@ async def create_order(order_data: OrderCreate, _: dict = Depends(verify_token))
     product_name = None
     if order_data.product_id:
         product = await db.products.find_one({"id": order_data.product_id}, {"_id": 0})
-        product_name = product["name"] if product else None
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        product_name = product["name"]
+        
+        if product["stock"] < order_data.items_count:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Insufficient stock. Available: {product['stock']}, Requested: {order_data.items_count}"
+            )
+        
+        new_stock = product["stock"] - order_data.items_count
+        await db.products.update_one(
+            {"id": order_data.product_id},
+            {"$set": {"stock": new_stock}}
+        )
     
     vat_rate = 0.15 if order_data.currency == "SAR" else 0.18
     vat_amount = order_data.subtotal * vat_rate
