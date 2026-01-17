@@ -174,68 +174,151 @@ export default function Orders() {
                 <DialogTitle className="font-heading text-2xl">Create New Order</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleCreateOrder} className="space-y-4" data-testid="create-order-form">
-                <div>
-                  <label className="text-sm font-heading font-medium text-foreground">Customer Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.customer_name}
-                    onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
-                    className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
-                    data-testid="customer-name-input"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2">
+                    <label className="text-sm font-heading font-medium text-foreground">Customer Name *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.customer_name}
+                      onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
+                      className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
+                      data-testid="customer-name-input"
+                      placeholder="Enter customer name"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-heading font-medium text-foreground">Customer Email</label>
+                    <input
+                      type="email"
+                      value={formData.customer_email}
+                      onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
+                      className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
+                      data-testid="customer-email-input"
+                      placeholder="customer@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-heading font-medium text-foreground">Customer Phone</label>
+                    <input
+                      type="tel"
+                      value={formData.customer_phone}
+                      onChange={(e) => setFormData({ ...formData, customer_phone: e.target.value })}
+                      className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
+                      data-testid="customer-phone-input"
+                      placeholder="+966 5XX XXX XXX"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-sm font-heading font-medium text-foreground">Customer Address</label>
+                    <textarea
+                      value={formData.customer_address}
+                      onChange={(e) => setFormData({ ...formData, customer_address: e.target.value })}
+                      className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
+                      data-testid="customer-address-input"
+                      placeholder="Enter customer address"
+                      rows="2"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="text-sm font-heading font-medium text-foreground">Customer Email</label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.customer_email}
-                    onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
-                    className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
-                    data-testid="customer-email-input"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-heading font-medium text-foreground">Brand</label>
-                  <Select value={formData.brand_id} onValueChange={(value) => setFormData({ ...formData, brand_id: value })} required>
-                    <SelectTrigger className="w-full mt-2" data-testid="brand-select">
-                      <SelectValue placeholder="Select brand" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {brands.map((brand) => (
-                        <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-heading font-medium text-foreground">Items Count</label>
+                    <label className="text-sm font-heading font-medium text-foreground">Select Product *</label>
+                    <Select 
+                      value={formData.product_id} 
+                      onValueChange={handleProductSelect} 
+                      required
+                    >
+                      <SelectTrigger className="w-full mt-2" data-testid="product-select">
+                        <SelectValue placeholder="Choose from inventory" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {products.map((product) => (
+                          <SelectItem key={product.id} value={product.id}>
+                            {product.name} - {product.brand_name} (SAR {product.price})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-heading font-medium text-foreground">Category</label>
+                    <input
+                      type="text"
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
+                      data-testid="category-input"
+                      placeholder="Auto-filled from product"
+                      readOnly
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="text-sm font-heading font-medium text-foreground">Brand</label>
+                    <input
+                      type="text"
+                      value={brands.find(b => b.id === formData.brand_id)?.name || ''}
+                      className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base text-foreground"
+                      placeholder="Auto-filled from product"
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-heading font-medium text-foreground">Items Count *</label>
                     <input
                       type="number"
                       min="1"
                       required
                       value={formData.items_count}
-                      onChange={(e) => setFormData({ ...formData, items_count: parseInt(e.target.value) })}
+                      onChange={(e) => {
+                        const count = parseInt(e.target.value);
+                        const product = products.find(p => p.id === formData.product_id);
+                        setFormData({ 
+                          ...formData, 
+                          items_count: count,
+                          subtotal: product ? product.price * count : 0
+                        });
+                      }}
                       className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
                       data-testid="items-count-input"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-heading font-medium text-foreground">Total (SAR)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      required
-                      value={formData.total}
-                      onChange={(e) => setFormData({ ...formData, total: parseFloat(e.target.value) })}
-                      className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
-                      data-testid="total-input"
-                    />
+                    <label className="text-sm font-heading font-medium text-foreground">Currency *</label>
+                    <Select 
+                      value={formData.currency} 
+                      onValueChange={(value) => setFormData({ ...formData, currency: value })}
+                    >
+                      <SelectTrigger className="w-full mt-2" data-testid="currency-select">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="SAR">SAR (Saudi Riyal)</SelectItem>
+                        <SelectItem value="INR">INR (Indian Rupee)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
+
+                <div className="bg-accent rounded-lg p-4 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-body text-muted-foreground">Subtotal:</span>
+                    <span className="font-mono font-medium text-foreground">{formData.currency} {formData.subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="font-body text-muted-foreground">VAT ({(vatRate * 100).toFixed(0)}%):</span>
+                    <span className="font-mono font-medium text-foreground">{formData.currency} {vat.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-lg border-t border-border pt-2">
+                    <span className="font-heading font-bold text-foreground">Total:</span>
+                    <span className="font-mono font-bold text-foreground">{formData.currency} {total.toFixed(2)}</span>
+                  </div>
+                </div>
+
                 <button
                   type="submit"
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 mt-6"
