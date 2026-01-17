@@ -566,6 +566,26 @@ async def get_customer_invoice(customer_id: str, _: dict = Depends(verify_token)
         "total_amount": sum(o.get('total', 0) for o in orders)
     }
 
+@api_router.get("/search/invoice")
+async def search_invoice_by_order_number(order_number: str, _: dict = Depends(verify_token)):
+    order = await db.orders.find_one({"order_number": order_number}, {"_id": 0})
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    customer_email = order.get("customer_email")
+    if not customer_email:
+        raise HTTPException(status_code=404, detail="Customer not found for this order")
+    
+    customer = await db.customers.find_one({"email": customer_email}, {"_id": 0})
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    
+    return {
+        "customer_id": customer["id"],
+        "customer_name": customer["name"],
+        "order_number": order_number
+    }
+
 @api_router.get("/public/invoice/{customer_id}")
 async def get_public_invoice(customer_id: str):
     customer = await db.customers.find_one({"id": customer_id}, {"_id": 0})
