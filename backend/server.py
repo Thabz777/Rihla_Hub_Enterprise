@@ -39,7 +39,6 @@ class User(BaseModel):
         "orders": True,
         "inventory": True,
         "customers": True,
-        "employees": True,
         "analytics": True,
         "settings": True,
         "can_create": False,
