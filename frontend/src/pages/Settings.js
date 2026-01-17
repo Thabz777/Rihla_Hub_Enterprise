@@ -1,12 +1,90 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout/Layout';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
-import { Moon, Sun, User, Mail } from 'lucide-react';
+import { Moon, Sun, User, Mail, Shield, Key, Settings as SettingsIcon } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import axios from 'axios';
+import { toast } from 'sonner';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 export default function Settings() {
   const { isDark, toggleTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [permissionsDialogOpen, setPermissionsDialogOpen] = useState(false);
+  const [permissions, setPermissions] = useState({});
+
+  const isAdmin = user?.role === 'admin';
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchUsers();
+    }
+  }, [isAdmin]);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${API}/users`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!selectedUser || !newPassword) return;
+
+    try {
+      await axios.put(
+        `${API}/users/${selectedUser.email}/reset-password?new_password=${newPassword}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success(`Password reset for ${selectedUser.email}`);
+      setResetDialogOpen(false);
+      setNewPassword('');
+      setSelectedUser(null);
+    } catch (error) {
+      toast.error('Failed to reset password');
+    }
+  };
+
+  const handleUpdatePermissions = async () => {
+    if (!selectedUser) return;
+
+    try {
+      await axios.put(
+        `${API}/users/${selectedUser.email}/permissions`,
+        permissions,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success(`Permissions updated for ${selectedUser.email}`);
+      setPermissionsDialogOpen(false);
+      setSelectedUser(null);
+      fetchUsers();
+    } catch (error) {
+      toast.error('Failed to update permissions');
+    }
+  };
+
+  const openResetDialog = (userItem) => {
+    setSelectedUser(userItem);
+    setResetDialogOpen(true);
+  };
+
+  const openPermissionsDialog = (userItem) => {
+    setSelectedUser(userItem);
+    setPermissions(userItem.permissions || {});
+    setPermissionsDialogOpen(true);
+  };
 
   return (
     <Layout>
