@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-01-17T10:48:19.624590",
+  "total_tests": 15,
+  "passed": 11,
+  "failed": 4,
+  "success_rate": "73.3%",
+  "results": [
+    {
+      "test": "User Login",
+      "passed": false,
+      "status_code": 401,
+      "message": "Expected 200, got 401"
+    },
+    {
+      "test": "User Registration",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Current User",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Brands",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Dashboard Metrics",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Revenue Trend",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Order",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Orders",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Orders (Filtered by Status)",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Update Order Status",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Product",
+      "passed": false,
+      "status_code": 520,
+      "message": "Expected 200, got 520"
+    },
+    {
+      "test": "Create Product",
+      "passed": false,
+      "status_code": null,
+      "message": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "test": "Get Products",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Update Product Stock",
+      "passed": false,
+      "status_code": null,
+      "message": "No product ID available"
+    },
+    {
+      "test": "Get Customers",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    }
+  ]
+}
