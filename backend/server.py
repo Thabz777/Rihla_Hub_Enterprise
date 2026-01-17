@@ -725,6 +725,40 @@ async def get_employee_stats(brand_id: Optional[str] = None, _: dict = Depends(v
         "avg_achievement_rate": round(avg_achievement, 2)
     }
 
+@api_router.get("/admin/orders-by-user")
+async def get_orders_by_user(current_user: dict = Depends(verify_token)):
+    user_doc = await db.users.find_one({"email": current_user["sub"]}, {"_id": 0})
+    if not user_doc or user_doc.get('role') != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    orders = await db.orders.find({}, {"_id": 0, "created_by": 1, "order_number": 1, "total": 1, "created_at": 1}).to_list(1000)
+    
+    user_stats = {}
+    for order in orders:
+        created_by = order.get('created_by', 'System')
+        if created_by not in user_stats:
+            user_stats[created_by] = {"count": 0, "total_value": 0, "orders": []}
+        user_stats[created_by]["count"] += 1
+        user_stats[created_by]["total_value"] += order.get('total', 0)
+        user_stats[created_by]["orders"].append(order.get('order_number'))
+    
+    return user_stats
+
+@app.on_event("startup")
+async def create_indexes():
+    try:
+        await db.orders.create_index("order_number", unique=True)
+        await db.orders.create_index("customer_email")
+        await db.orders.create_index("created_by")
+        await db.orders.create_index("created_at")
+        await db.customers.create_index("email", unique=True)
+        await db.products.create_index("sku", unique=True)
+        await db.products.create_index("brand_id")
+        await db.users.create_index("email", unique=True)
+        logger.info("Database indexes created successfully")
+    except Exception as e:
+        logger.warning(f"Index creation warning: {e}")
+
 app.include_router(api_router)
 
 app.add_middleware(
