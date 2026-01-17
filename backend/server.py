@@ -543,6 +543,25 @@ async def get_customers(_: dict = Depends(verify_token)):
             customer['created_at'] = datetime.fromisoformat(customer['created_at'])
     return customers
 
+@api_router.get("/customers/with-orders")
+async def get_customers_with_orders(_: dict = Depends(verify_token)):
+    customers = await db.customers.find({}, {"_id": 0}).sort("lifetime_value", -1).to_list(1000)
+    
+    result = []
+    for customer in customers:
+        if isinstance(customer['created_at'], str):
+            customer['created_at'] = datetime.fromisoformat(customer['created_at'])
+        
+        recent_orders = await db.orders.find(
+            {"customer_email": customer["email"]}, 
+            {"_id": 0, "order_number": 1, "created_at": 1}
+        ).sort("created_at", -1).limit(3).to_list(3)
+        
+        customer['recent_orders'] = [order['order_number'] for order in recent_orders]
+        result.append(customer)
+    
+    return result
+
 @api_router.get("/customers/{customer_id}/invoice")
 async def get_customer_invoice(customer_id: str, _: dict = Depends(verify_token)):
     customer = await db.customers.find_one({"id": customer_id}, {"_id": 0})
