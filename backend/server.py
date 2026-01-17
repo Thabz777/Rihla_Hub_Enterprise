@@ -361,7 +361,7 @@ async def get_orders(brand_id: Optional[str] = None, status: Optional[str] = Non
     return orders
 
 @api_router.post("/orders", response_model=Order)
-async def create_order(order_data: OrderCreate, _: dict = Depends(verify_token)):
+async def create_order(order_data: OrderCreate, current_user: dict = Depends(verify_token)):
     if not order_data.customer_email and not order_data.customer_phone:
         raise HTTPException(status_code=400, detail="Either email or phone number is required")
     
