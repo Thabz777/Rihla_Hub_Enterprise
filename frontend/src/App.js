@@ -11,6 +11,7 @@ import Customers from '@/pages/Customers';
 import Employees from '@/pages/Employees';
 import Analytics from '@/pages/Analytics';
 import Settings from '@/pages/Settings';
+import Invoice from '@/pages/Invoice';
 import '@/App.css';
 
 const ProtectedRoute = ({ children }) => {
