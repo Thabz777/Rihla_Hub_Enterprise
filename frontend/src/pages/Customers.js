@@ -73,6 +73,31 @@ export default function Customers() {
           <p className="font-body text-lg text-muted-foreground">View and manage customer relationships</p>
         </div>
 
+        <div className="bg-secondary border border-border/50 rounded-lg p-4">
+          <div className="flex gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearchInvoice()}
+                placeholder="Search by Order Number (e.g., ORD-20260117-XXXXXXXX)"
+                className="w-full bg-background border border-border rounded-lg pl-12 pr-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
+                data-testid="search-invoice-input"
+              />
+            </div>
+            <button
+              onClick={handleSearchInvoice}
+              disabled={searching}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 disabled:opacity-50"
+              data-testid="search-invoice-button"
+            >
+              {searching ? 'Searching...' : 'Search Invoice'}
+            </button>
+          </div>
+        </div>
+
         {loading ? (
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
