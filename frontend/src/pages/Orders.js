@@ -135,6 +135,10 @@ export default function Orders() {
     }
   };
 
+  const filteredProducts = formData.brand_id 
+    ? products.filter(p => p.brand_id === formData.brand_id)
+    : products;
+
   const handleUpdateStatus = async (orderId, newStatus) => {
     try {
       await axios.put(`${API}/orders/${orderId}?status=${newStatus}`, {}, {
