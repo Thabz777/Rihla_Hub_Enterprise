@@ -213,18 +213,37 @@ export default function Invoice() {
           </div>
 
           <div className="flex justify-end mb-8">
-            <div className="w-64">
-              <div className="flex justify-between py-2 border-t border-gray-300">
-                <span className="font-heading text-sm text-gray-600">Subtotal:</span>
-                <span className="font-heading text-sm text-gray-900">SAR {total_amount.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between py-2 border-t border-gray-300">
-                <span className="font-heading text-sm text-gray-600">VAT (15%):</span>
-                <span className="font-heading text-sm text-gray-900">SAR {(total_amount * 0.15).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between py-3 border-t-2 border-gray-900">
-                <span className="font-heading text-lg font-bold text-gray-900">Total:</span>
-                <span className="font-heading text-lg font-bold text-gray-900">SAR {(total_amount * 1.15).toFixed(2)}</span>
+            <div className="w-80">
+              {orders.map((order, idx) => (
+                <div key={order.id} className={`py-2 ${idx > 0 ? 'border-t border-gray-300' : ''}`}>
+                  <p className="text-xs text-gray-500 mb-1">Order: {order.order_number}</p>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Subtotal:</span>
+                      <span className="text-gray-900">{order.currency} {order.subtotal.toFixed(2)}</span>
+                    </div>
+                    {order.apply_vat && order.vat_amount > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">VAT ({(order.vat_rate * 100).toFixed(0)}%):</span>
+                        <span className="text-gray-900">{order.currency} {order.vat_amount.toFixed(2)}</span>
+                      </div>
+                    )}
+                    {order.shipping_charges > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Shipping:</span>
+                        <span className="text-gray-900">{order.currency} {order.shipping_charges.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-sm font-semibold">
+                      <span className="text-gray-700">Order Total:</span>
+                      <span className="text-gray-900">{order.currency} {order.total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className="flex justify-between py-3 border-t-2 border-gray-900 mt-2">
+                <span className="font-heading text-lg font-bold text-gray-900">Grand Total:</span>
+                <span className="font-heading text-lg font-bold text-gray-900">SAR {total_amount.toFixed(2)}</span>
               </div>
             </div>
           </div>
