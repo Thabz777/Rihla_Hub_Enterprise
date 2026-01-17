@@ -367,13 +367,13 @@ export default function Orders() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="7" className="px-4 py-8 text-center">
+                    <td colSpan="8" className="px-4 py-8 text-center">
                       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
                     </td>
                   </tr>
                 ) : orders.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="px-4 py-8 text-center text-muted-foreground font-body">
+                    <td colSpan="8" className="px-4 py-8 text-center text-muted-foreground font-body">
                       No orders found. Create your first order!
                     </td>
                   </tr>
@@ -384,12 +384,21 @@ export default function Orders() {
                       <td className="px-4 py-3">
                         <div>
                           <p className="text-sm font-body font-medium text-foreground">{order.customer_name}</p>
-                          <p className="text-xs text-muted-foreground">{order.customer_email}</p>
+                          {order.customer_email && <p className="text-xs text-muted-foreground">{order.customer_email}</p>}
+                          {order.customer_phone && <p className="text-xs text-muted-foreground">{order.customer_phone}</p>}
                         </div>
                       </td>
+                      <td className="px-4 py-3 text-sm font-body text-foreground">{order.product_name || '-'}</td>
                       <td className="px-4 py-3 text-sm font-body text-foreground">{order.brand_name}</td>
                       <td className="px-4 py-3 text-sm font-body text-foreground">{order.items_count}</td>
-                      <td className="px-4 py-3 text-sm font-body font-medium text-foreground">SAR {order.total.toFixed(2)}</td>
+                      <td className="px-4 py-3">
+                        <div>
+                          <p className="text-sm font-body font-medium text-foreground">{order.currency} {order.total.toFixed(2)}</p>
+                          {order.vat_amount && (
+                            <p className="text-xs text-muted-foreground">VAT: {order.currency} {order.vat_amount.toFixed(2)}</p>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-4 py-3">
                         <Select value={order.status} onValueChange={(value) => handleUpdateStatus(order.id, value)}>
                           <SelectTrigger 
