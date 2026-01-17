@@ -402,8 +402,10 @@ async def create_order(order_data: OrderCreate, _: dict = Depends(verify_token))
         items_count=order_data.items_count,
         currency=order_data.currency,
         subtotal=order_data.subtotal,
+        apply_vat=order_data.apply_vat,
         vat_rate=vat_rate,
         vat_amount=vat_amount,
+        shipping_charges=order_data.shipping_charges,
         total=total,
         status=order_data.status
     )
