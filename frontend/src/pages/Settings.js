@@ -273,20 +273,20 @@ export default function Settings() {
                 <label className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border cursor-pointer hover:border-ring transition-colors">
                   <input
                     type="checkbox"
-                    checked={permissions.employees || false}
-                    onChange={(e) => setPermissions({...permissions, employees: e.target.checked})}
-                    className="w-5 h-5"
-                  />
-                  <span className="text-sm font-body text-foreground">Employees Access</span>
-                </label>
-                <label className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border cursor-pointer hover:border-ring transition-colors">
-                  <input
-                    type="checkbox"
                     checked={permissions.analytics || false}
                     onChange={(e) => setPermissions({...permissions, analytics: e.target.checked})}
                     className="w-5 h-5"
                   />
                   <span className="text-sm font-body text-foreground">Analytics Access</span>
+                </label>
+                <label className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border cursor-pointer hover:border-ring transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={permissions.settings || false}
+                    onChange={(e) => setPermissions({...permissions, settings: e.target.checked})}
+                    className="w-5 h-5"
+                  />
+                  <span className="text-sm font-body text-foreground">Settings Access</span>
                 </label>
                 <label className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border cursor-pointer hover:border-ring transition-colors">
                   <input
