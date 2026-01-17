@@ -433,7 +433,8 @@ async def create_order(order_data: OrderCreate, current_user: dict = Depends(ver
         shipping_charges=order_data.shipping_charges,
         payment_method=order_data.payment_method,
         total=total,
-        status=order_data.status
+        status=order_data.status,
+        created_by=current_user.get("sub")
     )
     
     order_dict = order.model_dump()
