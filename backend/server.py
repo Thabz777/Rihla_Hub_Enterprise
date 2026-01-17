@@ -74,20 +74,34 @@ class Order(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     order_number: str
     customer_name: str
-    customer_email: EmailStr
+    customer_email: Optional[EmailStr] = None
+    customer_phone: Optional[str] = None
+    customer_address: Optional[str] = None
     brand_id: str
     brand_name: str
+    product_id: Optional[str] = None
+    product_name: Optional[str] = None
+    category: Optional[str] = None
     items_count: int
+    currency: str = "SAR"
+    subtotal: float
+    vat_rate: float
+    vat_amount: float
     total: float
     status: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class OrderCreate(BaseModel):
     customer_name: str
-    customer_email: EmailStr
+    customer_email: Optional[EmailStr] = None
+    customer_phone: Optional[str] = None
+    customer_address: Optional[str] = None
     brand_id: str
+    product_id: Optional[str] = None
+    category: Optional[str] = None
     items_count: int
-    total: float
+    currency: str = "SAR"
+    subtotal: float
     status: str = "pending"
 
 class Product(BaseModel):
