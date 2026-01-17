@@ -69,6 +69,13 @@ class Brand(BaseModel):
     color: str
     description: str
 
+class OrderItem(BaseModel):
+    product_id: str
+    product_name: str
+    quantity: int
+    price: float
+    total: float
+
 class Order(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -79,16 +86,15 @@ class Order(BaseModel):
     customer_address: Optional[str] = None
     brand_id: str
     brand_name: str
-    product_id: Optional[str] = None
-    product_name: Optional[str] = None
+    items: List[OrderItem] = []
     category: Optional[str] = None
-    items_count: int
     currency: str = "SAR"
     subtotal: float
     apply_vat: bool = True
     vat_rate: float
     vat_amount: float
     shipping_charges: float = 0.0
+    payment_method: str = "Cash on delivery"
     total: float
     status: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -99,13 +105,12 @@ class OrderCreate(BaseModel):
     customer_phone: Optional[str] = None
     customer_address: Optional[str] = None
     brand_id: str
-    product_id: Optional[str] = None
+    items: List[dict]
     category: Optional[str] = None
-    items_count: int
     currency: str = "SAR"
-    subtotal: float
     apply_vat: bool = True
     shipping_charges: float = 0.0
+    payment_method: str = "Cash on delivery"
     status: str = "pending"
 
 class Product(BaseModel):
@@ -129,6 +134,10 @@ class ProductCreate(BaseModel):
     stock: int
     price: float
     image_url: Optional[str] = None
+
+class ProductUpdate(BaseModel):
+    stock: Optional[int] = None
+    category: Optional[str] = None
 
 class Customer(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -230,6 +239,28 @@ async def register(user_data: UserCreate):
     token = create_access_token({"sub": user.email, "id": user.id})
     return Token(access_token=token, token_type="bearer", user=user)
 
+@api_router.post("/auth/login", response_model=Token)
+async def login(credentials: UserLogin):
+    user_doc = await db.users.find_one({"email": credentials.email}, {"_id": 0})
+    if not user_doc or not pwd_context.verify(credentials.password, user_doc['password_hash']):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    if isinstance(user_doc['created_at'], str):
+        user_doc['created_at'] = datetime.fromisoformat(user_doc['created_at'])
+    
+    user = User(**user_doc)
+    token = create_access_token({"sub": user.email, "id": user.id})
+    return Token(access_token=token, token_type="bearer", user=user)
+
+@api_router.get("/auth/me", response_model=User)
+async def get_current_user(payload: dict = Depends(verify_token)):
+    user_doc = await db.users.find_one({"email": payload["sub"]}, {"_id": 0})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    if isinstance(user_doc['created_at'], str):
+        user_doc['created_at'] = datetime.fromisoformat(user_doc['created_at'])
+    return User(**user_doc)
+
 @api_router.get("/users", response_model=List[User])
 async def get_all_users(current_user: dict = Depends(verify_token)):
     user_doc = await db.users.find_one({"email": current_user["sub"]}, {"_id": 0})
@@ -270,28 +301,6 @@ async def update_user_permissions(user_email: str, permissions: dict, current_us
     await db.users.update_one({"email": user_email}, {"$set": {"permissions": permissions}})
     
     return {"message": f"Permissions updated for {user_email}", "permissions": permissions}
-
-@api_router.post("/auth/login", response_model=Token)
-async def login(credentials: UserLogin):
-    user_doc = await db.users.find_one({"email": credentials.email}, {"_id": 0})
-    if not user_doc or not pwd_context.verify(credentials.password, user_doc['password_hash']):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    if isinstance(user_doc['created_at'], str):
-        user_doc['created_at'] = datetime.fromisoformat(user_doc['created_at'])
-    
-    user = User(**user_doc)
-    token = create_access_token({"sub": user.email, "id": user.id})
-    return Token(access_token=token, token_type="bearer", user=user)
-
-@api_router.get("/auth/me", response_model=User)
-async def get_current_user(payload: dict = Depends(verify_token)):
-    user_doc = await db.users.find_one({"email": payload["sub"]}, {"_id": 0})
-    if not user_doc:
-        raise HTTPException(status_code=404, detail="User not found")
-    if isinstance(user_doc['created_at'], str):
-        user_doc['created_at'] = datetime.fromisoformat(user_doc['created_at'])
-    return User(**user_doc)
 
 @api_router.get("/brands", response_model=List[Brand])
 async def get_brands():
@@ -355,37 +364,54 @@ async def create_order(order_data: OrderCreate, _: dict = Depends(verify_token))
     if not order_data.customer_email and not order_data.customer_phone:
         raise HTTPException(status_code=400, detail="Either email or phone number is required")
     
-    brand = await db.brands.find_one({"id": order_data.brand_id}, {"_id": 0})
-    brand_name = brand["name"] if brand else "Unknown"
+    if not order_data.items or len(order_data.items) == 0:
+        raise HTTPException(status_code=400, detail="At least one product is required")
     
-    product_name = None
-    if order_data.product_id:
-        product = await db.products.find_one({"id": order_data.product_id}, {"_id": 0})
+    brand = await db.brands.find_one({"id": order_data.brand_id}, {"_id": 0})
+    if not brand:
+        brands = await get_brands()
+        brand = next((b for b in brands if b['id'] == order_data.brand_id), None)
+    brand_name = brand['name'] if brand and isinstance(brand, dict) else (brand.name if brand else "Unknown")
+    
+    order_items = []
+    subtotal = 0.0
+    
+    for item_data in order_data.items:
+        product = await db.products.find_one({"id": item_data['product_id']}, {"_id": 0})
         if not product:
-            raise HTTPException(status_code=404, detail="Product not found")
+            raise HTTPException(status_code=404, detail=f"Product {item_data['product_id']} not found")
         
-        product_name = product["name"]
-        
-        if product["stock"] < order_data.items_count:
+        quantity = item_data.get('quantity', 1)
+        if product["stock"] < quantity:
             raise HTTPException(
-                status_code=400, 
-                detail=f"Insufficient stock. Available: {product['stock']}, Requested: {order_data.items_count}"
+                status_code=400,
+                detail=f"Insufficient stock for {product['name']}. Available: {product['stock']}, Requested: {quantity}"
             )
         
-        new_stock = product["stock"] - order_data.items_count
+        new_stock = product["stock"] - quantity
         await db.products.update_one(
-            {"id": order_data.product_id},
+            {"id": item_data['product_id']},
             {"$set": {"stock": new_stock}}
         )
+        
+        item_total = product['price'] * quantity
+        order_items.append(OrderItem(
+            product_id=product['id'],
+            product_name=product['name'],
+            quantity=quantity,
+            price=product['price'],
+            total=item_total
+        ))
+        subtotal += item_total
     
     vat_rate = 0.0
     vat_amount = 0.0
     
     if order_data.apply_vat:
         vat_rate = 0.15 if order_data.currency == "SAR" else 0.18
-        vat_amount = order_data.subtotal * vat_rate
+        vat_amount = subtotal * vat_rate
     
-    total = order_data.subtotal + vat_amount + order_data.shipping_charges
+    total = subtotal + vat_amount + order_data.shipping_charges
     
     order_number = f"ORD-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}"
     order = Order(
@@ -396,22 +422,22 @@ async def create_order(order_data: OrderCreate, _: dict = Depends(verify_token))
         customer_address=order_data.customer_address,
         brand_id=order_data.brand_id,
         brand_name=brand_name,
-        product_id=order_data.product_id,
-        product_name=product_name,
+        items=order_items,
         category=order_data.category,
-        items_count=order_data.items_count,
         currency=order_data.currency,
-        subtotal=order_data.subtotal,
+        subtotal=subtotal,
         apply_vat=order_data.apply_vat,
         vat_rate=vat_rate,
         vat_amount=vat_amount,
         shipping_charges=order_data.shipping_charges,
+        payment_method=order_data.payment_method,
         total=total,
         status=order_data.status
     )
     
     order_dict = order.model_dump()
     order_dict['created_at'] = order_dict['created_at'].isoformat()
+    order_dict['items'] = [item.model_dump() for item in order_items]
     await db.orders.insert_one(order_dict)
     
     customer_identifier = order_data.customer_email or order_data.customer_phone
@@ -487,13 +513,20 @@ async def create_product(product_data: ProductCreate, _: dict = Depends(verify_t
     return product
 
 @api_router.put("/products/{product_id}", response_model=Product)
-async def update_product(product_id: str, stock: int, _: dict = Depends(verify_token)):
+async def update_product(product_id: str, update_data: ProductUpdate, _: dict = Depends(verify_token)):
     product = await db.products.find_one({"id": product_id}, {"_id": 0})
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     
-    await db.products.update_one({"id": product_id}, {"$set": {"stock": stock}})
-    product['stock'] = stock
+    update_fields = {}
+    if update_data.stock is not None:
+        update_fields["stock"] = update_data.stock
+    if update_data.category is not None:
+        update_fields["category"] = update_data.category
+    
+    if update_fields:
+        await db.products.update_one({"id": product_id}, {"$set": update_fields})
+        product.update(update_fields)
     
     if isinstance(product['created_at'], str):
         product['created_at'] = datetime.fromisoformat(product['created_at'])
@@ -510,6 +543,29 @@ async def get_customers(_: dict = Depends(verify_token)):
 
 @api_router.get("/customers/{customer_id}/invoice")
 async def get_customer_invoice(customer_id: str, _: dict = Depends(verify_token)):
+    customer = await db.customers.find_one({"id": customer_id}, {"_id": 0})
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    
+    orders = await db.orders.find({"customer_email": customer["email"]}, {"_id": 0}).to_list(1000)
+    
+    for order in orders:
+        if isinstance(order.get('created_at'), str):
+            order['created_at'] = datetime.fromisoformat(order['created_at'])
+    
+    if isinstance(customer.get('created_at'), str):
+        customer['created_at'] = datetime.fromisoformat(customer['created_at'])
+    
+    return {
+        "customer": customer,
+        "orders": orders,
+        "invoice_id": f"INV-{customer_id[:8].upper()}",
+        "invoice_date": datetime.now(timezone.utc).isoformat(),
+        "total_amount": sum(o.get('total', 0) for o in orders)
+    }
+
+@api_router.get("/public/invoice/{customer_id}")
+async def get_public_invoice(customer_id: str):
     customer = await db.customers.find_one({"id": customer_id}, {"_id": 0})
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
@@ -591,7 +647,7 @@ async def update_employee(employee_id: str, employee_update: EmployeeUpdate, _: 
     if isinstance(employee['created_at'], str):
         employee['created_at'] = datetime.fromisoformat(employee['created_at'])
     if isinstance(employee.get('hire_date'), str):
-        employee['hire_date'] = datetime.fromisoformat(employee['hire_date'])
+        employee['hire_date'] = datetime.fromisoformat(employee.get('hire_date'))
     
     return Employee(**employee)
 
