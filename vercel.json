@@ -9,6 +9,5 @@
             "destination": "/index.html"
         }
     ],
-    "outputDirectory": "frontend/build",
-    "framework": "vite"
+    "outputDirectory": "frontend/build"
 }
