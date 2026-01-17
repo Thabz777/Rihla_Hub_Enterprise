@@ -378,9 +378,14 @@ async def create_order(order_data: OrderCreate, _: dict = Depends(verify_token))
             {"$set": {"stock": new_stock}}
         )
     
-    vat_rate = 0.15 if order_data.currency == "SAR" else 0.18
-    vat_amount = order_data.subtotal * vat_rate
-    total = order_data.subtotal + vat_amount
+    vat_rate = 0.0
+    vat_amount = 0.0
+    
+    if order_data.apply_vat:
+        vat_rate = 0.15 if order_data.currency == "SAR" else 0.18
+        vat_amount = order_data.subtotal * vat_rate
+    
+    total = order_data.subtotal + vat_amount + order_data.shipping_charges
     
     order_number = f"ORD-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}"
     order = Order(
