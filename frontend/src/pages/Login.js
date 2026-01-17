@@ -67,32 +67,48 @@ export default function Login() {
         <div className="w-full max-w-md">
           <div className="mb-8">
             <h2 className="font-display text-4xl font-bold text-foreground mb-2">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
+              Welcome Back
             </h2>
             <p className="font-body text-muted-foreground">
-              {isLogin ? 'Sign in to access your dashboard' : 'Get started with Rihla Enterprise'}
+              Sign in to access your dashboard
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6" data-testid="login-form">
-            {!isLogin && (
-              <div className="space-y-2">
-                <label htmlFor="full_name" className="text-sm font-heading font-medium text-foreground">
-                  Full Name
-                </label>
-                <input
-                  id="full_name"
-                  type="text"
-                  required={!isLogin}
-                  value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  className="w-full bg-secondary border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
-                  placeholder="Enter your full name"
-                  data-testid="full-name-input"
-                />
-              </div>
-            )}
+          {/* Quick Login Buttons */}
+          <div className="mb-6 space-y-3">
+            <p className="text-sm font-heading font-medium text-muted-foreground mb-3">Quick Login:</p>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('admin')}
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-3 bg-chart-1 text-white hover:bg-chart-1/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              data-testid="quick-login-admin"
+            >
+              <Shield size={20} />
+              Login as Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('user')}
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-3 bg-chart-3 text-white hover:bg-chart-3/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              data-testid="quick-login-user"
+            >
+              <User size={20} />
+              Login as User
+            </button>
+          </div>
 
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-background text-muted-foreground font-body">Or login with credentials</span>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6" data-testid="login-form">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-heading font-medium text-foreground">
                 Email Address
@@ -140,19 +156,18 @@ export default function Login() {
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               data-testid="submit-button"
             >
-              {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
+              {loading ? 'Processing...' : 'Sign In'}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm font-body text-muted-foreground hover:text-foreground transition-colors duration-200"
-              data-testid="toggle-mode-button"
-            >
-              {isLogin ? "Don't have an account? " : 'Already have an account? '}
-              <span className="font-semibold">{isLogin ? 'Sign Up' : 'Sign In'}</span>
-            </button>
+          <div className="mt-8 p-4 bg-secondary/50 rounded-lg border border-border/50">
+            <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+              Demo Credentials:
+            </p>
+            <div className="space-y-1 text-sm font-body text-foreground">
+              <p><strong>Admin:</strong> admin@rihla.com / admin123</p>
+              <p><strong>User:</strong> user@rihla.com / user123</p>
+            </div>
           </div>
         </div>
       </div>
