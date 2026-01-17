@@ -203,7 +203,7 @@ async def register(user_data: UserCreate):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    user = User(email=user_data.email, full_name=user_data.full_name)
+    user = User(email=user_data.email, full_name=user_data.full_name, role="user")
     user_dict = user.model_dump()
     user_dict['created_at'] = user_dict['created_at'].isoformat()
     user_dict['password_hash'] = pwd_context.hash(user_data.password)
@@ -212,6 +212,47 @@ async def register(user_data: UserCreate):
     
     token = create_access_token({"sub": user.email, "id": user.id})
     return Token(access_token=token, token_type="bearer", user=user)
+
+@api_router.get("/users", response_model=List[User])
+async def get_all_users(current_user: dict = Depends(verify_token)):
+    user_doc = await db.users.find_one({"email": current_user["sub"]}, {"_id": 0})
+    if not user_doc or user_doc.get('role') != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    users = await db.users.find({}, {"_id": 0, "password_hash": 0}).to_list(1000)
+    for user in users:
+        if isinstance(user['created_at'], str):
+            user['created_at'] = datetime.fromisoformat(user['created_at'])
+    return users
+
+@api_router.put("/users/{user_email}/reset-password")
+async def reset_user_password(user_email: str, new_password: str, current_user: dict = Depends(verify_token)):
+    admin_doc = await db.users.find_one({"email": current_user["sub"]}, {"_id": 0})
+    if not admin_doc or admin_doc.get('role') != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    user = await db.users.find_one({"email": user_email}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    new_hash = pwd_context.hash(new_password)
+    await db.users.update_one({"email": user_email}, {"$set": {"password_hash": new_hash}})
+    
+    return {"message": f"Password reset successfully for {user_email}"}
+
+@api_router.put("/users/{user_email}/permissions")
+async def update_user_permissions(user_email: str, permissions: dict, current_user: dict = Depends(verify_token)):
+    admin_doc = await db.users.find_one({"email": current_user["sub"]}, {"_id": 0})
+    if not admin_doc or admin_doc.get('role') != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    user = await db.users.find_one({"email": user_email}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    await db.users.update_one({"email": user_email}, {"$set": {"permissions": permissions}})
+    
+    return {"message": f"Permissions updated for {user_email}", "permissions": permissions}
 
 @api_router.post("/auth/login", response_model=Token)
 async def login(credentials: UserLogin):
