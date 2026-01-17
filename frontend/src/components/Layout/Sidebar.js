@@ -5,14 +5,16 @@ import { useAuth } from '@/context/AuthContext';
 
 export const Sidebar = () => {
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+
+  const isAdmin = user?.role === 'admin';
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Orders', href: '/orders', icon: ShoppingCart },
     { name: 'Inventory', href: '/inventory', icon: Package },
     { name: 'Customers', href: '/customers', icon: Users },
-    { name: 'Employees', href: '/employees', icon: UserCog },
+    ...(isAdmin ? [{ name: 'Employees', href: '/employees', icon: UserCog }] : []),
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];
