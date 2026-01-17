@@ -85,8 +85,10 @@ class Order(BaseModel):
     items_count: int
     currency: str = "SAR"
     subtotal: float
+    apply_vat: bool = True
     vat_rate: float
     vat_amount: float
+    shipping_charges: float = 0.0
     total: float
     status: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -102,6 +104,8 @@ class OrderCreate(BaseModel):
     items_count: int
     currency: str = "SAR"
     subtotal: float
+    apply_vat: bool = True
+    shipping_charges: float = 0.0
     status: str = "pending"
 
 class Product(BaseModel):
