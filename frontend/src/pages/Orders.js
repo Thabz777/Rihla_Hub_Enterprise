@@ -189,7 +189,7 @@ export default function Orders() {
 
   return (
     <Layout>
-      <div className="space-y-6\" data-testid=\"orders-page\">
+      <div className="space-y-6" data-testid=\"orders-page\">
         <div className="flex items-center justify-between\">
           <div>
             <h1 className="font-display text-5xl font-bold text-foreground mb-2 tracking-tight\">Orders</h1>
@@ -197,7 +197,7 @@ export default function Orders() {
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <button className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200\" data-testid=\"create-order-button\">
+              <button className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200" data-testid=\"create-order-button\">
                 <Plus size={20} />
                 New Order
               </button>
@@ -206,7 +206,7 @@ export default function Orders() {
               <DialogHeader>
                 <DialogTitle className="font-heading text-2xl\">Create New Order</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleCreateOrder} className="space-y-5\" data-testid=\"create-order-form\">
+              <form onSubmit={handleCreateOrder} className="space-y-5" data-testid=\"create-order-form\">
                 <div className="space-y-4\">
                   <h3 className="text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground border-b border-border pb-2\">Customer Information</h3>
                   
@@ -271,8 +271,8 @@ export default function Orders() {
                       onValueChange={(value) => setFormData({ ...formData, brand_id: value, items: [{product_id: '', quantity: 1}] })}
                       required
                     >
-                      <SelectTrigger className="w-full\" data-testid=\"brand-select\">
-                        <SelectValue placeholder=\"Select brand\" />
+                      <SelectTrigger className="w-full" data-testid=\"brand-select\">
+                        <SelectValue placeholder=\"Select brand" />
                       </SelectTrigger>
                       <SelectContent>
                         {brands.map((brand) => (
@@ -306,8 +306,8 @@ export default function Orders() {
                             onValueChange={(value) => updateItem(index, 'product_id', value)}
                             disabled={!formData.brand_id}
                           >
-                            <SelectTrigger className="w-full\" data-testid={`product-select-${index}`}>
-                              <SelectValue placeholder={formData.brand_id ? \"Choose product\" : \"Select brand first\"} />
+                            <SelectTrigger className="w-full" data-testid={`product-select-${index}`}>
+                              <SelectValue placeholder={formData.brand_id ? \"Choose product" : \"Select brand first\"} />
                             </SelectTrigger>
                             <SelectContent>
                               {filteredProducts.map((product) => (
@@ -350,7 +350,7 @@ export default function Orders() {
                         value={formData.currency} 
                         onValueChange={(value) => setFormData({ ...formData, currency: value })}
                       >
-                        <SelectTrigger className="w-full\" data-testid=\"currency-select\">
+                        <SelectTrigger className="w-full" data-testid=\"currency-select\">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -365,7 +365,7 @@ export default function Orders() {
                         value={formData.payment_method} 
                         onValueChange={(value) => setFormData({ ...formData, payment_method: value })}
                       >
-                        <SelectTrigger className="w-full\" data-testid=\"payment-method-select\">
+                        <SelectTrigger className="w-full" data-testid=\"payment-method-select\">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -387,7 +387,7 @@ export default function Orders() {
                         className="w-5 h-5 rounded border-border\"
                         data-testid=\"apply-vat-checkbox\"
                       />
-                      <label htmlFor=\"apply_vat\" className="text-sm font-heading font-medium text-foreground cursor-pointer\">
+                      <label htmlFor=\"apply_vat" className="text-sm font-heading font-medium text-foreground cursor-pointer\">
                         Apply VAT ({formData.currency === 'SAR' ? '15%' : '18%'})
                       </label>
                     </div>
@@ -446,9 +446,9 @@ export default function Orders() {
 
         <div className="flex items-center gap-4\">
           <div className="flex items-center gap-2\">
-            <Filter size={20} className="text-muted-foreground\" />
+            <Filter size={20} className="text-muted-foreground" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-48\" data-testid=\"status-filter\">
+              <SelectTrigger className="w-48" data-testid=\"status-filter\">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -464,7 +464,7 @@ export default function Orders() {
 
         <div className="bg-secondary border border-border/50 rounded-lg overflow-hidden\">
           <div className="overflow-x-auto\">
-            <table className="w-full\" data-testid=\"orders-table\">
+            <table className="w-full" data-testid=\"orders-table\">
               <thead className="bg-accent border-b border-border\">
                 <tr>
                   <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Order #</th>
@@ -480,19 +480,19 @@ export default function Orders() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan=\"8\" className="px-4 py-8 text-center\">
-                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto\" />
+                    <td colSpan=\"8" className="px-4 py-8 text-center\">
+                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
                     </td>
                   </tr>
                 ) : orders.length === 0 ? (
                   <tr>
-                    <td colSpan=\"8\" className="px-4 py-8 text-center text-muted-foreground font-body\">
+                    <td colSpan=\"8" className="px-4 py-8 text-center text-muted-foreground font-body\">
                       No orders found. Create your first order!
                     </td>
                   </tr>
                 ) : (
                   orders.map((order) => (
-                    <tr key={order.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150\" data-testid={`order-row-${order.id}`}>
+                    <tr key={order.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`order-row-${order.id}`}>
                       <td className="px-4 py-3 text-sm font-mono text-foreground\">{order.order_number}</td>
                       <td className="px-4 py-3\">
                         <div>
