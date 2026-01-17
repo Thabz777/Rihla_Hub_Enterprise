@@ -189,59 +189,59 @@ export default function Orders() {
 
   return (
     <Layout>
-      <div className=\"space-y-6\" data-testid=\"orders-page\">
-        <div className=\"flex items-center justify-between\">
+      <div className="space-y-6\" data-testid=\"orders-page\">
+        <div className="flex items-center justify-between\">
           <div>
-            <h1 className=\"font-display text-5xl font-bold text-foreground mb-2 tracking-tight\">Orders</h1>
-            <p className=\"font-body text-lg text-muted-foreground\">Manage orders across all brands</p>
+            <h1 className="font-display text-5xl font-bold text-foreground mb-2 tracking-tight\">Orders</h1>
+            <p className="font-body text-lg text-muted-foreground\">Manage orders across all brands</p>
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <button className=\"flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200\" data-testid=\"create-order-button\">
+              <button className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200\" data-testid=\"create-order-button\">
                 <Plus size={20} />
                 New Order
               </button>
             </DialogTrigger>
-            <DialogContent className=\"bg-popover border-border max-w-3xl max-h-[90vh] overflow-y-auto\">
+            <DialogContent className="bg-popover border-border max-w-3xl max-h-[90vh] overflow-y-auto\">
               <DialogHeader>
-                <DialogTitle className=\"font-heading text-2xl\">Create New Order</DialogTitle>
+                <DialogTitle className="font-heading text-2xl\">Create New Order</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleCreateOrder} className=\"space-y-5\" data-testid=\"create-order-form\">
-                <div className=\"space-y-4\">
-                  <h3 className=\"text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground border-b border-border pb-2\">Customer Information</h3>
+              <form onSubmit={handleCreateOrder} className="space-y-5\" data-testid=\"create-order-form\">
+                <div className="space-y-4\">
+                  <h3 className="text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground border-b border-border pb-2\">Customer Information</h3>
                   
                   <div>
-                    <label className=\"block text-sm font-heading font-medium text-foreground mb-2\">Customer Name *</label>
+                    <label className="block text-sm font-heading font-medium text-foreground mb-2\">Customer Name *</label>
                     <input
                       type=\"text\"
                       required
                       value={formData.customer_name}
                       onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
-                      className=\"w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
                       data-testid=\"customer-name-input\"
                       placeholder=\"Enter customer name\"
                     />
                   </div>
                   
-                  <div className=\"grid grid-cols-2 gap-4\">
+                  <div className="grid grid-cols-2 gap-4\">
                     <div>
-                      <label className=\"block text-sm font-heading font-medium text-foreground mb-2\">Customer Email</label>
+                      <label className="block text-sm font-heading font-medium text-foreground mb-2\">Customer Email</label>
                       <input
                         type=\"email\"
                         value={formData.customer_email}
                         onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
-                        className=\"w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
                         data-testid=\"customer-email-input\"
                         placeholder=\"customer@example.com\"
                       />
                     </div>
                     <div>
-                      <label className=\"block text-sm font-heading font-medium text-foreground mb-2\">Customer Phone</label>
+                      <label className="block text-sm font-heading font-medium text-foreground mb-2\">Customer Phone</label>
                       <input
                         type=\"tel\"
                         value={formData.customer_phone}
                         onChange={(e) => setFormData({ ...formData, customer_phone: e.target.value })}
-                        className=\"w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
                         data-testid=\"customer-phone-input\"
                         placeholder=\"+966 5XX XXX XXX\"
                       />
@@ -249,11 +249,11 @@ export default function Orders() {
                   </div>
                   
                   <div>
-                    <label className=\"block text-sm font-heading font-medium text-foreground mb-2\">Customer Address</label>
+                    <label className="block text-sm font-heading font-medium text-foreground mb-2\">Customer Address</label>
                     <textarea
                       value={formData.customer_address}
                       onChange={(e) => setFormData({ ...formData, customer_address: e.target.value })}
-                      className=\"w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground resize-none\"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground resize-none\"
                       data-testid=\"customer-address-input\"
                       placeholder=\"Enter customer address\"
                       rows=\"2\"
@@ -261,17 +261,17 @@ export default function Orders() {
                   </div>
                 </div>
 
-                <div className=\"space-y-4\">
-                  <h3 className=\"text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground border-b border-border pb-2\">Order Details</h3>
+                <div className="space-y-4\">
+                  <h3 className="text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground border-b border-border pb-2\">Order Details</h3>
                   
                   <div>
-                    <label className=\"block text-sm font-heading font-medium text-foreground mb-2\">Brand *</label>
+                    <label className="block text-sm font-heading font-medium text-foreground mb-2\">Brand *</label>
                     <Select 
                       value={formData.brand_id} 
                       onValueChange={(value) => setFormData({ ...formData, brand_id: value, items: [{product_id: '', quantity: 1}] })}
                       required
                     >
-                      <SelectTrigger className=\"w-full\" data-testid=\"brand-select\">
+                      <SelectTrigger className="w-full\" data-testid=\"brand-select\">
                         <SelectValue placeholder=\"Select brand\" />
                       </SelectTrigger>
                       <SelectContent>
@@ -282,14 +282,14 @@ export default function Orders() {
                     </Select>
                   </div>
 
-                  <div className=\"space-y-3\">
-                    <div className=\"flex items-center justify-between\">
-                      <label className=\"block text-sm font-heading font-medium text-foreground\">Products *</label>
+                  <div className="space-y-3\">
+                    <div className="flex items-center justify-between\">
+                      <label className="block text-sm font-heading font-medium text-foreground\">Products *</label>
                       <button
                         type=\"button\"
                         onClick={addItem}
                         disabled={!formData.brand_id}
-                        className=\"flex items-center gap-1 text-sm bg-chart-3 text-white hover:bg-chart-3/90 px-3 py-1.5 rounded-lg font-heading font-medium transition-all duration-200 disabled:opacity-50\"
+                        className="flex items-center gap-1 text-sm bg-chart-3 text-white hover:bg-chart-3/90 px-3 py-1.5 rounded-lg font-heading font-medium transition-all duration-200 disabled:opacity-50\"
                         data-testid=\"add-product-button\"
                       >
                         <Plus size={16} />
@@ -298,15 +298,15 @@ export default function Orders() {
                     </div>
                     
                     {formData.items.map((item, index) => (
-                      <div key={index} className=\"flex gap-3 items-end bg-background p-4 rounded-lg border border-border\">
-                        <div className=\"flex-1\">
-                          <label className=\"block text-xs font-heading font-medium text-muted-foreground mb-2\">Product {index + 1}</label>
+                      <div key={index} className="flex gap-3 items-end bg-background p-4 rounded-lg border border-border\">
+                        <div className="flex-1\">
+                          <label className="block text-xs font-heading font-medium text-muted-foreground mb-2\">Product {index + 1}</label>
                           <Select 
                             value={item.product_id} 
                             onValueChange={(value) => updateItem(index, 'product_id', value)}
                             disabled={!formData.brand_id}
                           >
-                            <SelectTrigger className=\"w-full\" data-testid={`product-select-${index}`}>
+                            <SelectTrigger className="w-full\" data-testid={`product-select-${index}`}>
                               <SelectValue placeholder={formData.brand_id ? \"Choose product\" : \"Select brand first\"} />
                             </SelectTrigger>
                             <SelectContent>
@@ -318,14 +318,14 @@ export default function Orders() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className=\"w-32\">
-                          <label className=\"block text-xs font-heading font-medium text-muted-foreground mb-2\">Quantity</label>
+                        <div className="w-32\">
+                          <label className="block text-xs font-heading font-medium text-muted-foreground mb-2\">Quantity</label>
                           <input
                             type=\"number\"
                             min=\"1\"
                             value={item.quantity}
                             onChange={(e) => updateItem(index, 'quantity', parseInt(e.target.value) || 1)}
-                            className=\"w-full bg-background border border-border rounded-lg px-3 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
+                            className="w-full bg-background border border-border rounded-lg px-3 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
                             data-testid={`quantity-input-${index}`}
                           />
                         </div>
@@ -333,7 +333,7 @@ export default function Orders() {
                           <button
                             type=\"button\"
                             onClick={() => removeItem(index)}
-                            className=\"p-3 bg-destructive/10 text-destructive hover:bg-destructive/20 rounded-lg transition-all duration-200\"
+                            className="p-3 bg-destructive/10 text-destructive hover:bg-destructive/20 rounded-lg transition-all duration-200\"
                             data-testid={`remove-item-${index}`}
                           >
                             <Trash2 size={18} />
@@ -343,14 +343,14 @@ export default function Orders() {
                     ))}
                   </div>
 
-                  <div className=\"grid grid-cols-2 gap-4\">
+                  <div className="grid grid-cols-2 gap-4\">
                     <div>
-                      <label className=\"block text-sm font-heading font-medium text-foreground mb-2\">Currency *</label>
+                      <label className="block text-sm font-heading font-medium text-foreground mb-2\">Currency *</label>
                       <Select 
                         value={formData.currency} 
                         onValueChange={(value) => setFormData({ ...formData, currency: value })}
                       >
-                        <SelectTrigger className=\"w-full\" data-testid=\"currency-select\">
+                        <SelectTrigger className="w-full\" data-testid=\"currency-select\">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -360,12 +360,12 @@ export default function Orders() {
                       </Select>
                     </div>
                     <div>
-                      <label className=\"block text-sm font-heading font-medium text-foreground mb-2\">Payment Method *</label>
+                      <label className="block text-sm font-heading font-medium text-foreground mb-2\">Payment Method *</label>
                       <Select 
                         value={formData.payment_method} 
                         onValueChange={(value) => setFormData({ ...formData, payment_method: value })}
                       >
-                        <SelectTrigger className=\"w-full\" data-testid=\"payment-method-select\">
+                        <SelectTrigger className="w-full\" data-testid=\"payment-method-select\">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -377,29 +377,29 @@ export default function Orders() {
                     </div>
                   </div>
 
-                  <div className=\"grid grid-cols-2 gap-4\">
-                    <div className=\"flex items-center gap-3 p-4 bg-background rounded-lg border border-border\">
+                  <div className="grid grid-cols-2 gap-4\">
+                    <div className="flex items-center gap-3 p-4 bg-background rounded-lg border border-border\">
                       <input
                         type=\"checkbox\"
                         id=\"apply_vat\"
                         checked={formData.apply_vat}
                         onChange={(e) => setFormData({ ...formData, apply_vat: e.target.checked })}
-                        className=\"w-5 h-5 rounded border-border\"
+                        className="w-5 h-5 rounded border-border\"
                         data-testid=\"apply-vat-checkbox\"
                       />
-                      <label htmlFor=\"apply_vat\" className=\"text-sm font-heading font-medium text-foreground cursor-pointer\">
+                      <label htmlFor=\"apply_vat\" className="text-sm font-heading font-medium text-foreground cursor-pointer\">
                         Apply VAT ({formData.currency === 'SAR' ? '15%' : '18%'})
                       </label>
                     </div>
                     <div>
-                      <label className=\"block text-sm font-heading font-medium text-foreground mb-2\">Shipping Charges</label>
+                      <label className="block text-sm font-heading font-medium text-foreground mb-2\">Shipping Charges</label>
                       <input
                         type=\"number\"
                         min=\"0\"
                         step=\"0.01\"
                         value={formData.shipping_charges}
                         onChange={(e) => setFormData({ ...formData, shipping_charges: parseFloat(e.target.value) || 0 })}
-                        className=\"w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
+                        className="w-full bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground\"
                         data-testid=\"shipping-charges-input\"
                         placeholder=\"0.00\"
                       />
@@ -407,34 +407,34 @@ export default function Orders() {
                   </div>
                 </div>
 
-                <div className=\"bg-accent rounded-lg p-5 space-y-3 border border-border\">
-                  <h3 className=\"text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Order Summary</h3>
-                  <div className=\"flex justify-between items-center\">
-                    <span className=\"font-body text-sm text-foreground\">Subtotal ({formData.items.filter(i => i.product_id).length} items):</span>
-                    <span className=\"font-mono font-medium text-foreground\">{formData.currency} {subtotal.toFixed(2)}</span>
+                <div className="bg-accent rounded-lg p-5 space-y-3 border border-border\">
+                  <h3 className="text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Order Summary</h3>
+                  <div className="flex justify-between items-center\">
+                    <span className="font-body text-sm text-foreground\">Subtotal ({formData.items.filter(i => i.product_id).length} items):</span>
+                    <span className="font-mono font-medium text-foreground\">{formData.currency} {subtotal.toFixed(2)}</span>
                   </div>
                   {formData.apply_vat && (
-                    <div className=\"flex justify-between items-center\">
-                      <span className=\"font-body text-sm text-foreground\">VAT ({(vatRate * 100).toFixed(0)}%):</span>
-                      <span className=\"font-mono font-medium text-foreground\">{formData.currency} {vat.toFixed(2)}</span>
+                    <div className="flex justify-between items-center\">
+                      <span className="font-body text-sm text-foreground\">VAT ({(vatRate * 100).toFixed(0)}%):</span>
+                      <span className="font-mono font-medium text-foreground\">{formData.currency} {vat.toFixed(2)}</span>
                     </div>
                   )}
                   {formData.shipping_charges > 0 && (
-                    <div className=\"flex justify-between items-center\">
-                      <span className=\"font-body text-sm text-foreground\">Shipping:</span>
-                      <span className=\"font-mono font-medium text-foreground\">{formData.currency} {formData.shipping_charges.toFixed(2)}</span>
+                    <div className="flex justify-between items-center\">
+                      <span className="font-body text-sm text-foreground\">Shipping:</span>
+                      <span className="font-mono font-medium text-foreground\">{formData.currency} {formData.shipping_charges.toFixed(2)}</span>
                     </div>
                   )}
-                  <div className=\"flex justify-between items-center pt-2 border-t-2 border-border\">
-                    <span className=\"font-heading text-lg font-bold text-foreground\">Total:</span>
-                    <span className=\"font-mono text-lg font-bold text-foreground\">{formData.currency} {total.toFixed(2)}</span>
+                  <div className="flex justify-between items-center pt-2 border-t-2 border-border\">
+                    <span className="font-heading text-lg font-bold text-foreground\">Total:</span>
+                    <span className="font-mono text-lg font-bold text-foreground\">{formData.currency} {total.toFixed(2)}</span>
                   </div>
                 </div>
 
                 <button
                   type=\"submit\"
                   disabled={!formData.brand_id || (!formData.customer_email && !formData.customer_phone)}
-                  className=\"w-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed\"
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed\"
                   data-testid=\"submit-order-button\"
                 >
                   Create Order
@@ -444,11 +444,11 @@ export default function Orders() {
           </Dialog>
         </div>
 
-        <div className=\"flex items-center gap-4\">
-          <div className=\"flex items-center gap-2\">
-            <Filter size={20} className=\"text-muted-foreground\" />
+        <div className="flex items-center gap-4\">
+          <div className="flex items-center gap-2\">
+            <Filter size={20} className="text-muted-foreground\" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className=\"w-48\" data-testid=\"status-filter\">
+              <SelectTrigger className="w-48\" data-testid=\"status-filter\">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -462,72 +462,72 @@ export default function Orders() {
           </div>
         </div>
 
-        <div className=\"bg-secondary border border-border/50 rounded-lg overflow-hidden\">
-          <div className=\"overflow-x-auto\">
-            <table className=\"w-full\" data-testid=\"orders-table\">
-              <thead className=\"bg-accent border-b border-border\">
+        <div className="bg-secondary border border-border/50 rounded-lg overflow-hidden\">
+          <div className="overflow-x-auto\">
+            <table className="w-full\" data-testid=\"orders-table\">
+              <thead className="bg-accent border-b border-border\">
                 <tr>
-                  <th className=\"px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Order #</th>
-                  <th className=\"px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Customer</th>
-                  <th className=\"px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Products</th>
-                  <th className=\"px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Brand</th>
-                  <th className=\"px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Payment</th>
-                  <th className=\"px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Total</th>
-                  <th className=\"px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Status</th>
-                  <th className=\"px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Date</th>
+                  <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Order #</th>
+                  <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Customer</th>
+                  <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Products</th>
+                  <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Brand</th>
+                  <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Payment</th>
+                  <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Total</th>
+                  <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Status</th>
+                  <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground\">Date</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan=\"8\" className=\"px-4 py-8 text-center\">
-                      <div className=\"w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto\" />
+                    <td colSpan=\"8\" className="px-4 py-8 text-center\">
+                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto\" />
                     </td>
                   </tr>
                 ) : orders.length === 0 ? (
                   <tr>
-                    <td colSpan=\"8\" className=\"px-4 py-8 text-center text-muted-foreground font-body\">
+                    <td colSpan=\"8\" className="px-4 py-8 text-center text-muted-foreground font-body\">
                       No orders found. Create your first order!
                     </td>
                   </tr>
                 ) : (
                   orders.map((order) => (
-                    <tr key={order.id} className=\"border-b border-border/30 hover:bg-accent/50 transition-colors duration-150\" data-testid={`order-row-${order.id}`}>
-                      <td className=\"px-4 py-3 text-sm font-mono text-foreground\">{order.order_number}</td>
-                      <td className=\"px-4 py-3\">
+                    <tr key={order.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150\" data-testid={`order-row-${order.id}`}>
+                      <td className="px-4 py-3 text-sm font-mono text-foreground\">{order.order_number}</td>
+                      <td className="px-4 py-3\">
                         <div>
-                          <p className=\"text-sm font-body font-medium text-foreground\">{order.customer_name}</p>
-                          {order.customer_email && <p className=\"text-xs text-muted-foreground\">{order.customer_email}</p>}
-                          {order.customer_phone && <p className=\"text-xs text-muted-foreground\">{order.customer_phone}</p>}
+                          <p className="text-sm font-body font-medium text-foreground\">{order.customer_name}</p>
+                          {order.customer_email && <p className="text-xs text-muted-foreground\">{order.customer_email}</p>}
+                          {order.customer_phone && <p className="text-xs text-muted-foreground\">{order.customer_phone}</p>}
                         </div>
                       </td>
-                      <td className=\"px-4 py-3\">
+                      <td className="px-4 py-3\">
                         {order.items && order.items.length > 0 ? (
-                          <div className=\"space-y-1\">
+                          <div className="space-y-1\">
                             {order.items.map((item, idx) => (
-                              <p key={idx} className=\"text-xs text-foreground\">
+                              <p key={idx} className="text-xs text-foreground\">
                                 {item.product_name} (x{item.quantity})
                               </p>
                             ))}
                           </div>
                         ) : (
-                          <p className=\"text-sm text-muted-foreground\">-</p>
+                          <p className="text-sm text-muted-foreground\">-</p>
                         )}
                       </td>
-                      <td className=\"px-4 py-3 text-sm font-body text-foreground\">{order.brand_name}</td>
-                      <td className=\"px-4 py-3 text-sm font-body text-foreground\">{order.payment_method || '-'}</td>
-                      <td className=\"px-4 py-3\">
+                      <td className="px-4 py-3 text-sm font-body text-foreground\">{order.brand_name}</td>
+                      <td className="px-4 py-3 text-sm font-body text-foreground\">{order.payment_method || '-'}</td>
+                      <td className="px-4 py-3\">
                         <div>
-                          <p className=\"text-sm font-body font-medium text-foreground\">{order.currency} {order.total.toFixed(2)}</p>
+                          <p className="text-sm font-body font-medium text-foreground\">{order.currency} {order.total.toFixed(2)}</p>
                           {order.vat_amount > 0 && (
-                            <p className=\"text-xs text-muted-foreground\">VAT: {order.currency} {order.vat_amount.toFixed(2)}</p>
+                            <p className="text-xs text-muted-foreground\">VAT: {order.currency} {order.vat_amount.toFixed(2)}</p>
                           )}
                         </div>
                       </td>
-                      <td className=\"px-4 py-3\">
+                      <td className="px-4 py-3\">
                         <Select value={order.status} onValueChange={(value) => handleUpdateStatus(order.id, value)}>
                           <SelectTrigger 
-                            className=\"w-32 h-8 text-xs\"
+                            className="w-32 h-8 text-xs\"
                             style={{
                               backgroundColor: `${statusColors[order.status]}15`,
                               color: statusColors[order.status],
@@ -544,7 +544,7 @@ export default function Orders() {
                           </SelectContent>
                         </Select>
                       </td>
-                      <td className=\"px-4 py-3 text-sm text-muted-foreground font-mono\">
+                      <td className="px-4 py-3 text-sm text-muted-foreground font-mono\">
                         {new Date(order.created_at).toLocaleDateString()}
                       </td>
                     </tr>
