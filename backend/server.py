@@ -374,6 +374,13 @@ async def create_order(order_data: OrderCreate, current_user: dict = Depends(ver
         brand = next((b for b in brands if b['id'] == order_data.brand_id), None)
     brand_name = brand['name'] if brand and isinstance(brand, dict) else (brand.name if brand else "Unknown")
     
+    order_count = await db.orders.count_documents({})
+    order_number = f"ORD-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{str(order_count + 1).zfill(6)}"
+    
+    existing_order = await db.orders.find_one({"order_number": order_number}, {"_id": 0})
+    if existing_order:
+        order_number = f"ORD-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}"
+    
     order_items = []
     subtotal = 0.0
     
@@ -414,7 +421,6 @@ async def create_order(order_data: OrderCreate, current_user: dict = Depends(ver
     
     total = subtotal + vat_amount + order_data.shipping_charges
     
-    order_number = f"ORD-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}"
     order = Order(
         order_number=order_number,
         customer_name=order_data.customer_name,
