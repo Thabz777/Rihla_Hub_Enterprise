@@ -11,6 +11,7 @@ const API = `${BACKEND_URL}/api`;
 
 export default function Customers() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
 
