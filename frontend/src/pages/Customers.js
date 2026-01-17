@@ -102,8 +102,7 @@ export default function Customers() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {customers.map((customer) => {
-              const orders = customerOrders[customer.id] || [];
-              const recentOrders = orders.slice(0, 3);
+              const recentOrders = customer.recent_orders || [];
               
               return (
                 <div key={customer.id} className="bg-secondary border border-border/50 rounded-lg p-6 hover:border-border hover:shadow-lg transition-all duration-200" data-testid={`customer-card-${customer.id}`}>
