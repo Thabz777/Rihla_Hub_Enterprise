@@ -12,12 +12,15 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 export default function Dashboard() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const { selectedBrand } = useTheme();
   const [metrics, setMetrics] = useState(null);
   const [revenueTrend, setRevenueTrend] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
+  const [ordersByUser, setOrdersByUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
     fetchDashboardData();
