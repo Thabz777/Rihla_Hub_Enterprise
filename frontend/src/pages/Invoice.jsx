@@ -69,7 +69,17 @@ export default function Invoice({ mode }) {
   // Totals
   const totalAmount = isSingleOrder ? order.total : data.total_amount;
   // Use a public URL format so it can be scanned "via internet"
-  const invoiceUrl = `https://verify.rihla-enterprise.com/invoice?id=${invoice_id}&ref=${isSingleOrder ? order.order_number : customer.id}`;
+  // const invoiceUrl = `https://verify.rihla-enterprise.com/invoice?id=${invoice_id}&ref=${isSingleOrder ? order.order_number : customer.id}`;
+  const invoiceUrl = isSingleOrder
+    ? `${window.location.origin}/public/invoice/${order.order_number}`
+    : `${window.location.origin}/public/invoice/customer/${customer.id}`; // Fallback for customer statement if we add public route for it later, or just keep as is for now.
+
+  // Since we only really implemented /public/invoice/:orderId, let's stick to that for orders.
+  // For statements, we might not have a public view yet, but let's make it consistent.
+  const qrUrl = isSingleOrder
+    ? `https://rihlahub.rihlatech.info/public/invoice/${order.order_number}`
+    : `https://rihlahub.rihlatech.info`; // Point to home for now if no specific route
+
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -228,7 +238,7 @@ export default function Invoice({ mode }) {
             <div className="flex-1">
               <p className="text-xs text-gray-500 mb-2">Scan for Digital Copy:</p>
               <div className="bg-white p-2 inline-block border border-gray-300 rounded">
-                <QRCodeSVG value={invoiceUrl} size={80} level="M" />
+                <QRCodeSVG value={qrUrl} size={80} level="M" />
               </div>
             </div>
             <div className="text-right">
