@@ -26,7 +26,7 @@ export default function Orders() {
     customer_phone: '',
     customer_address: '',
     brand_id: '',
-    items: [{product_id: '', quantity: 1}],
+    items: [{ product_id: '', quantity: 1 }],
     category: '',
     currency: 'SAR',
     apply_vat: true,
@@ -69,7 +69,7 @@ export default function Orders() {
       const params = new URLSearchParams();
       if (selectedBrand !== 'all') params.append('brand_id', selectedBrand);
       if (statusFilter !== 'all') params.append('status', statusFilter);
-      
+
       const response = await axios.get(`${API}/orders?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -83,7 +83,7 @@ export default function Orders() {
 
   const handleCreateOrder = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.customer_email && !formData.customer_phone) {
       toast.error('Please provide either email or phone number');
       return;
@@ -94,9 +94,9 @@ export default function Orders() {
       toast.error('Please add at least one product');
       return;
     }
-    
+
     try {
-      await axios.post(`${API}/orders`, {...formData, items: validItems}, {
+      await axios.post(`${API}/orders`, { ...formData, items: validItems }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Order created successfully!');
@@ -107,7 +107,7 @@ export default function Orders() {
         customer_phone: '',
         customer_address: '',
         brand_id: '',
-        items: [{product_id: '', quantity: 1}],
+        items: [{ product_id: '', quantity: 1 }],
         category: '',
         currency: 'SAR',
         apply_vat: true,
@@ -137,7 +137,7 @@ export default function Orders() {
   const calculateOrderTotal = () => {
     let subtotal = 0;
     formData.items.forEach(item => {
-      const product = products.find(p => p.id === item.product_id);
+      const product = products.find(p => (p._id || p.id) === item.product_id);
       if (product) {
         subtotal += product.price * item.quantity;
       }
@@ -146,7 +146,7 @@ export default function Orders() {
     const vatRate = formData.apply_vat ? (formData.currency === 'SAR' ? 0.15 : 0.18) : 0;
     const vat = subtotal * vatRate;
     const total = subtotal + vat + (formData.shipping_charges || 0);
-    
+
     return { subtotal, vat, total, vatRate };
   };
 
@@ -155,7 +155,7 @@ export default function Orders() {
   const addItem = () => {
     setFormData({
       ...formData,
-      items: [...formData.items, {product_id: '', quantity: 1}]
+      items: [...formData.items, { product_id: '', quantity: 1 }]
     });
   };
 
@@ -163,7 +163,7 @@ export default function Orders() {
     const newItems = formData.items.filter((_, i) => i !== index);
     setFormData({
       ...formData,
-      items: newItems.length > 0 ? newItems : [{product_id: '', quantity: 1}]
+      items: newItems.length > 0 ? newItems : [{ product_id: '', quantity: 1 }]
     });
   };
 
@@ -176,8 +176,8 @@ export default function Orders() {
     });
   };
 
-  const filteredProducts = formData.brand_id 
-    ? products.filter(p => p.brand_id === formData.brand_id)
+  const filteredProducts = formData.brand_id
+    ? products.filter(p => (p.brand_id === formData.brand_id) || (p.brand_id?.toString() === formData.brand_id))
     : products;
 
   const statusColors = {
@@ -209,7 +209,7 @@ export default function Orders() {
               <form onSubmit={handleCreateOrder} className="space-y-5" data-testid="create-order-form">
                 <div className="space-y-4">
                   <h3 className="text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground border-b border-border pb-2">Customer Information</h3>
-                  
+
                   <div>
                     <label className="block text-sm font-heading font-medium text-foreground mb-2">Customer Name *</label>
                     <input
@@ -222,7 +222,7 @@ export default function Orders() {
                       placeholder="Enter customer name"
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-heading font-medium text-foreground mb-2">Customer Email</label>
@@ -247,7 +247,7 @@ export default function Orders() {
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-heading font-medium text-foreground mb-2">Customer Address</label>
                     <textarea
@@ -263,12 +263,12 @@ export default function Orders() {
 
                 <div className="space-y-4">
                   <h3 className="text-sm font-heading font-semibold uppercase tracking-wide text-muted-foreground border-b border-border pb-2">Order Details</h3>
-                  
+
                   <div>
                     <label className="block text-sm font-heading font-medium text-foreground mb-2">Brand *</label>
-                    <Select 
-                      value={formData.brand_id} 
-                      onValueChange={(value) => setFormData({ ...formData, brand_id: value, items: [{product_id: '', quantity: 1}] })}
+                    <Select
+                      value={formData.brand_id}
+                      onValueChange={(value) => setFormData({ ...formData, brand_id: value, items: [{ product_id: '', quantity: 1 }] })}
                       required
                     >
                       <SelectTrigger className="w-full" data-testid="brand-select">
@@ -276,7 +276,7 @@ export default function Orders() {
                       </SelectTrigger>
                       <SelectContent>
                         {brands.map((brand) => (
-                          <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
+                          <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>{brand.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -296,13 +296,13 @@ export default function Orders() {
                         Add Product
                       </button>
                     </div>
-                    
+
                     {formData.items.map((item, index) => (
                       <div key={index} className="flex gap-3 items-end bg-background p-4 rounded-lg border border-border">
                         <div className="flex-1">
                           <label className="block text-xs font-heading font-medium text-muted-foreground mb-2">Product {index + 1}</label>
-                          <Select 
-                            value={item.product_id} 
+                          <Select
+                            value={item.product_id}
                             onValueChange={(value) => updateItem(index, 'product_id', value)}
                             disabled={!formData.brand_id}
                           >
@@ -311,7 +311,7 @@ export default function Orders() {
                             </SelectTrigger>
                             <SelectContent>
                               {filteredProducts.map((product) => (
-                                <SelectItem key={product.id} value={product.id}>
+                                <SelectItem key={product._id || product.id} value={product._id || product.id}>
                                   {product.name} - {product.currency || 'SAR'} {product.price} (Stock: {product.stock})
                                 </SelectItem>
                               ))}
@@ -346,8 +346,8 @@ export default function Orders() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-heading font-medium text-foreground mb-2">Currency *</label>
-                      <Select 
-                        value={formData.currency} 
+                      <Select
+                        value={formData.currency}
                         onValueChange={(value) => setFormData({ ...formData, currency: value })}
                       >
                         <SelectTrigger className="w-full" data-testid="currency-select">
@@ -361,8 +361,8 @@ export default function Orders() {
                     </div>
                     <div>
                       <label className="block text-sm font-heading font-medium text-foreground mb-2">Payment Method *</label>
-                      <Select 
-                        value={formData.payment_method} 
+                      <Select
+                        value={formData.payment_method}
                         onValueChange={(value) => setFormData({ ...formData, payment_method: value })}
                       >
                         <SelectTrigger className="w-full" data-testid="payment-method-select">
@@ -492,7 +492,7 @@ export default function Orders() {
                   </tr>
                 ) : (
                   orders.map((order) => (
-                    <tr key={order.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`order-row-${order.id}`}>
+                    <tr key={order._id || order.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`order-row-${order._id || order.id}`}>
                       <td className="px-4 py-3 text-sm font-mono text-foreground">{order.order_number}</td>
                       <td className="px-4 py-3">
                         <div>
@@ -525,8 +525,8 @@ export default function Orders() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <Select value={order.status} onValueChange={(value) => handleUpdateStatus(order.id, value)}>
-                          <SelectTrigger 
+                        <Select value={order.status} onValueChange={(value) => handleUpdateStatus(order._id || order.id, value)}>
+                          <SelectTrigger
                             className="w-32 h-8 text-xs"
                             style={{
                               backgroundColor: `${statusColors[order.status]}15`,

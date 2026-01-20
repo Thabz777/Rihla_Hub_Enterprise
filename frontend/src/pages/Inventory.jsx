@@ -165,7 +165,7 @@ export default function Inventory() {
                       </SelectTrigger>
                       <SelectContent>
                         {brands.map((brand) => (
-                          <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
+                          <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>{brand.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -252,7 +252,7 @@ export default function Inventory() {
                   products.map((product) => {
                     const stockStatus = getStockStatus(product.stock);
                     return (
-                      <tr key={product.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`product-row-${product.id}`}>
+                      <tr key={product._id || product.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`product-row-${product._id || product.id}`}>
                         <td className="px-4 py-3 text-sm font-mono text-foreground">{product.sku}</td>
                         <td className="px-4 py-3 text-sm font-body font-medium text-foreground">{product.name}</td>
                         <td className="px-4 py-3 text-sm font-body text-foreground">{product.brand_name}</td>
@@ -260,10 +260,10 @@ export default function Inventory() {
                           <input
                             type="text"
                             value={product.category}
-                            onChange={(e) => handleUpdateProduct(product.id, { category: e.target.value })}
-                            onBlur={(e) => handleUpdateProduct(product.id, { category: e.target.value })}
+                            onChange={(e) => handleUpdateProduct(product._id || product.id, { category: e.target.value })}
+                            onBlur={(e) => handleUpdateProduct(product._id || product.id, { category: e.target.value })}
                             className="w-full bg-background border border-border rounded px-2 py-1 text-sm font-body text-foreground focus:border-ring focus:ring-1 focus:ring-ring/20"
-                            data-testid={`category-input-${product.id}`}
+                            data-testid={`category-input-${product._id || product.id}`}
                           />
                         </td>
                         <td className="px-4 py-3">
@@ -271,9 +271,9 @@ export default function Inventory() {
                             type="number"
                             min="0"
                             value={product.stock}
-                            onChange={(e) => handleUpdateProduct(product.id, { stock: parseInt(e.target.value) })}
+                            onChange={(e) => handleUpdateProduct(product._id || product.id, { stock: parseInt(e.target.value) })}
                             className="w-20 bg-background border border-border rounded px-2 py-1 text-sm font-body text-foreground focus:border-ring focus:ring-1 focus:ring-ring/20"
-                            data-testid={`stock-input-${product.id}`}
+                            data-testid={`stock-input-${product._id || product.id}`}
                           />
                         </td>
                         <td className="px-4 py-3 text-sm font-body font-medium text-foreground">SAR {product.price.toFixed(2)}</td>
@@ -282,7 +282,7 @@ export default function Inventory() {
                             {product.stock < 10 && product.stock > 0 && (
                               <AlertTriangle size={16} className="text-warning" />
                             )}
-                            <span 
+                            <span
                               className="inline-flex items-center px-3 py-1 rounded-full text-xs font-heading font-medium uppercase tracking-wide"
                               style={{
                                 backgroundColor: `${stockStatus.color}15`,

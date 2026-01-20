@@ -61,7 +61,7 @@ export default function Employees() {
       if (selectedBrand !== 'all') params.append('brand_id', selectedBrand);
       if (departmentFilter !== 'all') params.append('department', departmentFilter);
       if (statusFilter !== 'all') params.append('status', statusFilter);
-      
+
       const response = await axios.get(`${API}/employees?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -87,6 +87,10 @@ export default function Employees() {
 
   const handleCreateEmployee = async (e) => {
     e.preventDefault();
+    if (!formData.brand_id) {
+      toast.error('Please select a brand');
+      return;
+    }
     try {
       await axios.post(`${API}/employees`, formData, {
         headers: { Authorization: `Bearer ${token}` }
@@ -117,11 +121,12 @@ export default function Employees() {
     if (!selectedEmployee) return;
 
     try {
-      await axios.put(`${API}/employees/${selectedEmployee.id}`, {
+      await axios.put(`${API}/employees/${selectedEmployee._id || selectedEmployee.id}`, {
         name: formData.name,
         phone: formData.phone,
         position: formData.position,
         department: formData.department,
+        brand_id: formData.brand_id,
         salary: formData.salary,
         bonus: formData.bonus,
         target: formData.target,
@@ -278,7 +283,7 @@ export default function Employees() {
                       </SelectTrigger>
                       <SelectContent>
                         {brands.map((brand) => (
-                          <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
+                          <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>{brand.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -293,7 +298,7 @@ export default function Employees() {
                       step="0.01"
                       required
                       value={formData.salary}
-                      onChange={(e) => setFormData({ ...formData, salary: parseFloat(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, salary: parseFloat(e.target.value) || 0 })}
                       className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
                       data-testid="employee-salary-input"
                     />
@@ -305,7 +310,7 @@ export default function Employees() {
                       min="0"
                       step="0.01"
                       value={formData.bonus}
-                      onChange={(e) => setFormData({ ...formData, bonus: parseFloat(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, bonus: parseFloat(e.target.value) || 0 })}
                       className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
                       data-testid="employee-bonus-input"
                     />
@@ -317,7 +322,7 @@ export default function Employees() {
                       min="0"
                       step="0.01"
                       value={formData.target}
-                      onChange={(e) => setFormData({ ...formData, target: parseFloat(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, target: parseFloat(e.target.value) || 0 })}
                       className="w-full mt-2 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200 text-foreground"
                       data-testid="employee-target-input"
                     />
@@ -424,9 +429,14 @@ export default function Employees() {
                   </tr>
                 ) : (
                   employees.map((employee) => {
-                    const achievementPercentage = employee.target > 0 ? ((employee.achieved / employee.target) * 100).toFixed(1) : 0;
+                    const achieved = employee.achieved || 0;
+                    const target = employee.target || 0;
+                    const rawPct = target > 0 ? (achieved / target) * 100 : 0;
+                    // Use numbers for Math.min, string for display
+                    const achievementPercentage = rawPct.toFixed(1);
+                    const widthPct = Math.min(rawPct || 0, 100); // Guard against NaN
                     return (
-                      <tr key={employee.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`employee-row-${employee.id}`}>
+                      <tr key={employee._id || employee.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`employee-row-${employee._id || employee.id}`}>
                         <td className="px-4 py-3">
                           <div>
                             <p className="text-sm font-body font-medium text-foreground">{employee.name}</p>
@@ -437,32 +447,32 @@ export default function Employees() {
                         <td className="px-4 py-3 text-sm font-body text-foreground">{employee.position}</td>
                         <td className="px-4 py-3 text-sm font-body text-foreground">{employee.department}</td>
                         <td className="px-4 py-3 text-sm font-body text-foreground">{employee.brand_name}</td>
-                        <td className="px-4 py-3 text-sm font-body font-medium text-foreground">SAR {employee.salary.toLocaleString()}</td>
-                        <td className="px-4 py-3 text-sm font-body font-medium text-success">SAR {employee.bonus.toLocaleString()}</td>
+                        <td className="px-4 py-3 text-sm font-body font-medium text-foreground">SAR {(employee.salary || 0).toLocaleString()}</td>
+                        <td className="px-4 py-3 text-sm font-body font-medium text-success">SAR {(employee.bonus || 0).toLocaleString()}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className="flex-1 bg-background rounded-full h-2 overflow-hidden">
-                              <div 
+                              <div
                                 className="h-full transition-all duration-300"
-                                style={{ 
-                                  width: `${Math.min(achievementPercentage, 100)}%`,
-                                  backgroundColor: getAchievementColor(employee.achieved, employee.target)
+                                style={{
+                                  width: `${widthPct}%`,
+                                  backgroundColor: getAchievementColor(achieved, target)
                                 }}
                               />
                             </div>
-                            <span 
+                            <span
                               className="text-xs font-mono font-medium"
-                              style={{ color: getAchievementColor(employee.achieved, employee.target) }}
+                              style={{ color: getAchievementColor(achieved, target) }}
                             >
                               {achievementPercentage}%
                             </span>
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">
-                            SAR {employee.achieved.toLocaleString()} / {employee.target.toLocaleString()}
+                            SAR {achieved.toLocaleString()} / {target.toLocaleString()}
                           </p>
                         </td>
                         <td className="px-4 py-3">
-                          <span 
+                          <span
                             className="inline-flex items-center px-3 py-1 rounded-full text-xs font-heading font-medium uppercase tracking-wide"
                             style={{
                               backgroundColor: `${statusColors[employee.status]}15`,
@@ -478,14 +488,14 @@ export default function Employees() {
                             <button
                               onClick={() => openEditDialog(employee)}
                               className="p-2 hover:bg-background rounded-lg transition-colors duration-200"
-                              data-testid={`edit-employee-${employee.id}`}
+                              data-testid={`edit-employee-${employee._id || employee.id}`}
                             >
                               <Edit2 size={16} className="text-chart-3" />
                             </button>
                             <button
-                              onClick={() => handleDeleteEmployee(employee.id)}
+                              onClick={() => handleDeleteEmployee(employee._id || employee.id)}
                               className="p-2 hover:bg-background rounded-lg transition-colors duration-200"
-                              data-testid={`delete-employee-${employee.id}`}
+                              data-testid={`delete-employee-${employee._id || employee.id}`}
                             >
                               <Trash2 size={16} className="text-destructive" />
                             </button>
@@ -527,7 +537,7 @@ export default function Employees() {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="text-sm font-heading font-medium text-foreground">Position</label>
                   <input
@@ -546,6 +556,19 @@ export default function Employees() {
                     <SelectContent>
                       {departments.map((dept) => (
                         <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-sm font-heading font-medium text-foreground">Brand</label>
+                  <Select value={formData.brand_id} onValueChange={(value) => setFormData({ ...formData, brand_id: value })}>
+                    <SelectTrigger className="w-full mt-2">
+                      <SelectValue placeholder="Brand" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {brands.map((brand) => (
+                        <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>{brand.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

@@ -35,10 +35,24 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const response = await axios.post(`${API}/auth/login`, { email, password });
     const { access_token, user } = response.data;
-    setToken(access_token);
-    setUser(user);
-    localStorage.setItem('token', access_token);
-    return user;
+
+    if (access_token) {
+      setToken(access_token);
+      setUser(user);
+      localStorage.setItem('token', access_token);
+    }
+    return response.data;
+  };
+
+  const verify2FA = async (email, token, temp_secret) => {
+    const response = await axios.post(`${API}/auth/verify-2fa`, { email, token, temp_secret });
+    const { access_token, user } = response.data;
+    if (access_token) {
+      setToken(access_token);
+      setUser(user);
+      localStorage.setItem('token', access_token);
+    }
+    return response.data;
   };
 
   const register = async (email, password, full_name) => {
@@ -57,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, verify2FA }}>
       {children}
     </AuthContext.Provider>
   );

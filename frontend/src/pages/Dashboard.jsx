@@ -30,7 +30,7 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const brandParam = selectedBrand !== 'all' ? `?brand_id=${selectedBrand}` : '';
-      
+
       const requests = [
         axios.get(`${API}/dashboard/metrics${brandParam}`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -56,7 +56,7 @@ export default function Dashboard() {
       setMetrics(responses[0].data);
       setRevenueTrend(responses[1].data);
       setRecentOrders(responses[2].data.slice(0, 5));
-      
+
       if (isAdmin && responses[3]) {
         setOrdersByUser(responses[3].data);
       }
@@ -215,18 +215,29 @@ export default function Dashboard() {
         </div>
 
         {isAdmin && ordersByUser && (
-          <div className="bg-secondary border border-border/50 rounded-lg p-6">
-            <h2 className="font-heading text-2xl font-semibold text-foreground mb-6">Orders by User (Admin View)</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Object.entries(ordersByUser).map(([user, stats]) => (
-                <div key={user} className="bg-background rounded-lg p-4 border border-border/50">
-                  <p className="font-heading font-semibold text-foreground mb-2">{user}</p>
-                  <div className="space-y-1 text-sm">
-                    <p className="text-muted-foreground">Orders: <span className="font-bold text-foreground">{stats.count}</span></p>
-                    <p className="text-muted-foreground">Total Value: <span className="font-bold text-success">SAR {stats.total_value.toFixed(2)}</span></p>
-                  </div>
-                </div>
-              ))}
+          <div className="bg-secondary border border-border/50 rounded-lg overflow-hidden mt-8">
+            <div className="p-6 border-b border-border/50">
+              <h2 className="font-heading text-2xl font-semibold text-foreground">Orders by User (Admin View)</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-accent border-b border-border">
+                  <tr>
+                    <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">User Name</th>
+                    <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">Total Orders</th>
+                    <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">Completed Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ordersByUser.map((stats) => (
+                    <tr key={stats.name} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150">
+                      <td className="px-4 py-3 text-sm font-medium text-foreground">{stats.name}</td>
+                      <td className="px-4 py-3 text-sm font-body text-foreground">{stats.total_orders}</td>
+                      <td className="px-4 py-3 text-sm font-body font-bold text-success">SAR {(stats.completed_value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

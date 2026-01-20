@@ -12,6 +12,7 @@ import Employees from '@/pages/Employees';
 import Analytics from '@/pages/Analytics';
 import Settings from '@/pages/Settings';
 import Invoice from '@/pages/Invoice';
+import PublicInvoice from '@/pages/PublicInvoice';
 import '@/App.css';
 
 const ProtectedRoute = ({ children }) => {
@@ -110,27 +111,37 @@ const AppRoutes = () => {
       <Route
         path="/analytics"
         element={
-          <ProtectedRoute>
+          <AdminRoute>
             <Analytics />
-          </ProtectedRoute>
+          </AdminRoute>
         }
       />
       <Route
         path="/settings"
         element={
-          <ProtectedRoute>
+          <AdminRoute>
             <Settings />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/invoice/customer/:customerId"
+        element={
+          <ProtectedRoute>
+            <Invoice mode="customer" />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/invoice/:customerId"
+        path="/invoice/order/:orderId"
         element={
           <ProtectedRoute>
-            <Invoice />
+            <Invoice mode="order" />
           </ProtectedRoute>
         }
       />
+      {/* Public Invoice Route - No authentication required for QR code scanning */}
+      <Route path="/public/invoice/:orderId" element={<PublicInvoice />} />
     </Routes>
   );
 };
