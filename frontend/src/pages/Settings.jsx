@@ -150,6 +150,10 @@ export default function Settings() {
   };
 
   const handleDeleteUser = async (userId) => {
+    if (user._id === userId || user.id === userId) {
+      toast.error("You cannot delete your own account.");
+      return;
+    }
     if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
 
     try {
@@ -159,7 +163,8 @@ export default function Settings() {
       toast.success('User deleted successfully');
       fetchUsers();
     } catch (error) {
-      toast.error('Failed to delete user');
+      console.error('Delete user failed:', error);
+      toast.error(error.response?.data?.error || 'Failed to delete user');
     }
   };
 
