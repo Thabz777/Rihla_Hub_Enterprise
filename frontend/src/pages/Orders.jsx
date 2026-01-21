@@ -119,7 +119,19 @@ export default function Orders() {
       fetchOrders();
       fetchProducts();
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to create order');
+      console.error('Order creation failed:', error.response?.data || error);
+      let errorMsg = error.response?.data?.error || error.response?.data?.detail || 'Failed to create order';
+
+      // Clean up Mongoose validation errors for better UI
+      if (errorMsg.includes('Order validation failed:')) {
+        errorMsg = errorMsg.replace('Order validation failed:', '').trim();
+        // If specific path error, try to show just that
+        if (errorMsg.includes('payment_method:')) {
+          errorMsg = 'Invalid Payment Method selected';
+        }
+      }
+
+      toast.error(errorMsg);
     }
   };
 

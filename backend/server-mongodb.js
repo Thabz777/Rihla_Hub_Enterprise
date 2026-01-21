@@ -304,7 +304,10 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
         res.status(201).json(newOrder);
     } catch (error) {
         console.error('Order creation error:', error);
-        res.status(500).json({ error: 'Failed to create order' });
+        res.status(500).json({
+            error: error.message || 'Failed to create order',
+            details: error.errors
+        });
     }
 });
 
