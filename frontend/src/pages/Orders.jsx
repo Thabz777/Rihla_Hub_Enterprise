@@ -67,7 +67,9 @@ export default function Orders() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (selectedBrand !== 'all') params.append('brand_id', selectedBrand);
+      // Only add brand_id if it's valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      if (isValidBrand) params.append('brand_id', selectedBrand);
       if (statusFilter !== 'all') params.append('status', statusFilter);
 
       const response = await axios.get(`${API}/orders?${params}`, {
@@ -545,7 +547,7 @@ export default function Orders() {
                         </Select>
                       </td>
                       <td className="px-4 py-3 text-sm text-muted-foreground font-mono">
-                        {new Date(order.created_at).toLocaleDateString()}
+                        {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '-'}
                       </td>
                     </tr>
                   ))

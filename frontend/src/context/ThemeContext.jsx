@@ -9,12 +9,16 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const savedBrand = localStorage.getItem('selectedBrand');
-    
+
     if (savedTheme) {
       setIsDark(savedTheme === 'dark');
     }
-    if (savedBrand) {
+    // Sanitize: ensure savedBrand is valid (not 'undefined', 'null', or empty)
+    if (savedBrand && savedBrand !== 'undefined' && savedBrand !== 'null') {
       setSelectedBrand(savedBrand);
+    } else {
+      // Clean up corrupted localStorage
+      localStorage.setItem('selectedBrand', 'all');
     }
   }, []);
 

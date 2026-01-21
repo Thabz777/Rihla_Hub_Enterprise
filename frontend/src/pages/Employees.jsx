@@ -58,7 +58,9 @@ export default function Employees() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (selectedBrand !== 'all') params.append('brand_id', selectedBrand);
+      // Only add brand_id if it's valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      if (isValidBrand) params.append('brand_id', selectedBrand);
       if (departmentFilter !== 'all') params.append('department', departmentFilter);
       if (statusFilter !== 'all') params.append('status', statusFilter);
 
@@ -75,7 +77,9 @@ export default function Employees() {
 
   const fetchStats = async () => {
     try {
-      const params = selectedBrand !== 'all' ? `?brand_id=${selectedBrand}` : '';
+      // Only add brand_id if it's valid
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      const params = isValidBrand ? `?brand_id=${selectedBrand}` : '';
       const response = await axios.get(`${API}/employees/stats${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });

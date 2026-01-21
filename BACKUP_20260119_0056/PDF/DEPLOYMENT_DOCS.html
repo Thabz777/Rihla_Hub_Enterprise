@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEPLOYMENT DOCS - Rihla Hub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      color: #1a1a2e;
+      background: #ffffff;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid #3b82f6;
+    }
+    
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+      color: #475569;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 2rem;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #e2e8f0;
+    }
+    
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.85em;
+      color: #e11d48;
+    }
+    
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1rem 0 2rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    pre code {
+      background: none;
+      color: #e2e8f0;
+      padding: 0;
+    }
+    
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+      color: #475569;
+    }
+    
+    hr {
+      border: none;
+      border-top: 2px solid #e2e8f0;
+      margin: 2rem 0;
+    }
+    
+    blockquote {
+      border-left: 4px solid #3b82f6;
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: #64748b;
+      font-style: italic;
+    }
+    
+    .header-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .header-logo img {
+      height: 60px;
+    }
+    
+    .document-info {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    
+    .document-info h1 {
+      color: white;
+      border-bottom: none;
+      margin-bottom: 0.5rem;
+    }
+    
+    .document-info p {
+      color: rgba(255,255,255,0.9);
+      margin: 0;
+    }
+    
+    @media print {
+      body { padding: 20px; }
+      pre { white-space: pre-wrap; }
+      .document-info { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="document-info">
+    <h1>Rihla Hub - DEPLOYMENT DOCS</h1>
+    <p>Enterprise Cloud Platform Documentation</p>
+  </div>
+  <h1>Rihla Hub - Deployment Documentation</h1>
+<h2>Backup Date: 2026-01-19 00:59 (Saudi Arabia Time)</h2>
+<hr>
+<h2>🌐 LIVE URLS</h2>
+<h3>Frontend (Cloudflare Pages)</h3>
+<ul>
+<li><strong>Production URL:</strong> <a href="https://rihla-hub.pages.dev">https://rihla-hub.pages.dev</a></li>
+<li><strong>Custom Domain:</strong> <a href="https://rihlahub.rihlatech.info">https://rihlahub.rihlatech.info</a></li>
+<li><strong>Public Invoice:</strong> <a href="https://rihlahub.rihlatech.info/verify/%7BORDER-NUMBER%7D">https://rihlahub.rihlatech.info/verify/{ORDER-NUMBER}</a></li>
+</ul>
+<h3>Backend (Google Cloud Run)</h3>
+<ul>
+<li><strong>Production URL:</strong> <a href="https://rihla-backend-47485511620.us-west1.run.app">https://rihla-backend-47485511620.us-west1.run.app</a></li>
+<li><strong>Region:</strong> us-west1</li>
+<li><strong>Project ID:</strong> thabzn8nn</li>
+</ul>
+<hr>
+<h2>🔐 LOGIN CREDENTIALS</h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Email</th>
+<th>Password</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Admin</td>
+<td><a href="mailto:admin@rihla.com">admin@rihla.com</a></td>
+<td>admin123</td>
+</tr>
+<tr>
+<td>User</td>
+<td><a href="mailto:user@rihla.com">user@rihla.com</a></td>
+<td>user123</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>☁️ GOOGLE CLOUD RUN CONFIGURATION</h2>
+<h3>Project Details</h3>
+<ul>
+<li><strong>Project ID:</strong> thabzn8nn</li>
+<li><strong>Service Name:</strong> rihla-backend</li>
+<li><strong>Region:</strong> us-west1</li>
+<li><strong>Authentication:</strong> Allow unauthenticated</li>
+</ul>
+<h3>Deployment Command</h3>
+<pre><code class="language-bash">gcloud run deploy rihla-backend \
+  --source . \
+  --region us-west1 \
+  --allow-unauthenticated
+</code></pre>
+<h3>Environment Variables (Optional)</h3>
+<pre><code>PORT=5000
+NODE_ENV=production
+</code></pre>
+<h3>How to Redeploy Backend</h3>
+<ol>
+<li>Open Google Cloud Console: <a href="https://console.cloud.google.com">https://console.cloud.google.com</a></li>
+<li>Open Cloud Shell</li>
+<li>Upload <code>Rihla_Backend_V5.zip</code></li>
+<li>Run:<pre><code class="language-bash">unzip Rihla_Backend_V5.zip -d rihla-backend
+cd rihla-backend
+gcloud run deploy rihla-backend --source . --region us-west1 --allow-unauthenticated
+</code></pre>
+</li>
+</ol>
+<hr>
+<h2>📄 CLOUDFLARE PAGES CONFIGURATION</h2>
+<h3>Project Details</h3>
+<ul>
+<li><strong>Project Name:</strong> rihla-hub</li>
+<li><strong>Production Branch:</strong> main (Direct Upload)</li>
+<li><strong>Build Output:</strong> / (Root - Flat Structure)</li>
+</ul>
+<h3>Custom Domain</h3>
+<ul>
+<li><strong>Domain:</strong> rihlahub.rihlatech.info</li>
+<li><strong>DNS:</strong> CNAME → rihla-hub.pages.dev</li>
+</ul>
+<h3>How to Redeploy Frontend</h3>
+<ol>
+<li>Go to Cloudflare Dashboard: <a href="https://dash.cloudflare.com">https://dash.cloudflare.com</a></li>
+<li>Navigate to: Workers &amp; Pages → rihla-hub</li>
+<li>Click &quot;Create deployment&quot;</li>
+<li>Select &quot;Production&quot;</li>
+<li>Upload <code>Rihla_Frontend_V5_PUBLIC_QR.zip</code></li>
+<li>Click &quot;Save and deploy&quot;</li>
+</ol>
+<h3>Important Settings</h3>
+<ul>
+<li><strong>Framework preset:</strong> None (Static HTML)</li>
+<li><strong>Build command:</strong> (None - Pre-built)</li>
+<li><strong>Build output directory:</strong> / (Root)</li>
+</ul>
+<hr>
+<h2>📁 PROJECT STRUCTURE</h2>
+<pre><code>Rihla_Hub/
+├── DEPLOYMENT_STAGING/
+│   ├── frontend/           # React Frontend (Vite)
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   ├── context/
+│   │   │   ├── pages/
+│   │   │   └── App.jsx
+│   │   ├── .env.production  # Backend URL config
+│   │   ├── vite.config.js
+│   │   └── package.json
+│   │
+│   └── backend/            # Node.js/Express Backend
+│       ├── server.js       # Main API server
+│       ├── package.json
+│       └── Dockerfile
+│
+├── Rihla_Frontend_V5_PUBLIC_QR.zip  # Latest frontend build
+└── Rihla_Backend_V5.zip             # Latest backend build
+</code></pre>
+<hr>
+<h2>🔧 ENVIRONMENT VARIABLES</h2>
+<h3>Frontend (.env.production)</h3>
+<pre><code>VITE_API_URL=https://rihla-backend-47485511620.us-west1.run.app
+REACT_APP_BACKEND_URL=https://rihla-backend-47485511620.us-west1.run.app
+</code></pre>
+<h3>Backend</h3>
+<pre><code>PORT=5000 (Cloud Run provides this automatically)
+</code></pre>
+<hr>
+<h2>🚀 FEATURES IMPLEMENTED</h2>
+<h3>Authentication</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Email/Password Login</li>
+<li><input checked="" disabled="" type="checkbox"> 2-Factor Authentication (TOTP)</li>
+<li><input checked="" disabled="" type="checkbox"> Admin Reset 2FA for users</li>
+<li><input checked="" disabled="" type="checkbox"> Role-based access (Admin/User)</li>
+</ul>
+<h3>Dashboard</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Multi-brand KPI Cards</li>
+<li><input checked="" disabled="" type="checkbox"> Revenue Trend Charts</li>
+<li><input checked="" disabled="" type="checkbox"> Order Status Pie Chart</li>
+<li><input checked="" disabled="" type="checkbox"> Recent Orders Table</li>
+<li><input checked="" disabled="" type="checkbox"> Orders by User (Admin)</li>
+</ul>
+<h3>Orders</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Create New Orders</li>
+<li><input checked="" disabled="" type="checkbox"> Order Status Management</li>
+<li><input checked="" disabled="" type="checkbox"> VAT Calculation (15%)</li>
+<li><input checked="" disabled="" type="checkbox"> Multi-currency Support</li>
+</ul>
+<h3>Inventory</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Product Management</li>
+<li><input checked="" disabled="" type="checkbox"> Stock Tracking</li>
+<li><input checked="" disabled="" type="checkbox"> Brand Filtering</li>
+</ul>
+<h3>Customers</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Customer List</li>
+<li><input checked="" disabled="" type="checkbox"> Order History</li>
+<li><input checked="" disabled="" type="checkbox"> Lifetime Value Calculation</li>
+<li><input checked="" disabled="" type="checkbox"> Invoice Generation</li>
+</ul>
+<h3>Employees</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Employee Management</li>
+<li><input checked="" disabled="" type="checkbox"> Department/Brand Assignment</li>
+<li><input checked="" disabled="" type="checkbox"> Target Tracking</li>
+<li><input checked="" disabled="" type="checkbox"> Performance Metrics</li>
+</ul>
+<h3>Analytics (Admin)</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> User Performance Charts</li>
+<li><input checked="" disabled="" type="checkbox"> Revenue Analytics</li>
+</ul>
+<h3>Settings (Admin)</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> User Management</li>
+<li><input checked="" disabled="" type="checkbox"> Create New Users</li>
+<li><input checked="" disabled="" type="checkbox"> Reset Password</li>
+<li><input checked="" disabled="" type="checkbox"> Manage Permissions</li>
+<li><input checked="" disabled="" type="checkbox"> Reset 2FA</li>
+</ul>
+<h3>Invoice</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Professional Invoice Generation</li>
+<li><input checked="" disabled="" type="checkbox"> QR Code for Public Verification</li>
+<li><input checked="" disabled="" type="checkbox"> Print-friendly Layout</li>
+<li><input checked="" disabled="" type="checkbox"> Public Invoice Page (/verify/:orderId)</li>
+</ul>
+<hr>
+<h2>⚠️ IMPORTANT NOTES</h2>
+<h3>Data Persistence</h3>
+<ul>
+<li>Backend uses <strong>IN-MEMORY storage</strong></li>
+<li>Data resets when Cloud Run container restarts</li>
+<li>Sample data is hardcoded in server.js</li>
+<li>For production: Migrate to PostgreSQL/Supabase</li>
+</ul>
+<h3>Brands (Pre-configured)</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Brand Name</th>
+<th>Color</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>b1</td>
+<td>Rihla Technologies</td>
+<td>#3B82F6</td>
+</tr>
+<tr>
+<td>b2</td>
+<td>Rihla Brand Journey</td>
+<td>#10B981</td>
+</tr>
+<tr>
+<td>b3</td>
+<td>Rihla Abaya</td>
+<td>#8B5CF6</td>
+</tr>
+<tr>
+<td>b4</td>
+<td>Rihla Atelier</td>
+<td>#F59E0B</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📞 SUPPORT</h2>
+<p>For any issues or questions, refer to this documentation.</p>
+<p>Last Updated: 2026-01-19</p>
+
+  <hr>
+  <p style="text-align: center; color: #94a3b8; font-size: 0.875rem;">
+    © 2026 Rihla Technologies | Generated on 1/19/2026
+  </p>
+</body>
+</html>

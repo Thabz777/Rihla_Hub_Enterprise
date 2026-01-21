@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const MONGO_URL = process.env.MONGO_URL || process.env.MONGODB_URI;
+const MONGO_URL = process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb+srv://thabuos89_db_user:RihlaHub2026Secure!@cluster0.jtqnszs.mongodb.net/?retryWrites=true&w=majority';
 const DB_NAME = process.env.DB_NAME || 'rihla_enterprise';
 
 let isConnected = false;

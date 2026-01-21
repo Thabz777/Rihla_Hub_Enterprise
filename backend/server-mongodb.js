@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import { connectDB } from './config/database.js';
 import seedDatabase from './config/seed.js';
 import { User, Order, Product, Customer, Employee, Brand } from './models/index.js';
@@ -11,13 +12,17 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Health Check
+// Health Check (Primary - responds even if DB fails)
 app.get('/api/health', (req, res) => {
+    const dbState = mongoose.connection.readyState;
+    const dbStatus = ['disconnected', 'connected', 'connecting', 'disconnecting'][dbState] || 'unknown';
+
     res.json({
         status: 'healthy',
-        timestamp: new Date().toISOString(),
-        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-        version: '2.0.0'
+        version: '2.15.0 (Data Fix)',
+        database_status: dbStatus,
+        error: global.dbError || null,
+        timestamp: new Date().toISOString()
     });
 });
 
@@ -138,6 +143,9 @@ app.post('/api/auth/logout', authMiddleware, (req, res) => {
 // DASHBOARD ROUTES
 // =============================================================================
 
+// Helper to check if brand_id is valid (not 'undefined' string, 'all', null, or empty)
+const isValidBrandId = (id) => id && id !== 'all' && id !== 'undefined' && id !== 'null';
+
 app.get('/api/dashboard/metrics', authMiddleware, async (req, res) => {
     try {
         const { brand_id } = req.query;
@@ -145,7 +153,7 @@ app.get('/api/dashboard/metrics', authMiddleware, async (req, res) => {
         let orderQuery = {};
         let productQuery = {};
 
-        if (brand_id && brand_id !== 'all') {
+        if (isValidBrandId(brand_id)) {
             orderQuery.brand_id = brand_id;
             productQuery.brand_id = brand_id;
         }
@@ -178,7 +186,7 @@ app.get('/api/dashboard/revenue-trend', authMiddleware, async (req, res) => {
         const { brand_id, month, year } = req.query;
 
         let matchQuery = {};
-        if (brand_id && brand_id !== 'all') {
+        if (isValidBrandId(brand_id)) {
             matchQuery.brand_id = brand_id;
         }
         if (year && year !== 'all') {
@@ -215,7 +223,7 @@ app.get('/api/orders', authMiddleware, async (req, res) => {
         const { brand_id, status, limit = 100 } = req.query;
 
         let query = {};
-        if (brand_id && brand_id !== 'all') query.brand_id = brand_id;
+        if (isValidBrandId(brand_id)) query.brand_id = brand_id;
         if (status && status !== 'all') query.status = status;
 
         const orders = await Order.find(query)
@@ -328,7 +336,7 @@ app.get('/api/products', authMiddleware, async (req, res) => {
         const { brand_id } = req.query;
 
         let query = {};
-        if (brand_id && brand_id !== 'all') query.brand_id = brand_id;
+        if (isValidBrandId(brand_id)) query.brand_id = brand_id;
 
         const products = await Product.find(query);
         res.json(products);
@@ -442,7 +450,7 @@ app.get('/api/employees', authMiddleware, async (req, res) => {
         const { brand_id, department, status } = req.query;
 
         let query = {};
-        if (brand_id && brand_id !== 'all') query.brand_id = brand_id;
+        if (isValidBrandId(brand_id)) query.brand_id = brand_id;
         if (department && department !== 'all') query.department = department;
         if (status && status !== 'all') query.status = status;
 
@@ -546,8 +554,16 @@ app.get('/api/brands', optionalAuthMiddleware, async (req, res) => {
 
 app.get('/api/users', authMiddleware, requireRole('admin'), async (req, res) => {
     try {
-        const users = await User.find();
-        res.json(users);
+        const users = await User.find().lean();
+        // Manually sanitize to ensure _id is present and password is removed
+        const safeUsers = users.map(user => ({
+            ...user,
+            id: user._id.toString(), // Ensure string ID exists
+            _id: user._id.toString(), // Ensure _id exists
+            password: undefined, // Remove sensitive data
+            two_factor_secret: undefined
+        }));
+        res.json(safeUsers);
     } catch (error) {
         console.error('Users fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch users' });
@@ -600,6 +616,53 @@ app.put('/api/users/:email/reset-password', authMiddleware, requireRole('admin')
     } catch (error) {
         console.error('Password reset error:', error);
         res.status(500).json({ error: 'Failed to reset password' });
+    }
+});
+
+
+app.put('/api/users/:id/reset-2fa', authMiddleware, requireRole('admin'), async (req, res) => {
+    try {
+        let { id } = req.params;
+        id = id.trim(); // Sanitization
+
+        console.log(`[Admin] Resetting 2FA for UserID: ${id}`); // Backend Log
+
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+            console.error(`Invalid User ID format: ${id}`);
+            return res.status(400).json({ error: 'Invalid User ID format' });
+        }
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            console.error(`User not found in DB: ${id}`);
+            return res.status(404).json({ error: `User not found (ID: ${id})` });
+        }
+
+        user.two_factor_secret = undefined;
+        user.two_factor_enabled = false;
+        await user.save();
+
+        res.json({ success: true, message: '2FA reset successfully' });
+    } catch (error) {
+        console.error('Reset 2FA error:', error);
+        res.status(500).json({ error: 'Failed to reset 2FA' });
+    }
+});
+
+app.delete('/api/users/:id', authMiddleware, requireRole('admin'), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findByIdAndDelete(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ success: true, message: 'User deleted successfully' });
+    } catch (error) {
+        console.error('Delete user error:', error);
+        res.status(500).json({ error: 'Failed to delete user' });
     }
 });
 
@@ -746,18 +809,7 @@ app.get('/api/public/invoice-by-order/:orderId', async (req, res) => {
     }
 });
 
-// =============================================================================
-// HEALTH CHECK & STATUS
-// =============================================================================
-
-app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'healthy',
-        version: '2.0.0',
-        database: 'MongoDB Atlas',
-        timestamp: new Date().toISOString()
-    });
-});
+// Health check moved to top of file (line ~15)
 
 // =============================================================================
 // START SERVER
@@ -766,20 +818,25 @@ app.get('/api/health', (req, res) => {
 const startServer = async () => {
     try {
         // Connect to MongoDB
-        await connectDB();
+        // Connect to MongoDB
+        await connectDB().catch(err => {
+            console.error('⚠️ DB Connection Failed, starting server anyway:', err.message);
+            global.dbError = err.message;
+        });
 
-        // Seed initial data if needed
-        await seedDatabase();
+        // Seed initial data if needed (only if connected)
+        if (mongoose.connection.readyState === 1) {
+            await seedDatabase().catch(console.error);
+        }
 
         // Start Express server
         app.listen(PORT, () => {
-            console.log(`🚀 Rihla Backend v2.0 (MongoDB) running on port ${PORT}`);
+            console.log(`🚀 Rihla Backend v2.9 (Debug) running on port ${PORT}`);
             console.log(`📊 API: http://localhost:${PORT}/api`);
-            console.log(`💾 Database: MongoDB Atlas (Encrypted)`);
         });
     } catch (error) {
-        console.error('❌ Failed to start server:', error);
-        process.exit(1);
+        console.error('❌ Failed to initialize app:', error);
+        // Do NOT exit, try to keep alive for logs
     }
 };
 

@@ -47,7 +47,9 @@ export default function Inventory() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const params = selectedBrand !== 'all' ? `?brand_id=${selectedBrand}` : '';
+      // Only add brand_id if it's valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      const params = isValidBrand ? `?brand_id=${selectedBrand}` : '';
       const response = await axios.get(`${API}/products${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });

@@ -1,0 +1,93 @@
+{
+  "timestamp": "2026-01-17T10:49:14.203922",
+  "total_tests": 14,
+  "passed": 13,
+  "failed": 1,
+  "success_rate": "92.9%",
+  "results": [
+    {
+      "test": "User Login",
+      "passed": false,
+      "status_code": 401,
+      "message": "Expected 200, got 401"
+    },
+    {
+      "test": "User Registration",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Current User",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Brands",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Dashboard Metrics",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Revenue Trend",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Order",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Orders",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Orders (Filtered by Status)",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Update Order Status",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Product",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Products",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Update Product Stock",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Customers",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    }
+  ]
+}

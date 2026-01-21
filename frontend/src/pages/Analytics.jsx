@@ -43,7 +43,9 @@ export default function Analytics() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (selectedBrand !== 'all') params.append('brand_id', selectedBrand);
+      // Only add brand_id if it's valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      if (isValidBrand) params.append('brand_id', selectedBrand);
       if (selectedYear !== 'all') params.append('year', selectedYear);
       if (selectedMonth !== 'all') params.append('month', selectedMonth);
 
@@ -91,7 +93,7 @@ export default function Analytics() {
     { value: '12', label: 'December' }
   ];
 
-  const years = ['2023', '2024', '2025', '2026'];
+  const years = Array.from({ length: 2050 - 2023 + 1 }, (_, i) => (2023 + i).toString());
 
   return (
     <Layout>

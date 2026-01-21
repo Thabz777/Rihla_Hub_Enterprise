@@ -1,0 +1,699 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMPLEMENTATION TASKS - Rihla Hub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      color: #1a1a2e;
+      background: #ffffff;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid #3b82f6;
+    }
+    
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+      color: #475569;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 2rem;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #e2e8f0;
+    }
+    
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.85em;
+      color: #e11d48;
+    }
+    
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1rem 0 2rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    pre code {
+      background: none;
+      color: #e2e8f0;
+      padding: 0;
+    }
+    
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+      color: #475569;
+    }
+    
+    hr {
+      border: none;
+      border-top: 2px solid #e2e8f0;
+      margin: 2rem 0;
+    }
+    
+    blockquote {
+      border-left: 4px solid #3b82f6;
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: #64748b;
+      font-style: italic;
+    }
+    
+    .header-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .header-logo img {
+      height: 60px;
+    }
+    
+    .document-info {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    
+    .document-info h1 {
+      color: white;
+      border-bottom: none;
+      margin-bottom: 0.5rem;
+    }
+    
+    .document-info p {
+      color: rgba(255,255,255,0.9);
+      margin: 0;
+    }
+    
+    @media print {
+      body { padding: 20px; }
+      pre { white-space: pre-wrap; }
+      .document-info { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="document-info">
+    <h1>Rihla Hub - IMPLEMENTATION TASKS</h1>
+    <p>Enterprise Cloud Platform Documentation</p>
+  </div>
+  <h1>Rihla Hub - Implementation Phase</h1>
+<h2>Task-by-Task Development Log</h2>
+<hr>
+<h1>📅 Project Timeline</h1>
+<ul>
+<li><strong>Project Start</strong>: 2026-01-17</li>
+<li><strong>Development Complete</strong>: 2026-01-19</li>
+<li><strong>Total Duration</strong>: 3 Days</li>
+</ul>
+<hr>
+<h1>🎯 Phase 1: Project Setup &amp; Architecture</h1>
+<h2>Task 1.1: Project Initialization</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created project directory structure</li>
+<li>Initialized React frontend with Vite</li>
+<li>Initialized Node.js backend with Express</li>
+<li>Set up Tailwind CSS for styling</li>
+<li>Configured path aliases (@/)</li>
+<li>Set up ESLint and formatting</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/package.json</code></li>
+<li><code>frontend/vite.config.js</code></li>
+<li><code>frontend/tailwind.config.js</code></li>
+<li><code>backend/package.json</code></li>
+<li><code>backend/server.js</code></li>
+</ul>
+<hr>
+<h2>Task 1.2: UI Component Library Setup</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Installed Shadcn/UI components</li>
+<li>Configured component themes (Dark/Light)</li>
+<li>Set up CSS variables for theming</li>
+<li>Installed Lucide React icons</li>
+<li>Configured Sonner for toast notifications</li>
+</ol>
+<h3>Components Added:</h3>
+<ul>
+<li>Button, Dialog, Select, Input, Card</li>
+<li>Table, Tabs, Badge, Checkbox</li>
+<li>Toast, Tooltip, Dropdown Menu</li>
+<li>46 total UI components</li>
+</ul>
+<hr>
+<h1>🎯 Phase 2: Core Infrastructure</h1>
+<h2>Task 2.1: Authentication System</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created AuthContext for state management</li>
+<li>Implemented login flow</li>
+<li>Created protected route wrapper</li>
+<li>Added token storage (localStorage)</li>
+<li>Implemented logout functionality</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/context/AuthContext.jsx</code></li>
+<li><code>backend/server.js</code> (auth endpoints)</li>
+</ul>
+<h3>API Endpoints:</h3>
+<ul>
+<li>POST <code>/api/auth/login</code></li>
+<li>GET <code>/api/auth/me</code></li>
+</ul>
+<hr>
+<h2>Task 2.2: 2-Factor Authentication</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Implemented TOTP-based 2FA</li>
+<li>Created QR code generation for setup</li>
+<li>Added 2FA verification flow</li>
+<li>Implemented 2FA setup on first login</li>
+<li>Added Admin 2FA reset capability</li>
+</ol>
+<h3>Features:</h3>
+<ul>
+<li>QR Code display for authenticator apps</li>
+<li>6-digit code verification</li>
+<li>Compatible with Google/Microsoft Authenticator</li>
+<li>Admin can reset user&#39;s 2FA</li>
+</ul>
+<h3>API Endpoints:</h3>
+<ul>
+<li>POST <code>/api/auth/verify-2fa</code></li>
+<li>PUT <code>/api/users/:email/reset-2fa</code></li>
+</ul>
+<hr>
+<h2>Task 2.3: Theme System</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created ThemeContext</li>
+<li>Implemented dark/light mode toggle</li>
+<li>Persisted theme preference</li>
+<li>Added brand color management</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/context/ThemeContext.jsx</code></li>
+<li><code>frontend/src/index.css</code> (theme variables)</li>
+</ul>
+<hr>
+<h1>🎯 Phase 3: Dashboard Module</h1>
+<h2>Task 3.1: KPI Cards</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created KPICard component</li>
+<li>Implemented revenue card</li>
+<li>Implemented orders card</li>
+<li>Implemented customers card</li>
+<li>Implemented products card</li>
+<li>Added change indicators (+/- %)</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/components/Dashboard/KPICard.jsx</code></li>
+</ul>
+<hr>
+<h2>Task 3.2: Charts &amp; Visualizations</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Installed Recharts library</li>
+<li>Created ChartContainer component</li>
+<li>Implemented Revenue Trend (Area Chart)</li>
+<li>Implemented Order Status (Pie Chart)</li>
+<li>Added responsive chart sizing</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/components/Dashboard/ChartContainer.jsx</code></li>
+</ul>
+<hr>
+<h2>Task 3.3: Dashboard Page</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Dashboard page</li>
+<li>Integrated KPI cards</li>
+<li>Integrated charts</li>
+<li>Added Recent Orders table</li>
+<li>Added Orders by User (Admin only)</li>
+<li>Implemented brand filtering</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/pages/Dashboard.jsx</code></li>
+</ul>
+<hr>
+<h1>🎯 Phase 4: Orders Module</h1>
+<h2>Task 4.1: Orders List View</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Orders page</li>
+<li>Implemented order table</li>
+<li>Added status filtering</li>
+<li>Added brand filtering</li>
+<li>Implemented status change dropdown</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/pages/Orders.jsx</code></li>
+</ul>
+<hr>
+<h2>Task 4.2: Create Order Flow</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created order creation modal</li>
+<li>Implemented customer selection</li>
+<li>Added product selection with quantities</li>
+<li>Implemented VAT calculation (15%)</li>
+<li>Added multi-currency support</li>
+<li>Implemented shipping charges</li>
+<li>Created order submission flow</li>
+</ol>
+<h3>Features:</h3>
+<ul>
+<li>Customer autocomplete/creation</li>
+<li>Dynamic item list</li>
+<li>Real-time total calculation</li>
+<li>SAR/USD/AED currency options</li>
+</ul>
+<hr>
+<h2>Task 4.3: Orders API</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>API Endpoints:</h3>
+<ul>
+<li>GET <code>/api/orders</code></li>
+<li>POST <code>/api/orders</code></li>
+<li>PUT <code>/api/orders/:id</code></li>
+<li>GET <code>/api/admin/orders-by-user</code></li>
+</ul>
+<hr>
+<h1>🎯 Phase 5: Inventory Module</h1>
+<h2>Task 5.1: Products Management</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Inventory page</li>
+<li>Implemented product table</li>
+<li>Added product creation modal</li>
+<li>Implemented product editing</li>
+<li>Added stock adjustment</li>
+<li>Implemented brand filtering</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/pages/Inventory.jsx</code></li>
+</ul>
+<h3>API Endpoints:</h3>
+<ul>
+<li>GET <code>/api/products</code></li>
+<li>POST <code>/api/products</code></li>
+<li>PUT <code>/api/products/:id</code></li>
+</ul>
+<hr>
+<h1>🎯 Phase 6: Customer Module</h1>
+<h2>Task 6.1: Customer Management</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Customers page</li>
+<li>Implemented customer table</li>
+<li>Added lifetime value calculation</li>
+<li>Implemented order history view</li>
+<li>Added invoice generation link</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/pages/Customers.jsx</code></li>
+</ul>
+<h3>API Endpoints:</h3>
+<ul>
+<li>GET <code>/api/customers/with-orders</code></li>
+</ul>
+<hr>
+<h2>Task 6.2: Invoice System</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Invoice page</li>
+<li>Designed professional invoice layout</li>
+<li>Added company header with logo</li>
+<li>Implemented QR code generation</li>
+<li>Added print-friendly styles</li>
+<li>Created public verification page</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/pages/Invoice.jsx</code></li>
+<li><code>frontend/src/pages/PublicInvoice.jsx</code></li>
+</ul>
+<h3>API Endpoints:</h3>
+<ul>
+<li>GET <code>/api/public/invoice/:customerId</code></li>
+<li>GET <code>/api/public/invoice-by-order/:orderId</code></li>
+<li>GET <code>/api/search/invoice</code></li>
+</ul>
+<hr>
+<h1>🎯 Phase 7: Employee Module</h1>
+<h2>Task 7.1: Employee Management</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Employees page (Admin only)</li>
+<li>Implemented employee table</li>
+<li>Added employee creation modal</li>
+<li>Implemented employee editing</li>
+<li>Added performance tracking</li>
+<li>Implemented target management</li>
+<li>Added annual target reset</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/pages/Employees.jsx</code></li>
+</ul>
+<h3>API Endpoints:</h3>
+<ul>
+<li>GET <code>/api/employees</code></li>
+<li>GET <code>/api/employees/stats</code></li>
+<li>POST <code>/api/employees</code></li>
+<li>PUT <code>/api/employees/:id</code></li>
+<li>DELETE <code>/api/employees/:id</code></li>
+</ul>
+<hr>
+<h1>🎯 Phase 8: Analytics Module</h1>
+<h2>Task 8.1: Analytics Dashboard</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Analytics page (Admin only)</li>
+<li>Implemented user performance chart</li>
+<li>Added revenue analytics</li>
+<li>Created performance tables</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/pages/Analytics.jsx</code></li>
+</ul>
+<h3>API Endpoints:</h3>
+<ul>
+<li>GET <code>/api/analytics/user-performance</code></li>
+</ul>
+<hr>
+<h1>🎯 Phase 9: Settings Module</h1>
+<h2>Task 9.1: User Management</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Settings page (Admin only)</li>
+<li>Implemented user list</li>
+<li>Added user creation modal</li>
+<li>Implemented password reset</li>
+<li>Added permission management</li>
+<li>Implemented 2FA reset</li>
+<li>Added employee linking</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/pages/Settings.jsx</code></li>
+</ul>
+<h3>API Endpoints:</h3>
+<ul>
+<li>GET <code>/api/users</code></li>
+<li>POST <code>/api/users</code></li>
+<li>PUT <code>/api/users/:email/reset-password</code></li>
+<li>PUT <code>/api/users/:email/permissions</code></li>
+<li>PUT <code>/api/users/:email/reset-2fa</code></li>
+</ul>
+<hr>
+<h2>Task 9.2: Theme Settings</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Added theme toggle in Settings</li>
+<li>Implemented dark/light mode persistence</li>
+<li>Added profile information display</li>
+</ol>
+<hr>
+<h1>🎯 Phase 10: Layout &amp; Navigation</h1>
+<h2>Task 10.1: Sidebar Navigation</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Sidebar component</li>
+<li>Implemented navigation links</li>
+<li>Added active state highlighting</li>
+<li>Implemented role-based menu items</li>
+<li>Added logout functionality</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/components/Layout/Sidebar.jsx</code></li>
+</ul>
+<hr>
+<h2>Task 10.2: Header Component</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Header component</li>
+<li>Added brand switcher dropdown</li>
+<li>Implemented theme toggle</li>
+<li>Added user profile display</li>
+<li>Implemented brand color indicators</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/components/Layout/Header.jsx</code></li>
+</ul>
+<hr>
+<h2>Task 10.3: Layout Wrapper</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Layout component</li>
+<li>Combined Sidebar and Header</li>
+<li>Implemented responsive design</li>
+<li>Added content area wrapper</li>
+</ol>
+<h3>Files Created:</h3>
+<ul>
+<li><code>frontend/src/components/Layout/Layout.jsx</code></li>
+</ul>
+<hr>
+<h1>🎯 Phase 11: Deployment</h1>
+<h2>Task 11.1: Deployment Staging Setup</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created DEPLOYMENT_STAGING directory</li>
+<li>Copied frontend source files</li>
+<li>Copied backend source files</li>
+<li>Configured production environment variables</li>
+<li>Created deployment packages</li>
+</ol>
+<hr>
+<h2>Task 11.2: Backend Deployment (Google Cloud Run)</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created Dockerfile for backend</li>
+<li>Configured Cloud Run settings</li>
+<li>Deployed to us-west1 region</li>
+<li>Enabled unauthenticated access</li>
+<li>Verified API endpoints</li>
+</ol>
+<h3>Deployment Details:</h3>
+<ul>
+<li><strong>Service</strong>: rihla-backend</li>
+<li><strong>URL</strong>: <a href="https://rihla-backend-47485511620.us-west1.run.app">https://rihla-backend-47485511620.us-west1.run.app</a></li>
+<li><strong>Region</strong>: us-west1</li>
+</ul>
+<hr>
+<h2>Task 11.3: Frontend Deployment (Cloudflare Pages)</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Built production frontend bundle</li>
+<li>Configured Vite for production</li>
+<li>Created deployment zip</li>
+<li>Deployed to Cloudflare Pages</li>
+<li>Configured custom domain</li>
+</ol>
+<h3>Deployment Details:</h3>
+<ul>
+<li><strong>Project</strong>: rihla-hub</li>
+<li><strong>URL</strong>: <a href="https://rihla-hub.pages.dev">https://rihla-hub.pages.dev</a></li>
+<li><strong>Custom Domain</strong>: <a href="https://rihlahub.rihlatech.info">https://rihlahub.rihlatech.info</a></li>
+</ul>
+<hr>
+<h2>Task 11.4: Production Bug Fixes</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Issues Fixed:</h3>
+<ol>
+<li><strong>White Page Issue</strong>: Fixed process.env for Vite (use import.meta.env)</li>
+<li><strong>MIME Type Error</strong>: Fixed Vite config for flat build structure</li>
+<li><strong>Invalid Credentials</strong>: Fixed VITE_API_URL environment variable</li>
+<li><strong>Dashboard Crash</strong>: Added Array.isArray() checks for API responses</li>
+<li><strong>Brands Not Loading</strong>: Added null-safety for map() calls</li>
+</ol>
+<h3>Files Modified:</h3>
+<ul>
+<li>All pages updated to use <code>import.meta.env.VITE_API_URL</code></li>
+<li><code>vite.config.js</code> updated for flat output</li>
+<li><code>index.html</code> polyfill added</li>
+<li>Array safety checks added throughout</li>
+</ul>
+<hr>
+<h2>Task 11.5: Public Invoice Feature</h2>
+<p><strong>Status</strong>: ✅ Completed</p>
+<h3>Actions Performed:</h3>
+<ol>
+<li>Created PublicInvoice.jsx component</li>
+<li>Added /verify/:orderId route (public)</li>
+<li>Updated QR code to use public URL</li>
+<li>Designed verification badge UI</li>
+<li>Implemented error handling</li>
+</ol>
+<h3>Public URL Format:</h3>
+<p><code>https://rihlahub.rihlatech.info/verify/{ORDER-NUMBER}</code></p>
+<hr>
+<h1>📊 Summary Statistics</h1>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Total Tasks</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Completed Tasks</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Frontend Pages</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Frontend Components</td>
+<td>50+</td>
+</tr>
+<tr>
+<td>Backend Endpoints</td>
+<td>25+</td>
+</tr>
+<tr>
+<td>Lines of Code (Est.)</td>
+<td>5,000+</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>✅ Final Deliverables</h1>
+<h2>Production URLs</h2>
+<ul>
+<li>Frontend: <a href="https://rihlahub.rihlatech.info">https://rihlahub.rihlatech.info</a></li>
+<li>Backend: <a href="https://rihla-backend-47485511620.us-west1.run.app">https://rihla-backend-47485511620.us-west1.run.app</a></li>
+</ul>
+<h2>Deployment Packages</h2>
+<ul>
+<li><code>Rihla_Frontend_V5_PUBLIC_QR.zip</code></li>
+<li><code>Rihla_Backend_V5.zip</code></li>
+</ul>
+<h2>Documentation</h2>
+<ul>
+<li><code>DEPLOYMENT_DOCS.md</code></li>
+<li><code>PROJECT_DOCUMENTATION.md</code></li>
+<li><code>IMPLEMENTATION_TASKS.md</code> (this file)</li>
+</ul>
+<hr>
+<p><strong>Implementation Complete</strong>: 2026-01-19 01:00 AST
+<strong>Project Status</strong>: ✅ LIVE IN PRODUCTION</p>
+
+  <hr>
+  <p style="text-align: center; color: #94a3b8; font-size: 0.875rem;">
+    © 2026 Rihla Technologies | Generated on 1/19/2026
+  </p>
+</body>
+</html>

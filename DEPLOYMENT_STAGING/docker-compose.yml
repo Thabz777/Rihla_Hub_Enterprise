@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: rihla-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: rihla_admin_2024
+      MONGO_INITDB_DATABASE: rihla_enterprise
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - rihla-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rihla-backend
+    restart: unless-stopped
+    environment:
+      MONGO_URL: mongodb://admin:rihla_admin_2024@mongodb:27017/rihla_enterprise?authSource=admin
+      DB_NAME: rihla_enterprise
+      SECRET_KEY: ${SECRET_KEY:-rihla-enterprise-secret-key-2024-change-in-production}
+      CORS_ORIGINS: http://localhost:3000,http://localhost:80
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    networks:
+      - rihla-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/brands" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rihla-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - rihla-network
+    environment:
+      REACT_APP_API_URL: http://localhost:8000/api
+
+networks:
+  rihla-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local

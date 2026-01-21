@@ -29,7 +29,9 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const brandParam = selectedBrand !== 'all' ? `?brand_id=${selectedBrand}` : '';
+      // Helper to check if brand is valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      const brandParam = isValidBrand ? `?brand_id=${selectedBrand}` : '';
 
       const requests = [
         axios.get(`${API}/dashboard/metrics${brandParam}`, {
@@ -38,7 +40,7 @@ export default function Dashboard() {
         axios.get(`${API}/dashboard/revenue-trend${brandParam}`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get(`${API}/orders?${new URLSearchParams({ ...(selectedBrand !== 'all' && { brand_id: selectedBrand }) })}`, {
+        axios.get(`${API}/orders${isValidBrand ? `?brand_id=${selectedBrand}` : ''}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ];

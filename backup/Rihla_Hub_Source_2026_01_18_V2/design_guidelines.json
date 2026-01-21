@@ -1,0 +1,1229 @@
+{
+  "project_name": "Rihla Enterprise Cloud Platform",
+  "design_context": "enterprise_dashboard",
+  "theme": "dark_mode_primary_with_light_toggle",
+  "theme_rationale": "Dark mode is preferred for enterprise dashboards to reduce eye strain during long sessions, enhance focus on data visualizations, and project sophistication. Light mode toggle available for user preference and printing needs.",
+  
+  "design_philosophy": {
+    "core_principles": [
+      "Data clarity over decoration - every visual element serves a functional purpose",
+      "Luxury minimalism - sophisticated restraint with premium materials (subtle gradients, refined typography, elegant spacing)",
+      "Multi-brand harmony - unified system that respects individual brand identities",
+      "Density with breathing room - information-rich but never cramped",
+      "Saudi market sophistication - blend of modern tech aesthetics with cultural elegance"
+    ],
+    "emotional_tone": "Professional authority with understated luxury - confident, precise, trustworthy, and refined",
+    "visual_mood": "Sophisticated command center with jewel-toned accents and architectural precision"
+  },
+
+  "color_system": {
+    "archetype": "JEWEL_LUXURY_WITH_SWISS_PRECISION",
+    "archetype_rationale": "Combines the premium depth of jewel tones (fitting for luxury Abaya and Atelier brands) with the functional clarity of Swiss design (essential for data-heavy enterprise dashboards). This hybrid approach ensures both sophistication and usability.",
+    
+    "dark_mode_palette": {
+      "backgrounds": {
+        "primary": "hsl(240, 8%, 6%)",
+        "primary_description": "Deep charcoal with subtle blue tint - main app background",
+        "secondary": "hsl(240, 6%, 10%)",
+        "secondary_description": "Slightly lighter charcoal - card and panel backgrounds",
+        "tertiary": "hsl(240, 5%, 14%)",
+        "tertiary_description": "Elevated surfaces - hover states, dropdowns",
+        "elevated": "hsl(240, 4%, 18%)",
+        "elevated_description": "Highest elevation - modals, popovers"
+      },
+      
+      "brand_colors": {
+        "rihla_abaya": {
+          "primary": "hsl(280, 45%, 58%)",
+          "primary_description": "Deep amethyst purple - elegant, modest, luxurious",
+          "secondary": "hsl(320, 35%, 52%)",
+          "secondary_description": "Rose gold accent",
+          "usage": "Brand indicator, category tags, abaya-specific metrics"
+        },
+        "rihla_atelier": {
+          "primary": "hsl(45, 85%, 58%)",
+          "primary_description": "Rich gold - luxury jewelry, craftsmanship",
+          "secondary": "hsl(25, 75%, 55%)",
+          "secondary_description": "Warm copper accent",
+          "usage": "Brand indicator, jewelry category, atelier metrics"
+        },
+        "rihla_technologies": {
+          "primary": "hsl(210, 75%, 55%)",
+          "primary_description": "Electric blue - innovation, technology",
+          "secondary": "hsl(195, 70%, 50%)",
+          "secondary_description": "Cyan accent",
+          "usage": "Brand indicator, tech services, analytics"
+        },
+        "rihla_brand_journey": {
+          "primary": "hsl(160, 60%, 48%)",
+          "primary_description": "Emerald green - growth, journey, consulting",
+          "secondary": "hsl(140, 55%, 45%)",
+          "secondary_description": "Forest green accent",
+          "usage": "Brand indicator, consulting metrics, journey tracking"
+        }
+      },
+
+      "functional_colors": {
+        "primary_action": "hsl(0, 0%, 98%)",
+        "primary_action_description": "Pure white for primary CTAs - maximum contrast and clarity",
+        "primary_action_text": "hsl(240, 8%, 6%)",
+        "primary_action_hover": "hsl(0, 0%, 92%)",
+        "primary_action_hover_text": "hsl(240, 8%, 6%)",
+        
+        "success": "hsl(142, 76%, 36%)",
+        "success_description": "Deep emerald green - completed orders, positive metrics",
+        "success_bg": "hsla(142, 76%, 36%, 0.1)",
+        "success_border": "hsla(142, 76%, 36%, 0.3)",
+        
+        "warning": "hsl(38, 92%, 50%)",
+        "warning_description": "Amber gold - low stock, pending actions",
+        "warning_bg": "hsla(38, 92%, 50%, 0.1)",
+        "warning_border": "hsla(38, 92%, 50%, 0.3)",
+        
+        "error": "hsl(0, 72%, 51%)",
+        "error_description": "Signal red - failed transactions, critical alerts",
+        "error_bg": "hsla(0, 72%, 51%, 0.1)",
+        "error_border": "hsla(0, 72%, 51%, 0.3)",
+        
+        "info": "hsl(199, 89%, 48%)",
+        "info_description": "Bright cyan - informational messages",
+        "info_bg": "hsla(199, 89%, 48%, 0.1)",
+        "info_border": "hsla(199, 89%, 48%, 0.3)"
+      },
+
+      "text_colors": {
+        "primary": "hsl(0, 0%, 98%)",
+        "primary_description": "Near white - headings, primary content",
+        "secondary": "hsl(0, 0%, 70%)",
+        "secondary_description": "Light grey - body text, labels",
+        "tertiary": "hsl(0, 0%, 50%)",
+        "tertiary_description": "Medium grey - supporting text, placeholders",
+        "disabled": "hsl(0, 0%, 35%)",
+        "disabled_description": "Dark grey - disabled states"
+      },
+
+      "border_colors": {
+        "subtle": "hsla(0, 0%, 100%, 0.06)",
+        "subtle_description": "Barely visible - default borders",
+        "default": "hsla(0, 0%, 100%, 0.1)",
+        "default_description": "Standard borders - cards, inputs",
+        "emphasis": "hsla(0, 0%, 100%, 0.2)",
+        "emphasis_description": "Stronger borders - focus states, active elements",
+        "strong": "hsla(0, 0%, 100%, 0.3)",
+        "strong_description": "High contrast borders - separators, dividers"
+      },
+
+      "chart_colors": {
+        "chart_1": "hsl(280, 45%, 58%)",
+        "chart_1_description": "Amethyst - primary data series",
+        "chart_2": "hsl(45, 85%, 58%)",
+        "chart_2_description": "Gold - secondary data series",
+        "chart_3": "hsl(210, 75%, 55%)",
+        "chart_3_description": "Electric blue - tertiary series",
+        "chart_4": "hsl(160, 60%, 48%)",
+        "chart_4_description": "Emerald - quaternary series",
+        "chart_5": "hsl(320, 35%, 52%)",
+        "chart_5_description": "Rose gold - additional series",
+        "chart_grid": "hsla(0, 0%, 100%, 0.05)",
+        "chart_grid_description": "Subtle grid lines"
+      }
+    },
+
+    "light_mode_palette": {
+      "backgrounds": {
+        "primary": "hsl(0, 0%, 99%)",
+        "primary_description": "Off-white - main app background",
+        "secondary": "hsl(0, 0%, 96%)",
+        "secondary_description": "Light grey - card backgrounds",
+        "tertiary": "hsl(0, 0%, 92%)",
+        "tertiary_description": "Medium grey - elevated surfaces",
+        "elevated": "hsl(0, 0%, 100%)",
+        "elevated_description": "Pure white - modals, popovers"
+      },
+      "text_colors": {
+        "primary": "hsl(240, 8%, 12%)",
+        "secondary": "hsl(240, 6%, 35%)",
+        "tertiary": "hsl(240, 5%, 55%)",
+        "disabled": "hsl(240, 4%, 70%)"
+      },
+      "note": "Brand colors, functional colors, and chart colors remain consistent across themes for brand recognition"
+    },
+
+    "contrast_requirements": {
+      "critical_rule": "ALL text must meet WCAG AA standards (4.5:1 for normal text, 3:1 for large text 18px+)",
+      "hover_states": "MUST explicitly set both background AND text color on hover to ensure visibility",
+      "focus_states": "Must have HIGHER contrast than default state with visible focus ring",
+      "interactive_elements": "Minimum 3:1 contrast against adjacent colors",
+      "text_over_images": "Use text-shadow or gradient overlays to ensure readability"
+    }
+  },
+
+  "typography": {
+    "font_pairing_strategy": "OLD_MONEY_TECH",
+    "font_pairing_rationale": "Combines classic serif elegance (fitting for luxury brands) with modern geometric sans-serif (essential for data clarity). This creates a sophisticated yet functional hierarchy.",
+    
+    "font_families": {
+      "display": {
+        "family": "Playfair Display",
+        "weights": [400, 500, 600, 700],
+        "usage": "Large headings, hero text, brand names, page titles",
+        "google_fonts_url": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap",
+        "fallback": "Georgia, serif"
+      },
+      "heading": {
+        "family": "Manrope",
+        "weights": [500, 600, 700, 800],
+        "usage": "Section headings, card titles, navigation, labels",
+        "google_fonts_url": "https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap",
+        "fallback": "system-ui, sans-serif"
+      },
+      "body": {
+        "family": "IBM Plex Sans",
+        "weights": [400, 500, 600],
+        "usage": "Body text, descriptions, table content, form inputs",
+        "google_fonts_url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap",
+        "fallback": "system-ui, sans-serif"
+      },
+      "mono": {
+        "family": "IBM Plex Mono",
+        "weights": [400, 500],
+        "usage": "SKU codes, order IDs, technical data, timestamps",
+        "google_fonts_url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap",
+        "fallback": "Consolas, monospace"
+      }
+    },
+
+    "type_scale": {
+      "display_xl": {
+        "size": "text-6xl",
+        "size_value": "3.75rem / 60px",
+        "line_height": "leading-none",
+        "letter_spacing": "tracking-tighter",
+        "font_weight": "font-bold",
+        "font_family": "font-display",
+        "usage": "Hero sections, brand names on login"
+      },
+      "display_lg": {
+        "size": "text-5xl",
+        "size_value": "3rem / 48px",
+        "line_height": "leading-tight",
+        "letter_spacing": "tracking-tight",
+        "font_weight": "font-semibold",
+        "font_family": "font-display",
+        "usage": "Page titles, dashboard headers"
+      },
+      "heading_xl": {
+        "size": "text-4xl",
+        "size_value": "2.25rem / 36px",
+        "line_height": "leading-tight",
+        "letter_spacing": "tracking-tight",
+        "font_weight": "font-bold",
+        "font_family": "font-heading",
+        "usage": "Section headers, modal titles"
+      },
+      "heading_lg": {
+        "size": "text-3xl",
+        "size_value": "1.875rem / 30px",
+        "line_height": "leading-snug",
+        "letter_spacing": "tracking-tight",
+        "font_weight": "font-semibold",
+        "font_family": "font-heading",
+        "usage": "Card headers, widget titles"
+      },
+      "heading_md": {
+        "size": "text-2xl",
+        "size_value": "1.5rem / 24px",
+        "line_height": "leading-snug",
+        "letter_spacing": "tracking-normal",
+        "font_weight": "font-semibold",
+        "font_family": "font-heading",
+        "usage": "Subsection headers, table headers"
+      },
+      "heading_sm": {
+        "size": "text-xl",
+        "size_value": "1.25rem / 20px",
+        "line_height": "leading-normal",
+        "letter_spacing": "tracking-normal",
+        "font_weight": "font-semibold",
+        "font_family": "font-heading",
+        "usage": "Small headers, emphasized labels"
+      },
+      "body_lg": {
+        "size": "text-lg",
+        "size_value": "1.125rem / 18px",
+        "line_height": "leading-relaxed",
+        "letter_spacing": "tracking-normal",
+        "font_weight": "font-normal",
+        "font_family": "font-body",
+        "usage": "Large body text, important descriptions"
+      },
+      "body_md": {
+        "size": "text-base",
+        "size_value": "1rem / 16px",
+        "line_height": "leading-relaxed",
+        "letter_spacing": "tracking-normal",
+        "font_weight": "font-normal",
+        "font_family": "font-body",
+        "usage": "Default body text, form inputs, table cells"
+      },
+      "body_sm": {
+        "size": "text-sm",
+        "size_value": "0.875rem / 14px",
+        "line_height": "leading-normal",
+        "letter_spacing": "tracking-normal",
+        "font_weight": "font-normal",
+        "font_family": "font-body",
+        "usage": "Supporting text, captions, helper text"
+      },
+      "label": {
+        "size": "text-xs",
+        "size_value": "0.75rem / 12px",
+        "line_height": "leading-normal",
+        "letter_spacing": "tracking-wide",
+        "font_weight": "font-medium",
+        "font_family": "font-heading",
+        "text_transform": "uppercase",
+        "usage": "Form labels, badges, overlines, category tags"
+      },
+      "caption": {
+        "size": "text-xs",
+        "size_value": "0.75rem / 12px",
+        "line_height": "leading-normal",
+        "letter_spacing": "tracking-normal",
+        "font_weight": "font-normal",
+        "font_family": "font-body",
+        "usage": "Timestamps, footnotes, metadata"
+      }
+    },
+
+    "typography_rules": {
+      "headlines_over_32px": "MUST use tracking-tight or tracking-tighter",
+      "labels_and_overlines": "MUST be uppercase with tracking-wide (0.2em)",
+      "body_text": "Use leading-relaxed for better readability in data-heavy contexts",
+      "monospace_usage": "Only for technical identifiers (SKUs, IDs, codes) - never for UI labels",
+      "arabic_support": "Ensure all fonts support Arabic Unicode range for bilingual interface"
+    }
+  },
+
+  "spacing_system": {
+    "philosophy": "Generous spacing creates luxury and improves data scanability. Use 2-3x more spacing than typical dashboards.",
+    "scale": {
+      "xs": "0.25rem / 4px",
+      "sm": "0.5rem / 8px",
+      "md": "1rem / 16px",
+      "lg": "1.5rem / 24px",
+      "xl": "2rem / 32px",
+      "2xl": "2.5rem / 40px",
+      "3xl": "3rem / 48px",
+      "4xl": "4rem / 64px",
+      "5xl": "5rem / 80px",
+      "6xl": "6rem / 96px"
+    },
+    "component_spacing": {
+      "cards": {
+        "padding": "p-6 md:p-8",
+        "gap_between": "gap-6",
+        "description": "Generous internal padding prevents text collision with borders"
+      },
+      "sections": {
+        "padding": "py-8 md:py-12",
+        "gap_between": "space-y-8 md:space-y-12",
+        "description": "Large vertical spacing between major sections"
+      },
+      "forms": {
+        "field_gap": "space-y-4",
+        "label_to_input": "space-y-2",
+        "button_margin": "mt-6",
+        "description": "Clear separation between form elements"
+      },
+      "tables": {
+        "cell_padding": "px-4 py-3",
+        "row_gap": "border-b border-border/50",
+        "header_padding": "px-4 py-4",
+        "description": "Comfortable cell spacing for data scanning"
+      },
+      "navigation": {
+        "item_padding": "px-4 py-3",
+        "item_gap": "space-y-1",
+        "section_gap": "space-y-6",
+        "description": "Clear hierarchy in navigation structure"
+      }
+    },
+    "critical_rules": {
+      "containers_with_borders": "MUST have internal padding (p-6 or p-8) to prevent text collision",
+      "mobile_spacing": "Reduce spacing by 25-30% on mobile (use responsive classes)",
+      "optical_alignment": "Add extra padding to visually center elements with asymmetric content (e.g., icons on left)"
+    }
+  },
+
+  "layout_system": {
+    "grid_strategy": "HIGH_DENSITY_DASHBOARD_GRID",
+    "grid_rationale": "Data-heavy enterprise dashboards require efficient space utilization while maintaining scanability. Every pixel serves a purpose.",
+    
+    "dashboard_grid": {
+      "base_grid": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4",
+      "gap": "gap-4 md:gap-6",
+      "description": "Tight, efficient grid for maximum data density",
+      "widget_spans": {
+        "summary_card": "col-span-1",
+        "summary_card_description": "Single metric KPI cards",
+        "primary_chart": "col-span-full md:col-span-2 lg:col-span-3",
+        "primary_chart_description": "Main analytics charts",
+        "secondary_chart": "col-span-full md:col-span-2",
+        "secondary_chart_description": "Supporting visualizations",
+        "data_table": "col-span-full",
+        "data_table_description": "Full-width tables",
+        "activity_feed": "col-span-1 row-span-2",
+        "activity_feed_description": "Tall narrow lists for recent activity"
+      },
+      "alignment_rule": "Use align-items-start on grid container, add align-self-stretch to individual items that need to fill height"
+    },
+
+    "page_layouts": {
+      "dashboard_main": {
+        "structure": "Sidebar navigation (fixed left) + Main content area (scrollable)",
+        "sidebar_width": "w-64",
+        "main_padding": "p-6 md:p-8",
+        "header_height": "h-16",
+        "description": "Standard enterprise dashboard layout"
+      },
+      "full_width_table": {
+        "structure": "Header + Filters + Table + Pagination",
+        "container_padding": "p-6 md:p-8",
+        "description": "Orders, customers, inventory list pages"
+      },
+      "detail_view": {
+        "structure": "Breadcrumb + Header + Two-column layout (main content + sidebar)",
+        "main_column": "lg:col-span-2",
+        "sidebar_column": "lg:col-span-1",
+        "description": "Order details, customer profiles"
+      }
+    },
+
+    "responsive_breakpoints": {
+      "mobile": "< 768px - Single column, stacked layout",
+      "tablet": "768px - 1024px - 2-3 column grid",
+      "desktop": "1024px+ - Full 4 column grid",
+      "mobile_first": "ALWAYS start with mobile layout and enhance for larger screens"
+    },
+
+    "grid_technical_rules": {
+      "direct_children": "Grid items MUST be direct children of grid container",
+      "animation_wrappers": "If using framer-motion, motion.div must be the direct grid child",
+      "subgrid_alternative": "Use display: grid; grid-template-columns: subgrid if nesting is unavoidable",
+      "stretch_behavior": "Override default stretch with align-items: start, add align-self: stretch to items that need it"
+    }
+  },
+
+  "component_system": {
+    "component_strategy": "SHADCN_CUSTOMIZED",
+    "strategy_rationale": "Use Shadcn/UI components for interactive logic (forms, dialogs, dropdowns) but heavily customize styling to match luxury brand aesthetic. Never use default Vercel look.",
+    
+    "component_categories": {
+      "use_shadcn": [
+        "Forms (Input, Select, Checkbox, Radio, Switch, Textarea)",
+        "Dialogs and Modals (Dialog, Sheet, Drawer)",
+        "Dropdowns (DropdownMenu, Select, Combobox)",
+        "Data Display (Table, Calendar, Tabs)",
+        "Feedback (Toast via Sonner, Alert, Progress)",
+        "Navigation (NavigationMenu, Breadcrumb)",
+        "Overlays (Popover, HoverCard, Tooltip)"
+      ],
+      "build_custom": [
+        "Dashboard layout structure",
+        "KPI stat cards",
+        "Chart containers and wrappers",
+        "Brand switcher interface",
+        "Custom data visualizations",
+        "Hero sections and headers"
+      ]
+    },
+
+    "component_customization_rules": {
+      "cards": {
+        "avoid_shadcn_card": "DO NOT use Shadcn Card component - too rigid for dashboard layouts",
+        "custom_approach": "Use raw div with custom classes for flexible layouts",
+        "base_classes": "bg-secondary border border-border/50 rounded-lg p-6",
+        "hover_state": "hover:border-border hover:shadow-lg transition-all duration-200"
+      },
+      "buttons": {
+        "primary": {
+          "base": "bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200",
+          "with_icon": "flex items-center gap-2",
+          "disabled": "disabled:opacity-50 disabled:cursor-not-allowed"
+        },
+        "secondary": {
+          "base": "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200"
+        },
+        "ghost": {
+          "base": "hover:bg-secondary/50 px-4 py-2 rounded-lg transition-all duration-200"
+        },
+        "brand_specific": {
+          "description": "Use brand colors for brand-specific actions",
+          "example": "bg-[hsl(280,45%,58%)] hover:bg-[hsl(280,45%,52%)] for Rihla Abaya actions"
+        }
+      },
+      "inputs": {
+        "base": "bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:border-emphasis focus:ring-2 focus:ring-emphasis/20 transition-all duration-200",
+        "error_state": "border-error focus:border-error focus:ring-error/20",
+        "disabled": "bg-secondary/50 cursor-not-allowed opacity-60"
+      },
+      "tables": {
+        "container": "border border-border/50 rounded-lg overflow-hidden",
+        "header": "bg-tertiary border-b border-border",
+        "header_cell": "px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-secondary",
+        "row": "border-b border-border/30 hover:bg-tertiary/50 transition-colors duration-150",
+        "cell": "px-4 py-3 text-sm font-body",
+        "no_card_wrapper": "Tables should NOT be wrapped in card components - use direct border styling"
+      },
+      "badges": {
+        "base": "inline-flex items-center px-3 py-1 rounded-full text-xs font-heading font-medium uppercase tracking-wide",
+        "status_success": "bg-success/10 text-success border border-success/30",
+        "status_warning": "bg-warning/10 text-warning border border-warning/30",
+        "status_error": "bg-error/10 text-error border border-error/30",
+        "brand_badge": "Use brand colors with 10% opacity background and 30% opacity border"
+      }
+    },
+
+    "shadcn_components_to_customize": {
+      "calendar": {
+        "customization": "Change default radius, update colors to match brand palette",
+        "usage": "Date range pickers for analytics, order filtering"
+      },
+      "select": {
+        "customization": "Increase padding, use custom arrow icon, match border styling",
+        "usage": "Brand switcher, filters, form dropdowns"
+      },
+      "dialog": {
+        "customization": "Increase backdrop blur, add subtle border, generous padding",
+        "usage": "Order details, customer forms, confirmation modals"
+      },
+      "tabs": {
+        "customization": "Override fixed height (h-9 to h-auto), use brand colors for active state",
+        "usage": "Dashboard sections, settings pages, multi-view data"
+      }
+    }
+  },
+
+  "surface_treatments": {
+    "primary_surface_style": "FLAT_SOLID_WITH_SUBTLE_BORDERS",
+    "surface_rationale": "For data-heavy dashboards, flat solid surfaces with subtle borders provide maximum clarity without visual refraction. Glass effects reserved for overlays only.",
+    
+    "surface_styles": {
+      "default_card": {
+        "background": "bg-secondary",
+        "border": "border border-border/50",
+        "radius": "rounded-lg",
+        "shadow": "shadow-sm",
+        "hover": "hover:border-border hover:shadow-md transition-all duration-200",
+        "usage": "KPI cards, stat widgets, chart containers"
+      },
+      "elevated_card": {
+        "background": "bg-tertiary",
+        "border": "border border-border",
+        "radius": "rounded-lg",
+        "shadow": "shadow-md",
+        "usage": "Featured metrics, primary charts, important notifications"
+      },
+      "glass_overlay": {
+        "background": "bg-background/70 backdrop-blur-xl backdrop-saturate-150",
+        "border": "border border-white/10",
+        "radius": "rounded-lg",
+        "shadow": "shadow-[0_8px_32px_rgba(0,0,0,0.12)]",
+        "usage": "ONLY for sticky headers, floating navigation, modal overlays, dropdowns"
+      },
+      "grid_borders": {
+        "description": "Expose grid structure for technical precision",
+        "implementation": "border-r border-b border-border/30 on grid items",
+        "usage": "Dashboard widget grids, data comparison layouts"
+      }
+    },
+
+    "header_treatment": {
+      "sticky_header": {
+        "background": "bg-background/80 backdrop-blur-xl backdrop-saturate-150",
+        "border": "border-b border-border/50",
+        "shadow": "shadow-sm",
+        "position": "sticky top-0 z-50",
+        "description": "Glass effect for headers that scroll over content"
+      },
+      "static_header": {
+        "background": "bg-background",
+        "border": "border-b border-border",
+        "description": "Solid background for headers with no scroll-under content"
+      }
+    },
+
+    "footer_treatment": {
+      "contrast_shift": "If body is dark, footer remains dark but with different background shade",
+      "background": "bg-primary",
+      "border": "border-t border-border",
+      "padding": "py-12 md:py-16",
+      "description": "Subtle contrast shift, generous spacing"
+    }
+  },
+
+  "motion_and_interactions": {
+    "animation_philosophy": "Micro-interactions for feedback and delight, but never distracting from data. Respect prefers-reduced-motion.",
+    
+    "required_animations": {
+      "hover_states": {
+        "buttons": "transform: translateY(-1px), shadow increase, color shift",
+        "cards": "border color intensify, subtle shadow lift",
+        "table_rows": "background color change",
+        "links": "color shift, underline animation"
+      },
+      "click_states": {
+        "buttons": "transform: scale(0.98), brief opacity shift",
+        "interactive_elements": "ripple effect or scale feedback"
+      },
+      "focus_states": {
+        "all_interactive": "ring-2 ring-emphasis/50 outline-none",
+        "accessibility": "MUST be visible and high contrast"
+      },
+      "entrance_animations": {
+        "cards": "fade-in with slight upward movement, stagger by 50ms",
+        "lists": "stagger children by 30ms",
+        "modals": "fade-in backdrop, scale-in content"
+      },
+      "loading_states": {
+        "skeleton": "Use Shadcn Skeleton with pulse animation",
+        "spinners": "Subtle rotation, brand color accent",
+        "progress": "Smooth progress bar with brand color"
+      }
+    },
+
+    "transition_specifications": {
+      "fast": "duration-150 - hover states, focus rings",
+      "normal": "duration-200 - most interactions, color changes",
+      "slow": "duration-300 - layout shifts, entrance animations",
+      "easing": "ease-in-out for most, ease-out for entrances, ease-in for exits",
+      "critical_rule": "NEVER use transition: all - specify properties (transform, opacity, colors, shadow)"
+    },
+
+    "scroll_animations": {
+      "smooth_scrolling": "NOT REQUIRED for dashboards - standard browser scroll is acceptable",
+      "scroll_to_top": "Smooth scroll behavior for back-to-top buttons",
+      "sticky_elements": "Smooth transition when elements become sticky"
+    },
+
+    "accessibility_motion": {
+      "prefers_reduced_motion": "MUST disable or reduce all animations for users who prefer reduced motion",
+      "implementation": "@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }",
+      "decorative_elements": "Add aria-hidden='true' to purely decorative animations"
+    }
+  },
+
+  "data_visualization": {
+    "chart_library": "SHADCN_CHARTS_WITH_RECHARTS",
+    "library_rationale": "Shadcn chart components built on Recharts provide excellent theming integration, accessibility, and customization for enterprise dashboards.",
+    
+    "chart_types_by_use_case": {
+      "revenue_trends": {
+        "chart_type": "Line Chart or Area Chart",
+        "shadcn_component": "ChartContainer with LineChart",
+        "usage": "Daily/weekly/monthly revenue tracking across brands",
+        "colors": "Use brand colors for multi-brand comparison"
+      },
+      "sales_comparison": {
+        "chart_type": "Bar Chart or Column Chart",
+        "shadcn_component": "ChartContainer with BarChart",
+        "usage": "Compare sales across brands, categories, or time periods",
+        "colors": "Use chart palette colors"
+      },
+      "order_status_breakdown": {
+        "chart_type": "Donut Chart or Pie Chart",
+        "shadcn_component": "ChartContainer with PieChart",
+        "usage": "Visualize order status distribution (pending, completed, cancelled)",
+        "colors": "Use functional colors (success, warning, error)"
+      },
+      "inventory_levels": {
+        "chart_type": "Bar Chart with threshold lines",
+        "shadcn_component": "ChartContainer with BarChart + ReferenceLine",
+        "usage": "Show stock levels with low-stock warnings",
+        "colors": "Green for healthy stock, amber for low, red for out-of-stock"
+      },
+      "customer_segments": {
+        "chart_type": "Stacked Bar Chart or Tree Map",
+        "shadcn_component": "ChartContainer with BarChart (stacked)",
+        "usage": "Customer distribution by segment, location, or value",
+        "colors": "Use chart palette"
+      },
+      "conversion_funnel": {
+        "chart_type": "Funnel Chart (custom)",
+        "implementation": "Build custom funnel with descending bars",
+        "usage": "Visualize customer journey from visit to purchase",
+        "colors": "Single brand color with opacity gradient"
+      },
+      "time_series_comparison": {
+        "chart_type": "Multi-line Chart",
+        "shadcn_component": "ChartContainer with LineChart (multiple lines)",
+        "usage": "Compare metrics over time (this year vs last year)",
+        "colors": "Use contrasting colors from chart palette"
+      }
+    },
+
+    "chart_design_rules": {
+      "grid_lines": "Subtle (chart_grid color), horizontal only for most charts",
+      "axis_labels": "Small (text-xs), secondary text color, font-body",
+      "legend": "Horizontal below chart, use badges with brand colors",
+      "tooltips": "Dark background with white text, show all relevant data points",
+      "responsive": "Charts must adapt to container width, maintain aspect ratio",
+      "empty_states": "Show helpful message and illustration when no data available",
+      "loading_states": "Use skeleton loaders matching chart shape"
+    },
+
+    "chart_color_accessibility": {
+      "color_blind_friendly": "Ensure chart colors are distinguishable for color-blind users",
+      "patterns": "Consider adding patterns or textures for critical distinctions",
+      "labels": "Always include data labels or legends, don't rely on color alone",
+      "contrast": "Ensure sufficient contrast between chart elements and background"
+    },
+
+    "kpi_card_design": {
+      "structure": "Label (uppercase, small) + Large number + Change indicator + Sparkline (optional)",
+      "number_size": "text-3xl md:text-4xl font-heading font-bold",
+      "change_indicator": "Small badge with arrow icon, success/error color",
+      "sparkline": "Tiny line chart showing trend, 60px height",
+      "layout": "Vertical stack with generous spacing (space-y-2)"
+    }
+  },
+
+  "icons_and_assets": {
+    "icon_library": "LUCIDE_REACT",
+    "icon_library_rationale": "Lucide React is already installed, provides consistent stroke-based icons perfect for enterprise dashboards, and has excellent coverage.",
+    
+    "icon_usage": {
+      "navigation": "20px size, secondary text color",
+      "buttons": "16px size, inherit button text color",
+      "form_inputs": "18px size, tertiary text color, positioned left",
+      "status_indicators": "14px size, functional colors (success, warning, error)",
+      "data_tables": "16px size, action icons in tertiary color",
+      "kpi_cards": "24px size, brand colors or tertiary"
+    },
+
+    "icon_style_rules": {
+      "stroke_width": "1.5 to 2 for consistency",
+      "never_use_emoji": "FORBIDDEN to use emoji characters for icons (🤖💰📊 etc)",
+      "always_use_components": "Import from lucide-react, never use unicode or emoji",
+      "accessibility": "Add aria-label or aria-hidden='true' depending on context"
+    },
+
+    "brand_logos": {
+      "rihla_main": "Elegant wordmark with subtle geometric pattern",
+      "rihla_abaya": "Incorporate flowing fabric motif",
+      "rihla_atelier": "Incorporate jewelry/gem motif",
+      "rihla_technologies": "Incorporate circuit/tech motif",
+      "rihla_brand_journey": "Incorporate path/journey motif",
+      "logo_usage": "Display in header, brand switcher, and login page"
+    },
+
+    "image_assets": {
+      "product_images": {
+        "abaya_products": [
+          {
+            "url": "https://images.unsplash.com/photo-1767469697194-ac997d70b1ee",
+            "description": "Woman in elegant black abaya sitting in chair",
+            "usage": "Hero image for Rihla Abaya dashboard, product showcase"
+          },
+          {
+            "url": "https://images.unsplash.com/photo-1762605135376-ae5af70a5628",
+            "description": "Two women in elegant abayas standing indoors",
+            "usage": "Multi-product display, category headers"
+          },
+          {
+            "url": "https://images.unsplash.com/photo-1762605135012-56a59a059e60",
+            "description": "Woman in long beige coat on stairs",
+            "usage": "Seasonal collection, neutral tone products"
+          }
+        ],
+        "atelier_products": [
+          {
+            "url": "https://images.unsplash.com/photo-1717409014701-8e630ff057f3",
+            "description": "Gold jewelry display in Grand Bazaar style",
+            "usage": "Hero image for Rihla Atelier dashboard, luxury jewelry showcase"
+          },
+          {
+            "url": "https://images.unsplash.com/photo-1708268765147-82cf60cb4cbb",
+            "description": "Vintage pearl earrings with black stones",
+            "usage": "Product detail pages, earring category"
+          },
+          {
+            "url": "https://images.unsplash.com/photo-1667013829921-b1c1719a0cfa",
+            "description": "Gold and red necklace",
+            "usage": "Featured products, necklace category"
+          },
+          {
+            "url": "https://images.unsplash.com/photo-1767096612165-b5a33caa48a5",
+            "description": "Collection of ornate golden jewelry with pearls and gems",
+            "usage": "Collection showcase, luxury product grid"
+          }
+        ],
+        "technologies_office": [
+          {
+            "url": "https://images.unsplash.com/photo-1748346918817-0b1b6b2f9bab",
+            "description": "People working at desks in modern office",
+            "usage": "Hero image for Rihla Technologies dashboard, team section"
+          }
+        ]
+      },
+      "empty_states": "Use simple illustrations or icons, not photos, for empty data states",
+      "placeholder_images": "NEVER use placeholder text like 'Image Here' - always use actual images from image_selector tool"
+    }
+  },
+
+  "accessibility": {
+    "wcag_compliance": "WCAG 2.1 Level AA minimum",
+    
+    "color_contrast": {
+      "normal_text": "4.5:1 minimum contrast ratio",
+      "large_text": "3:1 minimum contrast ratio (18px+ or 14px+ bold)",
+      "interactive_elements": "3:1 contrast against adjacent colors",
+      "focus_indicators": "Must be visible and high contrast"
+    },
+
+    "keyboard_navigation": {
+      "tab_order": "Logical tab order following visual hierarchy",
+      "focus_visible": "Clear focus indicators on all interactive elements",
+      "skip_links": "Provide skip-to-content link for keyboard users",
+      "keyboard_shortcuts": "Document and implement common shortcuts (Ctrl+K for search, etc)"
+    },
+
+    "screen_reader_support": {
+      "semantic_html": "Use proper heading hierarchy (h1, h2, h3), landmarks (nav, main, aside)",
+      "aria_labels": "Provide descriptive labels for icon-only buttons",
+      "aria_live": "Use for dynamic content updates (notifications, live data)",
+      "alt_text": "Descriptive alt text for all images, empty alt for decorative images"
+    },
+
+    "form_accessibility": {
+      "labels": "Every input must have associated label",
+      "error_messages": "Clear, descriptive error messages linked to inputs",
+      "required_fields": "Clearly marked with asterisk and aria-required",
+      "validation": "Real-time validation with helpful feedback"
+    },
+
+    "testing_attributes": {
+      "data_testid": "All interactive and key informational elements MUST include data-testid attribute",
+      "convention": "kebab-case, role-based naming (e.g., 'login-form-submit-button', 'revenue-chart', 'brand-switcher-dropdown')",
+      "examples": [
+        "data-testid='dashboard-revenue-card'",
+        "data-testid='orders-table-row'",
+        "data-testid='brand-switcher-button'",
+        "data-testid='customer-detail-modal'",
+        "data-testid='inventory-low-stock-alert'"
+      ]
+    }
+  },
+
+  "brand_specific_guidelines": {
+    "brand_switcher": {
+      "component": "Custom dropdown using Shadcn Select",
+      "location": "Top navigation bar, always visible",
+      "design": "Show brand logo/icon + name, use brand color as accent",
+      "behavior": "Switching brand filters all dashboard data to that brand",
+      "all_brands_view": "Include 'All Brands' option for unified view"
+    },
+
+    "brand_visual_identity": {
+      "rihla_abaya": {
+        "personality": "Elegant, modest, luxurious, feminine",
+        "visual_cues": "Flowing lines, soft curves, fabric textures",
+        "imagery": "Elegant abayas, modest fashion, sophisticated styling",
+        "color_usage": "Amethyst purple as primary accent"
+      },
+      "rihla_atelier": {
+        "personality": "Luxurious, crafted, precious, timeless",
+        "visual_cues": "Geometric precision, metallic accents, gem-like details",
+        "imagery": "Fine jewelry, gold details, craftsmanship close-ups",
+        "color_usage": "Rich gold as primary accent"
+      },
+      "rihla_technologies": {
+        "personality": "Innovative, modern, efficient, professional",
+        "visual_cues": "Clean lines, tech patterns, digital aesthetics",
+        "imagery": "Modern office, technology, professional team",
+        "color_usage": "Electric blue as primary accent"
+      },
+      "rihla_brand_journey": {
+        "personality": "Growth-focused, strategic, consultative, transformative",
+        "visual_cues": "Path motifs, progression indicators, journey metaphors",
+        "imagery": "Business growth, consulting, strategic planning",
+        "color_usage": "Emerald green as primary accent"
+      }
+    }
+  },
+
+  "page_specific_guidelines": {
+    "login_page": {
+      "layout": "Split screen - left side brand hero, right side form",
+      "hero_content": "Large Rihla logo, tagline, elegant background image",
+      "form_design": "Centered card with generous padding, clear labels, primary CTA",
+      "branding": "Emphasize luxury and professionalism"
+    },
+
+    "main_dashboard": {
+      "layout": "Sidebar navigation + header + grid of widgets",
+      "top_section": "Brand switcher + key metrics (revenue, orders, customers) in 4-column grid",
+      "middle_section": "Revenue chart (col-span-3) + recent activity feed (col-span-1)",
+      "bottom_section": "Top products table + order status breakdown chart",
+      "quick_actions": "Floating action button for common tasks"
+    },
+
+    "orders_page": {
+      "layout": "Header + filters + data table + pagination",
+      "filters": "Status, date range, brand, search",
+      "table_columns": "Order ID, Customer, Brand, Items, Total, Status, Date, Actions",
+      "row_actions": "View details, update status, print invoice",
+      "status_badges": "Color-coded badges for order status"
+    },
+
+    "inventory_page": {
+      "layout": "Header + filters + grid/table toggle + data display",
+      "filters": "Brand, category, stock level, search",
+      "grid_view": "Product cards with image, name, SKU, stock level, price",
+      "table_view": "Detailed table with all product information",
+      "stock_indicators": "Color-coded indicators for stock levels (green: healthy, amber: low, red: out)"
+    },
+
+    "customers_page": {
+      "layout": "Header + filters + customer list + detail sidebar",
+      "filters": "Segment, lifetime value, location, search",
+      "list_view": "Customer cards with avatar, name, email, total orders, lifetime value",
+      "detail_view": "Slide-out panel with full customer profile, order history, notes"
+    },
+
+    "analytics_page": {
+      "layout": "Header + date range selector + multi-chart dashboard",
+      "sections": [
+        "Revenue trends (line chart)",
+        "Sales by brand (bar chart)",
+        "Customer acquisition (area chart)",
+        "Conversion funnel (custom funnel)",
+        "Top products (table)",
+        "Geographic distribution (map or bar chart)"
+      ],
+      "interactivity": "All charts respond to date range changes, support drill-down"
+    }
+  },
+
+  "technical_implementation": {
+    "tech_stack": {
+      "frontend": "React.js",
+      "styling": "Tailwind CSS",
+      "components": "Shadcn/UI",
+      "charts": "Recharts via Shadcn Charts",
+      "icons": "Lucide React",
+      "animations": "Tailwind CSS transitions + Framer Motion (if needed)",
+      "forms": "React Hook Form + Zod validation",
+      "notifications": "Sonner (already configured)",
+      "backend": "FastAPI",
+      "database": "MongoDB"
+    },
+
+    "file_structure": {
+      "components": "/app/frontend/src/components/",
+      "pages": "/app/frontend/src/pages/",
+      "ui_components": "/app/frontend/src/components/ui/",
+      "styles": "/app/frontend/src/index.css and /app/frontend/src/App.css",
+      "assets": "/app/frontend/src/assets/"
+    },
+
+    "css_custom_properties": {
+      "update_index_css": "Update CSS custom properties in /app/frontend/src/index.css to match design system colors",
+      "dark_mode_variables": "Update .dark class variables with jewel-toned palette",
+      "light_mode_variables": "Update :root variables for light mode",
+      "add_font_families": "Add font-display, font-heading, font-body, font-mono to Tailwind config"
+    },
+
+    "tailwind_config_updates": {
+      "extend_colors": "Add brand colors, functional colors, chart colors to theme.extend.colors",
+      "extend_font_family": "Add custom font families (display, heading, body, mono)",
+      "extend_spacing": "Ensure all spacing values are available",
+      "extend_border_radius": "Confirm border radius values match design system"
+    },
+
+    "component_export_conventions": {
+      "components": "Use named exports (export const ComponentName = ...)",
+      "pages": "Use default exports (export default function PageName() {...})",
+      "consistency": "Follow existing patterns in codebase"
+    },
+
+    "state_management": {
+      "global_state": "Use React Context for theme, user, selected brand",
+      "local_state": "Use useState for component-specific state",
+      "server_state": "Use React Query or SWR for API data fetching and caching"
+    },
+
+    "api_integration": {
+      "base_url": "Configure API base URL for FastAPI backend",
+      "authentication": "JWT tokens stored in httpOnly cookies",
+      "error_handling": "Global error boundary + toast notifications for API errors",
+      "loading_states": "Skeleton loaders for data fetching"
+    }
+  },
+
+  "general_ui_ux_guidelines": {
+    "design_principles": [
+      "Clarity over cleverness - users should never be confused",
+      "Consistency across all pages - same patterns, same interactions",
+      "Feedback for every action - loading states, success messages, error handling",
+      "Progressive disclosure - show essential info first, details on demand",
+      "Forgiveness - allow undo, confirm destructive actions",
+      "Performance - fast load times, optimistic updates, efficient rendering"
+    ],
+
+    "interaction_patterns": {
+      "primary_actions": "Prominent buttons with clear labels, positioned consistently",
+      "secondary_actions": "Ghost or outline buttons, less prominent",
+      "destructive_actions": "Red color, require confirmation dialog",
+      "bulk_actions": "Checkbox selection + action bar at top of table",
+      "inline_editing": "Click to edit, save/cancel buttons, validation feedback",
+      "search": "Global search in header, page-specific search in filters"
+    },
+
+    "error_handling": {
+      "form_errors": "Inline validation, clear error messages below fields",
+      "api_errors": "Toast notifications with retry option",
+      "empty_states": "Helpful message + illustration + CTA to add data",
+      "404_pages": "Friendly message + navigation back to dashboard",
+      "network_errors": "Offline indicator + retry mechanism"
+    },
+
+    "loading_states": {
+      "initial_load": "Full-page skeleton matching layout structure",
+      "data_refresh": "Subtle loading indicator, don't block interaction",
+      "button_actions": "Spinner inside button, disable during loading",
+      "infinite_scroll": "Loading indicator at bottom of list"
+    },
+
+    "responsive_design": {
+      "mobile_first": "Design for mobile, enhance for desktop",
+      "breakpoints": "sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px",
+      "mobile_navigation": "Hamburger menu, slide-out drawer",
+      "mobile_tables": "Card view or horizontal scroll with sticky first column",
+      "mobile_charts": "Simplified charts, focus on key metrics"
+    },
+
+    "performance_optimization": {
+      "lazy_loading": "Code-split routes, lazy load heavy components",
+      "image_optimization": "Use WebP format, responsive images, lazy loading",
+      "virtualization": "Use virtual scrolling for long lists (react-window)",
+      "memoization": "Memoize expensive calculations and components",
+      "debouncing": "Debounce search inputs and filters"
+    }
+  },
+
+  "instructions_to_main_agent": {
+    "critical_rules": [
+      "NEVER center-align the app container - do not add text-align: center to .App in App.css",
+      "NEVER use transition: all - always specify properties (transform, opacity, colors, shadow)",
+      "NEVER use emoji characters for icons - always use Lucide React components",
+      "ALWAYS add data-testid attributes to interactive and key informational elements",
+      "ALWAYS explicitly set both background AND text color on hover states",
+      "ALWAYS ensure text meets WCAG AA contrast standards (4.5:1 for normal text)",
+      "ALWAYS use Shadcn components for forms, dialogs, dropdowns - customize styling heavily",
+      "NEVER use Shadcn Card component for dashboard layouts - build custom with raw divs",
+      "ALWAYS use generous spacing (2-3x more than typical) - luxury requires breathing room",
+      "ALWAYS add padding to containers with borders to prevent text collision"
+    ],
+
+    "implementation_sequence": [
+      "1. Update /app/frontend/src/index.css with new color system (CSS custom properties)",
+      "2. Update /app/frontend/tailwind.config.js with custom fonts and extended colors",
+      "3. Add Google Fonts links to index.html for Playfair Display, Manrope, IBM Plex Sans, IBM Plex Mono",
+      "4. Create theme context for dark/light mode toggle and brand selection",
+      "5. Build core layout components (Sidebar, Header, MainContent)",
+      "6. Build reusable dashboard components (KPICard, ChartContainer, DataTable)",
+      "7. Implement authentication pages (Login, Register)",
+      "8. Implement main dashboard with brand switcher and key metrics",
+      "9. Implement data pages (Orders, Inventory, Customers)",
+      "10. Implement analytics page with charts and visualizations",
+      "11. Add loading states, error handling, and empty states throughout",
+      "12. Test responsive design on mobile, tablet, desktop",
+      "13. Test accessibility (keyboard navigation, screen readers, color contrast)",
+      "14. Optimize performance (lazy loading, code splitting, image optimization)"
+    ],
+
+    "component_creation_guidelines": [
+      "Use named exports for components (export const ComponentName = ...)",
+      "Use default exports for pages (export default function PageName() {...})",
+      "Always include PropTypes or TypeScript types for props",
+      "Add data-testid attributes to all interactive elements",
+      "Include hover, focus, and active states for all interactive elements",
+      "Use Tailwind classes for styling, avoid inline styles",
+      "Ensure components are responsive (mobile-first approach)",
+      "Add loading and error states where applicable",
+      "Include accessibility attributes (aria-label, aria-describedby, etc)",
+      "Follow existing component patterns in /app/frontend/src/components/ui/"
+    ],
+
+    "styling_guidelines": [
+      "Use Tailwind utility classes for all styling",
+      "Use CSS custom properties from index.css for colors",
+      "Use font-display for large headings, font-heading for section headers, font-body for text",
+      "Use tracking-tight for large headings, tracking-wide for labels",
+      "Use generous spacing (p-6, p-8, gap-6, space-y-8)",
+      "Use subtle borders (border-border/50) for default, stronger for emphasis",
+      "Use rounded-lg for most components, rounded-full for badges and pills",
+      "Use shadow-sm for default elevation, shadow-md for hover, shadow-lg for modals",
+      "Always specify transition properties (not transition-all)",
+      "Use brand colors sparingly - only for brand-specific elements and CTAs"
+    ],
+
+    "data_visualization_guidelines": [
+      "Use Shadcn Chart components with Recharts for all charts",
+      "Use brand colors for multi-brand comparisons",
+      "Use chart palette colors for general data series",
+      "Use functional colors (success, warning, error) for status-based data",
+      "Always include tooltips with relevant data points",
+      "Always include legends for multi-series charts",
+      "Use responsive chart containers that adapt to screen size",
+      "Add loading skeletons for charts while data is fetching",
+      "Add empty states with helpful messages when no data available",
+      "Ensure charts are accessible (color-blind friendly, keyboard navigable)"
+    ],
+
+    "form_guidelines": [
+      "Always use Shadcn form components (Input, Select, Checkbox, etc)",
+      "Always use React Hook Form for form state management",
+      "Always use Zod for form validation",
+      "Always show inline validation errors below fields",
+      "Always disable submit button during submission",
+      "Always show loading spinner in submit button during submission",
+      "Always show success toast after successful submission",
+      "Always show error toast if submission fails",
+      "Always provide clear labels for all form fields",
+      "Always mark required fields with asterisk and aria-required"
+    ],
+
+    "table_guidelines": [
+      "Use Shadcn Table component as base, customize heavily",
+      "Never wrap tables in Card component - use direct border styling",
+      "Use sticky header for long tables",
+      "Use hover state on rows for better scanability",
+      "Use zebra striping sparingly - only if it improves readability",
+      "Include sorting functionality for key columns",
+      "Include filtering functionality (search, status, date range)",
+      "Include pagination for large datasets",
+      "Use skeleton loaders while data is loading",
+      "Add empty state with helpful message when no data",
+      "Make tables responsive (card view on mobile or horizontal scroll)"
+    ],
+
+    "navigation_guidelines": [
+      "Use fixed sidebar navigation on desktop (w-64)",
+      "Use slide-out drawer navigation on mobile",
+      "Highlight active page in navigation",
+      "Group navigation items by category with section headers",
+      "Use icons + text for navigation items",
+      "Include brand switcher in top navigation bar",
+      "Include user menu in top right corner",
+      "Include global search in header (Ctrl+K shortcut)",
+      "Use breadcrumbs for deep navigation hierarchies",
+      "Ensure keyboard navigation works (Tab, Enter, Escape)"
+    ],
+
+    "brand_switcher_implementation": [
+      "Use Shadcn Select component as base",
+      "Position in top navigation bar, always visible",
+      "Show brand logo/icon + name in dropdown",
+      "Use brand color as accent for selected brand",
+      "Include 'All Brands' option for unified view",
+      "Switching brand should filter all dashboard data",
+      "Store selected brand in global state (Context)",
+      "Persist selected brand in localStorage",
+      "Show loading state when switching brands",
+      "Update page title to reflect selected brand"
+    ],
+
+    "common_pitfalls_to_avoid": [
+      "DO NOT use complete transparent backgrounds for headers/overlays with content underneath",
+      "DO NOT use default Shadcn styling without customization - it looks generic",
+      "DO NOT use Inter font for headings - use Playfair Display or Manrope",
+      "DO NOT use purple/teal gradients for CTAs - use solid white on dark backgrounds",
+      "DO NOT center-align everything - use intentional alignment based on content",
+      "DO NOT cram content - use generous spacing for luxury feel",
+      "DO NOT use emoji icons - always use Lucide React components",
+      "DO NOT forget hover states - every interactive element needs feedback",
+      "DO NOT forget focus states - accessibility is critical",
+      "DO NOT forget loading states - users need feedback during async operations"
+    ]
+  },
+
+  "universal_guidelines_for_main_agent": {
+    "anti_ai_slop_rules": [
+      "Avoid generic centered layouts - use intentional asymmetry and hierarchy",
+      "Avoid simplistic gradients - use solid colors or subtle textures",
+      "Avoid uniform styling - create depth through layered design with z-index",
+      "Use glass-morphism effects with backdrop filters (12-24px blur) for overlays",
+      "Dark colors look good independently without gradients - avoid dark color gradients",
+      "Create distinctive frontends that surprise and delight, not generic templates"
+    ],
+
+    "transition_rules": [
+      "NEVER apply universal transition (transition: all) - it breaks transforms",
+      "Always add transitions for specific properties: transform, opacity, colors, shadow",
+      "Exclude transforms from universal transitions",
+      "Use duration-150 for fast interactions, duration-200 for normal, duration-300 for slow"
+    ],
+
+    "alignment_rules": [
+      "NEVER center-align the app container (.App { text-align: center; })",
+      "This disrupts natural reading flow of text",
+      "Use intentional alignment based on content type and hierarchy"
+    ],
+
+    "button_styling": [
+      "Always use modern button styles (pill-shaped or sharp with rounded corners)",
+      "Always include interaction animations (hover, active, focus states)",
+      "Use colors relevant to app style and context",
+      "Primary actions: solid background, high contrast",
+      "Secondary actions: outline or ghost style",
+      "Destructive actions: red color with confirmation"
+    ],
+
+    "icon_usage": [
+      "NEVER use AI assistant emoji characters (🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc)",
+      "ALWAYS use Lucide React icon components",
+      "Import from lucide-react, never use unicode or emoji",
+      "Add aria-label or aria-hidden='true' depending on context"
+    ],
+
+    "micro_interactions": [
+      "Every interaction needs micro-animations",
+      "Hover states for all interactive elements",
+      "Transitions for state changes",
+      "Parallax effects where appropriate",
+      "Entrance animations for content",
+      "Static designs feel dead - add life through motion"
+    ],
+
+    "spacing_philosophy": [
+      "Use 2-3x more spacing than feels comfortable",
+      "Cramped designs look cheap",
+      "Generous spacing creates luxury and improves readability",
+      "Use p-6, p-8, gap-6, space-y-8 as baseline, not p-2 or p-4"
+    ],
+
+    "visual_polish": [
+      "Add subtle grain textures or noise overlays for depth",
+      "Consider custom cursors for interactive elements",
+      "Style selection states (::selection pseudo-element)",
+      "Add loading animations that match brand aesthetic",
+      "These details separate good from extraordinary"
+    ],
+
+    "component_reuse": [
+      "Prioritize using pre-existing components from src/components/ui",
+      "Create new components that match style and conventions of existing ones",
+      "Examine existing components to understand project patterns before creating new ones"
+    ],
+
+    "toast_notifications": [
+      "Use Sonner for all toast notifications",
+      "Sonner component located at /app/frontend/src/components/ui/sonner.jsx",
+      "Configure with appropriate duration and position",
+      "Use for success messages, error messages, and informational updates"
+    ]
+  }
+}

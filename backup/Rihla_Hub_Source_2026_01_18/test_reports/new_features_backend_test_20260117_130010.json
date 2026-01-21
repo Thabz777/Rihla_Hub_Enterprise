@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-01-17T13:00:10.939311",
+  "total_tests": 21,
+  "passed": 21,
+  "failed": 0,
+  "success_rate": "100.0%",
+  "results": [
+    {
+      "test": "User Login",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Product: Test Product 1",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Product: Test Product 2",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Product: Test Product 3",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Order: Multiple Products with VAT",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Order: Without VAT",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Order: INR with 18% VAT",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Payment Method: UPI",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Payment Method: Cash on delivery",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Payment Method: Bank transfer",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Products Before Order",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Create Order for Stock Test",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Products After Order",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Stock Deduction",
+      "passed": true,
+      "status_code": 200,
+      "message": "Stock deducted correctly"
+    },
+    {
+      "test": "Update Product Category",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Customers for Invoice Test",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Public Invoice Access",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Orders for abaya",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Orders for atelier",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Orders for technologies",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    },
+    {
+      "test": "Get Orders for brand-journey",
+      "passed": true,
+      "status_code": 200,
+      "message": "Success"
+    }
+  ]
+}

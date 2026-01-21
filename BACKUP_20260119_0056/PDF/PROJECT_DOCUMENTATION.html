@@ -1,0 +1,803 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROJECT DOCUMENTATION - Rihla Hub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      color: #1a1a2e;
+      background: #ffffff;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid #3b82f6;
+    }
+    
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+      color: #475569;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 2rem;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #e2e8f0;
+    }
+    
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.85em;
+      color: #e11d48;
+    }
+    
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1rem 0 2rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    pre code {
+      background: none;
+      color: #e2e8f0;
+      padding: 0;
+    }
+    
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+      color: #475569;
+    }
+    
+    hr {
+      border: none;
+      border-top: 2px solid #e2e8f0;
+      margin: 2rem 0;
+    }
+    
+    blockquote {
+      border-left: 4px solid #3b82f6;
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: #64748b;
+      font-style: italic;
+    }
+    
+    .header-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .header-logo img {
+      height: 60px;
+    }
+    
+    .document-info {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    
+    .document-info h1 {
+      color: white;
+      border-bottom: none;
+      margin-bottom: 0.5rem;
+    }
+    
+    .document-info p {
+      color: rgba(255,255,255,0.9);
+      margin: 0;
+    }
+    
+    @media print {
+      body { padding: 20px; }
+      pre { white-space: pre-wrap; }
+      .document-info { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="document-info">
+    <h1>Rihla Hub - PROJECT DOCUMENTATION</h1>
+    <p>Enterprise Cloud Platform Documentation</p>
+  </div>
+  <h1>Rihla Enterprise Cloud Platform</h1>
+<h2>Project Documentation v1.0</h2>
+<hr>
+<h1>📋 Table of Contents</h1>
+<ol>
+<li><a href="#executive-summary">Executive Summary</a></li>
+<li><a href="#project-overview">Project Overview</a></li>
+<li><a href="#system-architecture">System Architecture</a></li>
+<li><a href="#technology-stack">Technology Stack</a></li>
+<li><a href="#core-modules">Core Modules</a></li>
+<li><a href="#database-schema">Database Schema</a></li>
+<li><a href="#api-documentation">API Documentation</a></li>
+<li><a href="#user-roles--permissions">User Roles &amp; Permissions</a></li>
+<li><a href="#security-features">Security Features</a></li>
+<li><a href="#deployment-architecture">Deployment Architecture</a></li>
+</ol>
+<hr>
+<h1>Executive Summary</h1>
+<p><strong>Rihla Enterprise Cloud Platform</strong> is a cloud-native, multi-brand enterprise management solution designed for Rihla&#39;s portfolio of businesses. The platform provides a unified command center for managing e-commerce operations, inventory, customers, employees, and financial analytics across all Rihla brands.</p>
+<h3>Key Highlights</h3>
+<ul>
+<li><strong>Multi-Brand Management</strong>: Single dashboard to manage 4+ brands</li>
+<li><strong>Real-Time Analytics</strong>: Live KPIs, charts, and performance metrics</li>
+<li><strong>Role-Based Access</strong>: Admin and User roles with granular permissions</li>
+<li><strong>2-Factor Authentication</strong>: Enhanced security with TOTP-based 2FA</li>
+<li><strong>Responsive Design</strong>: Works seamlessly on desktop and mobile</li>
+<li><strong>Saudi Arabia Compliant</strong>: 15% VAT calculation, SAR currency default</li>
+</ul>
+<hr>
+<h1>Project Overview</h1>
+<h2>Vision</h2>
+<p>To create a unified, scalable, and secure enterprise platform that empowers Rihla&#39;s teams to manage all business operations from a single, intuitive interface.</p>
+<h2>Objectives</h2>
+<ol>
+<li>Centralize multi-brand operations management</li>
+<li>Provide real-time visibility into business performance</li>
+<li>Streamline order and inventory management</li>
+<li>Enable data-driven decision making through analytics</li>
+<li>Ensure security with modern authentication</li>
+<li>Support Saudi Arabian business requirements (VAT, currency)</li>
+</ol>
+<h2>Brands Managed</h2>
+<table>
+<thead>
+<tr>
+<th>Brand</th>
+<th>Industry</th>
+<th>Color Code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rihla Technologies</td>
+<td>Software/Cloud Services</td>
+<td>#3B82F6 (Blue)</td>
+</tr>
+<tr>
+<td>Rihla Brand Journey</td>
+<td>Marketing/Branding</td>
+<td>#10B981 (Green)</td>
+</tr>
+<tr>
+<td>Rihla Abaya</td>
+<td>Fashion/Clothing</td>
+<td>#8B5CF6 (Purple)</td>
+</tr>
+<tr>
+<td>Rihla Atelier</td>
+<td>Luxury/Couture</td>
+<td>#F59E0B (Amber)</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>System Architecture</h1>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                        USERS                                     │
+│                    (Web Browsers)                                │
+└─────────────────────┬───────────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              CLOUDFLARE PAGES (Frontend)                         │
+│              https://rihlahub.rihlatech.info                     │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  React SPA (Vite Build)                                  │    │
+│  │  - Components                                            │    │
+│  │  - Pages                                                 │    │
+│  │  - Context (Auth, Theme)                                 │    │
+│  │  - Tailwind CSS                                          │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────┬───────────────────────────────────────────┘
+                      │ HTTPS API Calls
+                      ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              GOOGLE CLOUD RUN (Backend)                          │
+│              https://rihla-backend-*.us-west1.run.app            │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  Node.js + Express API                                   │    │
+│  │  - Authentication (/api/auth/*)                          │    │
+│  │  - Dashboard (/api/dashboard/*)                          │    │
+│  │  - Orders (/api/orders/*)                                │    │
+│  │  - Products (/api/products/*)                            │    │
+│  │  - Customers (/api/customers/*)                          │    │
+│  │  - Employees (/api/employees/*)                          │    │
+│  │  - Users (/api/users/*)                                  │    │
+│  │  - Public Invoice (/api/public/*)                        │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────┬───────────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              DATA STORAGE (In-Memory)                            │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  USERS | BRANDS | PRODUCTS | CUSTOMERS | ORDERS | EMP.  │    │
+│  │                                                          │    │
+│  │  Note: For production, migrate to PostgreSQL/Supabase    │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h1>Technology Stack</h1>
+<h2>Frontend</h2>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Purpose</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>React</td>
+<td>UI Framework</td>
+<td>18.x</td>
+</tr>
+<tr>
+<td>Vite</td>
+<td>Build Tool</td>
+<td>5.x</td>
+</tr>
+<tr>
+<td>React Router</td>
+<td>Navigation</td>
+<td>6.x</td>
+</tr>
+<tr>
+<td>Tailwind CSS</td>
+<td>Styling</td>
+<td>3.x</td>
+</tr>
+<tr>
+<td>Recharts</td>
+<td>Charts/Graphs</td>
+<td>2.x</td>
+</tr>
+<tr>
+<td>Lucide React</td>
+<td>Icons</td>
+<td>Latest</td>
+</tr>
+<tr>
+<td>Axios</td>
+<td>HTTP Client</td>
+<td>1.x</td>
+</tr>
+<tr>
+<td>Sonner</td>
+<td>Toast Notifications</td>
+<td>Latest</td>
+</tr>
+<tr>
+<td>Shadcn/UI</td>
+<td>Component Library</td>
+<td>Latest</td>
+</tr>
+</tbody></table>
+<h2>Backend</h2>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Purpose</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Node.js</td>
+<td>Runtime</td>
+<td>20.x</td>
+</tr>
+<tr>
+<td>Express.js</td>
+<td>Web Framework</td>
+<td>4.x</td>
+</tr>
+<tr>
+<td>CORS</td>
+<td>Cross-Origin Support</td>
+<td>Latest</td>
+</tr>
+<tr>
+<td>dotenv</td>
+<td>Environment Variables</td>
+<td>Latest</td>
+</tr>
+</tbody></table>
+<h2>Infrastructure</h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+<th>Provider</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Frontend Hosting</td>
+<td>Static Site Hosting</td>
+<td>Cloudflare Pages</td>
+</tr>
+<tr>
+<td>Backend Hosting</td>
+<td>Serverless Containers</td>
+<td>Google Cloud Run</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>Domain Management</td>
+<td>Cloudflare</td>
+</tr>
+<tr>
+<td>Custom Domain</td>
+<td>rihlahub.rihlatech.info</td>
+<td>Cloudflare</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>Core Modules</h1>
+<h2>1. Dashboard</h2>
+<ul>
+<li><strong>Purpose</strong>: Central command center overview</li>
+<li><strong>Features</strong>:<ul>
+<li>KPI Cards (Revenue, Orders, Customers, Products)</li>
+<li>Revenue Trend Chart (30 days)</li>
+<li>Order Status Pie Chart</li>
+<li>Recent Orders Table</li>
+<li>Orders by User (Admin only)</li>
+</ul>
+</li>
+<li><strong>Access</strong>: All authenticated users</li>
+</ul>
+<h2>2. Orders Management</h2>
+<ul>
+<li><strong>Purpose</strong>: Create and manage customer orders</li>
+<li><strong>Features</strong>:<ul>
+<li>Create new orders with multiple items</li>
+<li>Customer selection or creation</li>
+<li>Automatic VAT calculation (15%)</li>
+<li>Status management (Pending → Processing → Completed)</li>
+<li>Brand filtering</li>
+</ul>
+</li>
+<li><strong>Access</strong>: All authenticated users</li>
+</ul>
+<h2>3. Inventory Management</h2>
+<ul>
+<li><strong>Purpose</strong>: Product and stock management</li>
+<li><strong>Features</strong>:<ul>
+<li>Product CRUD operations</li>
+<li>Stock level tracking</li>
+<li>Brand assignment</li>
+<li>Category management</li>
+<li>Price management (SAR)</li>
+</ul>
+</li>
+<li><strong>Access</strong>: All authenticated users</li>
+</ul>
+<h2>4. Customer Management</h2>
+<ul>
+<li><strong>Purpose</strong>: Customer relationship tracking</li>
+<li><strong>Features</strong>:<ul>
+<li>Customer list with order history</li>
+<li>Lifetime Value (LTV) calculation</li>
+<li>Recent orders per customer</li>
+<li>Invoice generation</li>
+</ul>
+</li>
+<li><strong>Access</strong>: All authenticated users</li>
+</ul>
+<h2>5. Employee Management</h2>
+<ul>
+<li><strong>Purpose</strong>: HR and performance tracking</li>
+<li><strong>Features</strong>:<ul>
+<li>Employee CRUD operations</li>
+<li>Department/Brand assignment</li>
+<li>Salary and bonus tracking</li>
+<li>Target setting and achievement tracking</li>
+<li>Annual target reset</li>
+</ul>
+</li>
+<li><strong>Access</strong>: Admin only</li>
+</ul>
+<h2>6. Analytics</h2>
+<ul>
+<li><strong>Purpose</strong>: Business intelligence and reporting</li>
+<li><strong>Features</strong>:<ul>
+<li>User performance metrics</li>
+<li>Revenue analytics</li>
+<li>Order trends</li>
+</ul>
+</li>
+<li><strong>Access</strong>: Admin only</li>
+</ul>
+<h2>7. Settings</h2>
+<ul>
+<li><strong>Purpose</strong>: User and system administration</li>
+<li><strong>Features</strong>:<ul>
+<li>User management (CRUD)</li>
+<li>Password reset</li>
+<li>Permission management</li>
+<li>2FA reset</li>
+<li>Theme toggle (Dark/Light)</li>
+</ul>
+</li>
+<li><strong>Access</strong>: Admin only (User management)</li>
+</ul>
+<h2>8. Invoice System</h2>
+<ul>
+<li><strong>Purpose</strong>: Invoice generation and verification</li>
+<li><strong>Features</strong>:<ul>
+<li>Professional invoice layout</li>
+<li>QR code for verification</li>
+<li>Public verification page</li>
+<li>Print-friendly design</li>
+</ul>
+</li>
+<li><strong>Access</strong>: Authenticated (generation), Public (verification)</li>
+</ul>
+<hr>
+<h1>Database Schema</h1>
+<h2>Users</h2>
+<pre><code class="language-javascript">{
+  id: Number,
+  email: String,
+  password: String,  // Note: Hash in production
+  full_name: String,
+  role: &#39;admin&#39; | &#39;user&#39;,
+  two_factor_secret: String | null,
+  employee_id: String | null,
+  permissions: {
+    dashboard: Boolean,
+    orders: Boolean,
+    inventory: Boolean,
+    customers: Boolean,
+    analytics: Boolean,
+    settings: Boolean,
+    can_create: Boolean,
+    can_edit: Boolean,
+    can_delete: Boolean
+  }
+}
+</code></pre>
+<h2>Brands</h2>
+<pre><code class="language-javascript">{
+  id: String,
+  name: String,
+  logo: String,
+  color: String  // Hex code
+}
+</code></pre>
+<h2>Products</h2>
+<pre><code class="language-javascript">{
+  id: String,
+  sku: String,
+  name: String,
+  brand_id: String,
+  brand_name: String,
+  price: Number,
+  stock: Number,
+  currency: String,
+  category: String
+}
+</code></pre>
+<h2>Customers</h2>
+<pre><code class="language-javascript">{
+  id: String,
+  name: String,
+  email: String,
+  phone: String,
+  created_at: ISO Date String
+}
+</code></pre>
+<h2>Orders</h2>
+<pre><code class="language-javascript">{
+  id: String,
+  order_number: String,
+  customer_name: String,
+  customer_email: String,
+  customer_id: String,
+  brand_id: String,
+  brand_name: String,
+  items: [{
+    product_id: String,
+    product_name: String,
+    quantity: Number,
+    price: Number
+  }],
+  total: Number,
+  vat_amount: Number,
+  currency: String,
+  status: &#39;pending&#39; | &#39;processing&#39; | &#39;completed&#39; | &#39;cancelled&#39;,
+  created_at: ISO Date String,
+  payment_method: String,
+  created_by_user_id: Number,
+  attributed_employee_id: String
+}
+</code></pre>
+<h2>Employees</h2>
+<pre><code class="language-javascript">{
+  id: String,
+  name: String,
+  email: String,
+  phone: String,
+  position: String,
+  department: String,
+  brand_id: String,
+  brand_name: String,
+  salary: Number,
+  bonus: Number,
+  target: Number,
+  achieved: Number,
+  status: &#39;active&#39; | &#39;inactive&#39;,
+  last_reset_year: Number
+}
+</code></pre>
+<hr>
+<h1>API Documentation</h1>
+<h2>Authentication Endpoints</h2>
+<h3>POST /api/auth/login</h3>
+<p>Login with email and password.</p>
+<ul>
+<li><strong>Body</strong>: <code>{ email, password }</code></li>
+<li><strong>Response</strong>: <code>{ access_token, user }</code> or <code>{ status: &#39;setup_2fa&#39;, qr_code }</code> or <code>{ status: &#39;2fa_required&#39; }</code></li>
+</ul>
+<h3>POST /api/auth/verify-2fa</h3>
+<p>Verify 2FA code.</p>
+<ul>
+<li><strong>Body</strong>: <code>{ email, token, temp_secret? }</code></li>
+<li><strong>Response</strong>: <code>{ access_token, user }</code></li>
+</ul>
+<h3>GET /api/auth/me</h3>
+<p>Get current user info.</p>
+<ul>
+<li><strong>Headers</strong>: <code>Authorization: Bearer &lt;token&gt;</code></li>
+<li><strong>Response</strong>: User object</li>
+</ul>
+<h2>Dashboard Endpoints</h2>
+<h3>GET /api/dashboard/metrics</h3>
+<p>Get KPI metrics.</p>
+<ul>
+<li><strong>Query</strong>: <code>?brand_id=</code></li>
+<li><strong>Response</strong>: <code>{ total_revenue, revenue_change, total_orders, orders_change, total_customers, total_products }</code></li>
+</ul>
+<h3>GET /api/dashboard/revenue-trend</h3>
+<p>Get revenue trend data.</p>
+<ul>
+<li><strong>Query</strong>: <code>?brand_id=&amp;month=&amp;year=</code></li>
+<li><strong>Response</strong>: <code>[{ date, revenue }]</code></li>
+</ul>
+<h2>Orders Endpoints</h2>
+<h3>GET /api/orders</h3>
+<p>List all orders.</p>
+<ul>
+<li><strong>Query</strong>: <code>?brand_id=&amp;status=</code></li>
+</ul>
+<h3>POST /api/orders</h3>
+<p>Create new order.</p>
+<ul>
+<li><strong>Body</strong>: Order object</li>
+</ul>
+<h3>PUT /api/orders/:id</h3>
+<p>Update order status.</p>
+<ul>
+<li><strong>Query</strong>: <code>?status=</code></li>
+</ul>
+<h2>Products Endpoints</h2>
+<h3>GET /api/products</h3>
+<p>List products.</p>
+<ul>
+<li><strong>Query</strong>: <code>?brand_id=</code></li>
+</ul>
+<h3>POST /api/products</h3>
+<p>Create product.</p>
+<h3>PUT /api/products/:id</h3>
+<p>Update product.</p>
+<h2>Customers Endpoints</h2>
+<h3>GET /api/customers/with-orders</h3>
+<p>List customers with order stats.</p>
+<h2>Employees Endpoints</h2>
+<h3>GET /api/employees</h3>
+<p>List employees.</p>
+<ul>
+<li><strong>Query</strong>: <code>?brand_id=&amp;department=&amp;status=</code></li>
+</ul>
+<h3>GET /api/employees/stats</h3>
+<p>Get employee statistics.</p>
+<h3>POST /api/employees</h3>
+<p>Create employee.</p>
+<h3>PUT /api/employees/:id</h3>
+<p>Update employee.</p>
+<h3>DELETE /api/employees/:id</h3>
+<p>Delete employee.</p>
+<h2>Users Endpoints (Admin)</h2>
+<h3>GET /api/users</h3>
+<p>List all users.</p>
+<h3>POST /api/users</h3>
+<p>Create new user.</p>
+<h3>PUT /api/users/:email/reset-password</h3>
+<p>Reset user password.</p>
+<ul>
+<li><strong>Query</strong>: <code>?new_password=</code></li>
+</ul>
+<h3>PUT /api/users/:email/permissions</h3>
+<p>Update user permissions.</p>
+<ul>
+<li><strong>Body</strong>: Permissions object</li>
+</ul>
+<h3>PUT /api/users/:email/reset-2fa</h3>
+<p>Reset user&#39;s 2FA.</p>
+<h2>Public Endpoints</h2>
+<h3>GET /api/public/invoice/:customerId</h3>
+<p>Get customer statement (public).</p>
+<h3>GET /api/public/invoice-by-order/:orderId</h3>
+<p>Get single order invoice (public).</p>
+<hr>
+<h1>User Roles &amp; Permissions</h1>
+<h2>Admin Role</h2>
+<ul>
+<li>Full access to all modules</li>
+<li>Can create/edit/delete users</li>
+<li>Can reset passwords and 2FA</li>
+<li>Can manage permissions</li>
+<li>Can view analytics</li>
+<li>Can manage employees</li>
+</ul>
+<h2>User Role</h2>
+<ul>
+<li>Access to Dashboard</li>
+<li>Access to Orders (create only)</li>
+<li>Access to Inventory (view only)</li>
+<li>Access to Customers (view + invoice)</li>
+<li>No access to Analytics</li>
+<li>No access to Settings (user management)</li>
+<li>No access to Employees</li>
+</ul>
+<hr>
+<h1>Security Features</h1>
+<h2>Authentication</h2>
+<ol>
+<li><strong>Email/Password</strong>: Standard credential verification</li>
+<li><strong>2-Factor Authentication</strong>: TOTP-based (Google Authenticator, Microsoft Authenticator compatible)</li>
+<li><strong>JWT Tokens</strong>: Bearer token authentication for API calls</li>
+</ol>
+<h2>Authorization</h2>
+<ol>
+<li><strong>Role-Based Access Control (RBAC)</strong>: Admin/User roles</li>
+<li><strong>Permission System</strong>: Granular permissions per user</li>
+<li><strong>Route Protection</strong>: Frontend route guards</li>
+</ol>
+<h2>Data Protection</h2>
+<ol>
+<li><strong>HTTPS</strong>: All traffic encrypted</li>
+<li><strong>CORS</strong>: Configured for allowed origins</li>
+<li><strong>Input Validation</strong>: Server-side validation</li>
+</ol>
+<hr>
+<h1>Deployment Architecture</h1>
+<h2>Frontend (Cloudflare Pages)</h2>
+<pre><code>┌─────────────────────────────────────┐
+│         Cloudflare Pages            │
+├─────────────────────────────────────┤
+│  Project: rihla-hub                 │
+│  URL: rihla-hub.pages.dev           │
+│  Custom: rihlahub.rihlatech.info    │
+│                                     │
+│  Build: Pre-built (Vite)            │
+│  Output: / (root)                   │
+│  Files: index.html, index.js, css   │
+└─────────────────────────────────────┘
+</code></pre>
+<h2>Backend (Google Cloud Run)</h2>
+<pre><code>┌─────────────────────────────────────┐
+│         Google Cloud Run            │
+├─────────────────────────────────────┤
+│  Project: thabzn8nn                 │
+│  Service: rihla-backend             │
+│  Region: us-west1                   │
+│                                     │
+│  Runtime: Node.js 20                │
+│  Port: 5000                         │
+│  Auth: Unauthenticated allowed      │
+│  Memory: Auto-scaled                │
+└─────────────────────────────────────┘
+</code></pre>
+<hr>
+<h1>Future Roadmap</h1>
+<h2>Phase 2: Database Migration</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Migrate to PostgreSQL/Supabase</li>
+<li><input disabled="" type="checkbox"> Implement data persistence</li>
+<li><input disabled="" type="checkbox"> Add data backup/restore</li>
+</ul>
+<h2>Phase 3: Additional Features</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Email notifications</li>
+<li><input disabled="" type="checkbox"> SMS integration</li>
+<li><input disabled="" type="checkbox"> Payment gateway integration</li>
+<li><input disabled="" type="checkbox"> Shipping/logistics module</li>
+<li><input disabled="" type="checkbox"> Advanced reporting</li>
+</ul>
+<h2>Phase 4: Mobile App</h2>
+<ul>
+<li><input disabled="" type="checkbox"> React Native mobile app</li>
+<li><input disabled="" type="checkbox"> Push notifications</li>
+<li><input disabled="" type="checkbox"> Offline capability</li>
+</ul>
+<hr>
+<p><strong>Document Version</strong>: 1.0
+<strong>Last Updated</strong>: 2026-01-19
+<strong>Author</strong>: Rihla Technologies Development Team</p>
+
+  <hr>
+  <p style="text-align: center; color: #94a3b8; font-size: 0.875rem;">
+    © 2026 Rihla Technologies | Generated on 1/19/2026
+  </p>
+</body>
+</html>

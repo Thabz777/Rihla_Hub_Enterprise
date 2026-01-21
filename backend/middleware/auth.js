@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../models/index.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || process.env.SECRET_KEY || 'rihla-enterprise-jwt-secret-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SECRET_KEY || 'rihla-enterprise-super-secure-jwt-key-2026-thabz777-production-ready';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'; // 7 days default (not 24 hours!)
 
 /**
