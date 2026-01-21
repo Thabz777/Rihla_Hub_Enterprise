@@ -96,6 +96,12 @@ export default function Dashboard() {
     );
   }
 
+  const parseChange = (val) => {
+    if (typeof val === 'number') return val;
+    if (!val) return 0;
+    return parseFloat(String(val).replace(/[^0-9.-]/g, ''));
+  };
+
   return (
     <Layout>
       <div className="space-y-8" data-testid="dashboard-page">
@@ -112,7 +118,7 @@ export default function Dashboard() {
           <KPICard
             title="Total Revenue"
             value={metrics?.total_revenue ?? 0}
-            change={metrics?.revenue_change ?? '+0%'}
+            change={parseChange(metrics?.revenue_change)}
             icon={DollarSign}
             format="currency"
             brandColor="hsl(var(--success))"
@@ -120,7 +126,7 @@ export default function Dashboard() {
           <KPICard
             title="Total Orders"
             value={metrics?.total_orders ?? 0}
-            change={metrics?.orders_change ?? '+0%'}
+            change={parseChange(metrics?.orders_change)}
             icon={ShoppingCart}
             brandColor="hsl(var(--chart-3))"
           />
