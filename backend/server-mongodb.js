@@ -414,13 +414,25 @@ app.get('/api/customers/with-orders', authMiddleware, async (req, res) => {
 app.get('/api/search/invoice', authMiddleware, async (req, res) => {
     try {
         const { order_number, query } = req.query;
-        const term = (query || order_number || '').trim();
+        let term = (query || order_number || '').trim();
+
+        // Handle common prefixes if user pasted full Invoice ID
+        if (term.toUpperCase().startsWith('INV-')) {
+            term = term.substring(4);
+        }
+
+        const searchConditions = [
+            { order_number: { $regex: term, $options: 'i' } },
+            { order_number: term }
+        ];
+
+        // If it looks like a MongoID, add that to search
+        if (term.match(/^[0-9a-fA-F]{24}$/)) {
+            searchConditions.push({ _id: term });
+        }
 
         const order = await Order.findOne({
-            $or: [
-                { order_number: { $regex: term, $options: 'i' } },
-                { order_number: term }
-            ]
+            $or: searchConditions
         });
 
         if (!order) {
@@ -779,8 +791,13 @@ app.get('/api/public/invoice/:customerId', async (req, res) => {
 
 app.get('/api/public/invoice-by-order/:orderId', async (req, res) => {
     try {
-        const { orderId } = req.params;
+        let { orderId } = req.params;
         let order = null;
+
+        // Handle INV- prefix
+        if (orderId.toUpperCase().startsWith('INV-')) {
+            orderId = orderId.substring(4);
+        }
 
         // First try to find by order_number (e.g., "ORD-001")
         order = await Order.findOne({ order_number: orderId });
