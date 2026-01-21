@@ -136,7 +136,33 @@ export default function Inventory() {
     }
   };
 
-  // ... handleEditClick and handleAddNewClick remain the same ...
+  const handleEditClick = (product) => {
+    setEditingId(product._id || product.id);
+    setFormData({
+      sku: product.sku,
+      name: product.name,
+      brand_id: product.brand_id?._id || product.brand_id || '', // Handle populated vs string ID
+      category: product.category,
+      stock: product.stock,
+      price: product.price,
+      image_url: product.image_url || ''
+    });
+    setDialogOpen(true);
+  };
+
+  const handleAddNewClick = () => {
+    setEditingId(null);
+    setFormData({
+      sku: '',
+      name: '',
+      brand_id: '',
+      category: '',
+      stock: 0,
+      price: 0,
+      image_url: ''
+    });
+    setDialogOpen(true);
+  };
 
   const handleUpdateStock = async (productId, newStock) => {
     // Optimistic Update
