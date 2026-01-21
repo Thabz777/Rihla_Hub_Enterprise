@@ -16,6 +16,17 @@ export const Header = () => {
     fetchBrands();
   }, []);
 
+  useEffect(() => {
+    // Validate selection against loaded brands to prevent stuck states
+    if (brands.length > 0 && selectedBrand !== 'all') {
+      const exists = brands.some(b => String(b._id || b.id) === String(selectedBrand));
+      if (!exists) {
+        console.warn(`Selected brand ${selectedBrand} not found in loaded brands, resetting.`);
+        changeBrand('all');
+      }
+    }
+  }, [brands, selectedBrand, changeBrand]);
+
   const fetchBrands = async () => {
     try {
       const response = await axios.get(`${API}/brands`, {
@@ -35,20 +46,24 @@ export const Header = () => {
   return (
     <header className="h-16 border-b border-border/50 bg-background/80 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-50 flex items-center justify-between px-8" data-testid="header">
       <div className="flex items-center gap-6">
-        <Select value={selectedBrand} onValueChange={changeBrand}>
+        <Select value={String(selectedBrand)} onValueChange={changeBrand}>
           <SelectTrigger className="w-64 font-heading" data-testid="brand-switcher">
             <SelectValue placeholder="Select Brand" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Brands</SelectItem>
-            {brands.map((brand) => (
-              <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: brand.settings?.primary_color || brand.color || '#666' }} />
-                  <span>{brand.name}</span>
-                </div>
-              </SelectItem>
-            ))}
+            {brands.map((brand) => {
+              const brandId = String(brand._id || brand.id);
+              if (!brandId) return null;
+              return (
+                <SelectItem key={brandId} value={brandId}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: brand.settings?.primary_color || brand.color || '#666' }} />
+                    <span>{brand.name}</span>
+                  </div>
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
       </div>
