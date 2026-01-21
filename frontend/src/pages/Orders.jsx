@@ -371,6 +371,7 @@ export default function Orders() {
                           <SelectItem value="USD">USD (US Dollar)</SelectItem>
                           <SelectItem value="AED">AED (UAE Dirham)</SelectItem>
                           <SelectItem value="EUR">EUR (Euro)</SelectItem>
+                          <SelectItem value="INR">INR (Indian Rupee)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

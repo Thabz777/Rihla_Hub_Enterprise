@@ -75,7 +75,7 @@ const orderSchema = new mongoose.Schema({
     },
     currency: {
         type: String,
-        enum: ['SAR', 'USD', 'AED', 'EUR'],
+        enum: ['SAR', 'USD', 'AED', 'EUR', 'INR'],
         default: 'SAR'
     },
     status: {
