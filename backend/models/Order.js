@@ -85,7 +85,7 @@ const orderSchema = new mongoose.Schema({
     },
     payment_method: {
         type: String,
-        enum: ['Credit Card', 'Bank Transfer', 'Cash', 'Apple Pay', 'Mada', 'STC Pay'],
+        enum: ['Credit Card', 'Bank Transfer', 'Cash', 'Apple Pay', 'Mada', 'STC Pay', 'Cash on Delivery', 'UPI'],
         default: 'Credit Card'
     },
     payment_status: {

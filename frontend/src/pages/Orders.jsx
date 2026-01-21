@@ -378,6 +378,8 @@ export default function Orders() {
                           <SelectItem value="STC Pay">STC Pay</SelectItem>
                           <SelectItem value="Bank Transfer">Bank Transfer</SelectItem>
                           <SelectItem value="Cash">Cash</SelectItem>
+                          <SelectItem value="Cash on Delivery">Cash on Delivery</SelectItem>
+                          <SelectItem value="UPI">UPI</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
