@@ -109,6 +109,7 @@ export default function Invoice({ mode }) {
                 <h1 className="font-display text-4xl font-bold text-gray-900">Rihla</h1>
                 <p className="font-body text-sm text-gray-600 italic mt-1">Where every journey becomes a story worth telling</p>
                 <p className="text-xs text-gray-500 mt-1">Email: info@rihlatech.info</p>
+                <p className="text-xs text-gray-500">Contact: +91 7012568438</p>
               </div>
             </div>
             <div className="text-right">
