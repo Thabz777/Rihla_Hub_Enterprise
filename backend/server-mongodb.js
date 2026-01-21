@@ -414,7 +414,7 @@ app.get('/api/customers/with-orders', authMiddleware, async (req, res) => {
 app.get('/api/search/invoice', authMiddleware, async (req, res) => {
     try {
         const { order_number, query } = req.query;
-        let term = (query || order_number || '').trim();
+        let term = (query || order_number || '').replace(/[—–]/g, '-').trim();
 
         // Handle common prefixes if user pasted full Invoice ID
         if (term.toUpperCase().startsWith('INV-')) {

@@ -44,7 +44,17 @@ export default function Customers() {
 
     setSearching(true);
     try {
-      const response = await axios.get(`${API}/search/invoice?query=${encodeURIComponent(searchQuery)}`, {
+      // Robust client-side cleanup
+      let queryTerm = searchQuery
+        .replace(/[—–]/g, '-') // Replace en/em dashes with hyphens
+        .trim();
+
+      // Strip INV- prefix if present (handle case-insensitive)
+      if (queryTerm.toUpperCase().startsWith('INV-')) {
+        queryTerm = queryTerm.substring(4);
+      }
+
+      const response = await axios.get(`${API}/search/invoice?query=${encodeURIComponent(queryTerm)}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success(`Found Order for ${response.data.customer_name}`);
