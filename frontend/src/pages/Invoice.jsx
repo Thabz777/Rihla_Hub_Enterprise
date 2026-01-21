@@ -143,6 +143,7 @@ export default function Invoice({ mode }) {
                 </p>
                 <p className="text-sm text-gray-600">Rihla Cloud Platform</p>
                 <p className="text-sm text-gray-600 mt-1">Email: info@rihlatech.info</p>
+                <p className="text-sm text-gray-600">Contact: +91 7012568438</p>
               </div>
             </div>
           </div>

@@ -155,6 +155,7 @@ export default function PublicInvoice() {
                     {/* Footer */}
                     <div className="bg-slate-800/50 px-6 py-4 text-center">
                         <p className="text-slate-400 text-xs">Rihla Enterprise Cloud Platform</p>
+                        <p className="text-slate-400 text-xs mt-1">Contact: +91 7012568438 | Email: info@rihlatech.info</p>
                         <p className="text-slate-500 text-[10px] mt-1">This is an electronically generated invoice</p>
                     </div>
                 </div>
