@@ -113,8 +113,8 @@ const orderSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Generate order number before saving
-orderSchema.pre('save', async function (next) {
+// Generate order number before validation
+orderSchema.pre('validate', async function (next) {
     if (!this.order_number) {
         const count = await mongoose.model('Order').countDocuments();
         const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, '');
@@ -123,18 +123,23 @@ orderSchema.pre('save', async function (next) {
     next();
 });
 
-// Calculate totals before saving
-orderSchema.pre('save', function (next) {
+// Calculate totals before validation
+orderSchema.pre('validate', function (next) {
     if (this.items && this.items.length > 0) {
         this.subtotal = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
         if (this.apply_vat) {
-            this.vat_amount = this.subtotal * this.vat_rate;
+            this.vat_amount = this.subtotal * (this.vat_rate || 0.15);
         } else {
             this.vat_amount = 0;
         }
 
-        this.total = this.subtotal + this.vat_amount + (this.shipping_charges || 0) - (this.discount || 0);
+        const shipping = this.shipping_charges || 0;
+        const discount = this.discount || 0;
+        this.total = this.subtotal + this.vat_amount + shipping - discount;
+    } else if (typeof this.total === 'undefined') {
+        // Fallback if no items and total not provided
+        this.total = 0;
     }
     next();
 });

@@ -96,8 +96,17 @@ export default function Orders() {
       return;
     }
 
+    const { subtotal, vat, total, vatRate } = calculateOrderTotal();
+
     try {
-      await axios.post(`${API}/orders`, { ...formData, items: validItems }, {
+      await axios.post(`${API}/orders`, {
+        ...formData,
+        items: validItems,
+        subtotal,
+        vat_amount: vat,
+        total,
+        vat_rate: vatRate
+      }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Order created successfully!');
