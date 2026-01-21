@@ -30,7 +30,7 @@ export default function Orders() {
     currency: 'SAR',
     apply_vat: true,
     shipping_charges: 0,
-    payment_method: 'Cash on delivery',
+    payment_method: 'Credit Card',
     status: 'pending'
   });
 
@@ -356,7 +356,9 @@ export default function Orders() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="SAR">SAR (Saudi Riyal)</SelectItem>
-                          <SelectItem value="INR">INR (Indian Rupee)</SelectItem>
+                          <SelectItem value="USD">USD (US Dollar)</SelectItem>
+                          <SelectItem value="AED">AED (UAE Dirham)</SelectItem>
+                          <SelectItem value="EUR">EUR (Euro)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -370,9 +372,12 @@ export default function Orders() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="UPI">UPI</SelectItem>
-                          <SelectItem value="Cash on delivery">Cash on Delivery</SelectItem>
-                          <SelectItem value="Bank transfer">Bank Transfer</SelectItem>
+                          <SelectItem value="Credit Card">Credit Card</SelectItem>
+                          <SelectItem value="Mada">Mada</SelectItem>
+                          <SelectItem value="Apple Pay">Apple Pay</SelectItem>
+                          <SelectItem value="STC Pay">STC Pay</SelectItem>
+                          <SelectItem value="Bank Transfer">Bank Transfer</SelectItem>
+                          <SelectItem value="Cash">Cash</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
