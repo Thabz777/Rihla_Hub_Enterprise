@@ -145,14 +145,29 @@ export default function Orders() {
   };
 
   const handleUpdateStatus = async (orderId, newStatus) => {
+    // 1. Optimistic Update: Update local state immediately
+    const previousOrders = [...orders];
+    setOrders(orders.map(order =>
+      (order._id === orderId || order.id === orderId)
+        ? { ...order, status: newStatus }
+        : order
+    ));
+
     try {
+      // 2. Send request to server
       await axios.put(`${API}/orders/${orderId}?status=${newStatus}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      // 3. Success feedback (optional, or just silent success)
       toast.success('Order status updated');
-      fetchOrders();
+
+      // No need to re-fetch all orders, we already have the correct state
     } catch (error) {
-      toast.error('Failed to update order');
+      // 4. On Error: Revert to previous state
+      setOrders(previousOrders);
+      console.error('Update status failed:', error);
+      toast.error('Failed to update order status');
     }
   };
 
