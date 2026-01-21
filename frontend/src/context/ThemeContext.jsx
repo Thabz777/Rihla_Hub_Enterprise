@@ -35,8 +35,10 @@ export const ThemeProvider = ({ children }) => {
   const toggleTheme = () => setIsDark(!isDark);
 
   const changeBrand = (brandId) => {
-    setSelectedBrand(brandId);
-    localStorage.setItem('selectedBrand', brandId);
+    console.log("Changing brand to:", brandId);
+    const validId = brandId ? String(brandId) : 'all';
+    setSelectedBrand(validId);
+    localStorage.setItem('selectedBrand', validId);
   };
 
   return (
