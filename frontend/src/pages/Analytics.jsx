@@ -62,11 +62,13 @@ export default function Analytics() {
     }
   };
 
-  // Mock data for other charts
-  const brandRevenueData = brands.map(brand => ({
-    name: brand.name,
-    revenue: Math.random() * 50000 + 20000
-  }));
+  // Derive brand revenue from actual user performance if available to avoid random numbers
+  const brandRevenueData = userPerformance.length > 0
+    ? userPerformance.map(u => ({ name: u.name, revenue: u.revenue }))
+    : brands.map(brand => ({
+      name: brand.name,
+      revenue: 0
+    }));
 
   const monthlyData = [
     { month: 'Jan', revenue: 45000, orders: 156 },
