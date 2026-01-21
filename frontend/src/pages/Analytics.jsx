@@ -7,8 +7,7 @@ import { useTheme } from '@/context/ThemeContext';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export default function Analytics() {
   const { token } = useAuth();

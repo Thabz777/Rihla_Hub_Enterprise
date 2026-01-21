@@ -4,8 +4,7 @@ import axios from 'axios';
 import { CheckCircle, XCircle, Loader2, FileText, Calendar, User, Package, DollarSign } from 'lucide-react';
 
 // Use the same environment variable pattern as AuthContext
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const LOGO_URL = 'https://customer-assets.emergentagent.com/job_ecomm-command/artifacts/qa8d1hm5_RIHLA%20%281%29.png';
 
 export default function PublicInvoice() {
