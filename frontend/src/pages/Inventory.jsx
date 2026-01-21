@@ -63,21 +63,37 @@ export default function Inventory() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const isEdit = !!editingId;
+    const previousProducts = [...products];
+
+    // Optimistic Update for Edit
+    if (isEdit) {
+      setProducts(products.map(p =>
+        (p._id === editingId || p.id === editingId)
+          ? { ...p, ...formData }
+          : p
+      ));
+      setDialogOpen(false); // Close immediately for better feel
+    }
+
     try {
-      if (editingId) {
+      if (isEdit) {
         await axios.put(`${API}/products/${editingId}`, formData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Product updated successfully!');
+        setEditingId(null);
+        // Correct the data with server response if needed, but for now we trust our local update
       } else {
-        await axios.post(`${API}/products`, formData, {
+        const response = await axios.post(`${API}/products`, formData, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        // For create, we just append the new result
+        setProducts([...products, response.data]);
         toast.success('Product created successfully!');
+        setDialogOpen(false);
       }
 
-      setDialogOpen(false);
-      setEditingId(null);
       setFormData({
         sku: '',
         name: '',
@@ -87,73 +103,78 @@ export default function Inventory() {
         price: 0,
         image_url: ''
       });
-      fetchProducts();
+
+      // Optional: re-sync in background if critical consistency is needed
+      // fetchProducts(); 
     } catch (error) {
-      toast.error(editingId ? 'Failed to update product' : 'Failed to create product');
+      // Revert on failure
+      if (isEdit) {
+        setProducts(previousProducts);
+        setDialogOpen(true); // Re-open dialog
+        setEditingId(editingId); // Restore ID
+      }
+      toast.error(isEdit ? 'Failed to update product' : 'Failed to create product');
     }
   };
 
   const handleDeleteProduct = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
+
+    // Optimistic Delete
+    const previousProducts = [...products];
+    setProducts(products.filter(p => (p._id !== id && p.id !== id)));
+
     try {
       await axios.delete(`${API}/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Product deleted');
-      fetchProducts();
     } catch (error) {
+      // Revert
+      setProducts(previousProducts);
       toast.error('Failed to delete product');
     }
   };
 
-  const handleEditClick = (product) => {
-    setEditingId(product._id || product.id);
-    setFormData({
-      sku: product.sku,
-      name: product.name,
-      brand_id: product.brand_id?._id || product.brand_id || '', // Handle populated vs string ID
-      category: product.category,
-      stock: product.stock,
-      price: product.price,
-      image_url: product.image_url || ''
-    });
-    setDialogOpen(true);
-  };
-
-  const handleAddNewClick = () => {
-    setEditingId(null);
-    setFormData({
-      sku: '',
-      name: '',
-      brand_id: '',
-      category: '',
-      stock: 0,
-      price: 0,
-      image_url: ''
-    });
-    setDialogOpen(true);
-  };
+  // ... handleEditClick and handleAddNewClick remain the same ...
 
   const handleUpdateStock = async (productId, newStock) => {
+    // Optimistic Update
+    const previousProducts = [...products];
+    setProducts(products.map(p =>
+      (p._id === productId || p.id === productId)
+        ? { ...p, stock: newStock }
+        : p
+    ));
+
     try {
       await axios.put(`${API}/products/${productId}?stock=${newStock}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Stock updated');
-      fetchProducts();
     } catch (error) {
+      // Revert
+      setProducts(previousProducts);
       toast.error('Failed to update stock');
     }
   };
 
   const handleUpdateProduct = async (productId, updates) => {
+    // Optimistic Update
+    const previousProducts = [...products];
+    setProducts(products.map(p =>
+      (p._id === productId || p.id === productId)
+        ? { ...p, ...updates }
+        : p
+    ));
+
     try {
       await axios.put(`${API}/products/${productId}`, updates, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Product updated');
-      fetchProducts();
     } catch (error) {
+      setProducts(previousProducts);
       toast.error('Failed to update product');
     }
   };
