@@ -62,6 +62,6 @@ jobs:
           service: rihla-backend
           region: us-west1
           source: ./backend
-          env_vars: |
+          env_vars: |-
             MONGO_URL=${{ secrets.MONGO_URL }}
             DB_NAME=rihla_enterprise
