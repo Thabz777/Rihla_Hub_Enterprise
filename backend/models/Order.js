@@ -116,9 +116,24 @@ const orderSchema = new mongoose.Schema({
 // Generate order number before validation
 orderSchema.pre('validate', async function (next) {
     if (!this.order_number) {
-        const count = await mongoose.model('Order').countDocuments();
-        const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, '');
-        this.order_number = `ORD-${dateStr}-${String(count + 1).padStart(4, '0')}`;
+        // Find the last order created today to increment sequence
+        const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, ''); // YYMMDD
+        const prefix = `ORD-${dateStr}`;
+
+        const lastOrder = await mongoose.model('Order')
+            .findOne({ order_number: new RegExp(`^${prefix}`) })
+            .sort({ order_number: -1 });
+
+        let sequence = 1;
+        if (lastOrder && lastOrder.order_number) {
+            const parts = lastOrder.order_number.split('-');
+            const lastSeq = parseInt(parts[parts.length - 1]);
+            if (!isNaN(lastSeq)) {
+                sequence = lastSeq + 1;
+            }
+        }
+
+        this.order_number = `${prefix}-${String(sequence).padStart(4, '0')}`;
     }
     next();
 });

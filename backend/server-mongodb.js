@@ -258,11 +258,30 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
 
         // Create if not found
         if (!customer && (data.customer_email || data.customer_phone)) {
-            customer = await Customer.create({
-                name: data.customer_name,
-                email: data.customer_email || undefined, // Send undefined if empty string to respect sparse index
-                phone: data.customer_phone
-            });
+            try {
+                customer = await Customer.create({
+                    name: data.customer_name,
+                    email: data.customer_email || undefined,
+                    phone: data.customer_phone
+                });
+            } catch (error) {
+                // If duplicate key error, try to find the existing customer that caused the conflict
+                if (error.code === 11000) {
+                    console.warn('⚠️ Duplicate customer detected during creation, attempting lookup...');
+                    const lookup = [];
+                    if (data.customer_email) lookup.push({ email: data.customer_email.toLowerCase() });
+                    if (data.customer_phone) lookup.push({ phone: data.customer_phone });
+
+                    if (lookup.length > 0) {
+                        customer = await Customer.findOne({ $or: lookup });
+                    }
+
+                    // If still null after duplicate error, something is wrong, but we can proceed without linking if permissible
+                    if (!customer) throw error;
+                } else {
+                    throw error; // Rethrow other errors
+                }
+            }
         }
 
         // Get brand name
