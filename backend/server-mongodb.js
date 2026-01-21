@@ -243,11 +243,24 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
         const data = req.body;
 
         // Find or create customer
-        let customer = await Customer.findOne({ email: data.customer_email });
-        if (!customer && data.customer_email) {
+        // Find or create customer
+        let customer = null;
+
+        // Try finding by email first
+        if (data.customer_email) {
+            customer = await Customer.findOne({ email: data.customer_email.toLowerCase() });
+        }
+
+        // If not found by email (or no email), try by phone
+        if (!customer && data.customer_phone) {
+            customer = await Customer.findOne({ phone: data.customer_phone });
+        }
+
+        // Create if not found
+        if (!customer && (data.customer_email || data.customer_phone)) {
             customer = await Customer.create({
                 name: data.customer_name,
-                email: data.customer_email,
+                email: data.customer_email || undefined, // Send undefined if empty string to respect sparse index
                 phone: data.customer_phone
             });
         }

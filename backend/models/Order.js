@@ -35,7 +35,7 @@ const orderSchema = new mongoose.Schema({
     },
     customer_email: {
         type: String,
-        required: true
+        required: false
     },
     customer_phone: String,
     brand_id: {

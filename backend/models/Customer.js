@@ -8,8 +8,8 @@ const customerSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
         unique: true,
+        sparse: true, // Allow multiple customers with null/undefined email
         lowercase: true,
         trim: true
     },
