@@ -241,101 +241,125 @@ app.get('/api/orders', authMiddleware, async (req, res) => {
 app.post('/api/orders', authMiddleware, async (req, res) => {
     try {
         const data = req.body;
+        console.log('📦 Creating order with data:', JSON.stringify(data, null, 2));
 
-        // Find or create customer
-        // Find or create customer
+        // === 1. CUSTOMER (Optional - errors won't block order) ===
         let customer = null;
-
-        // Try finding by email first
-        if (data.customer_email) {
-            customer = await Customer.findOne({ email: data.customer_email.toLowerCase() });
-        }
-
-        // If not found by email (or no email), try by phone
-        if (!customer && data.customer_phone) {
-            customer = await Customer.findOne({ phone: data.customer_phone });
-        }
-
-        // Create if not found
-        if (!customer && (data.customer_email || data.customer_phone)) {
-            try {
+        try {
+            if (data.customer_email) {
+                customer = await Customer.findOne({ email: data.customer_email.toLowerCase() });
+            }
+            if (!customer && data.customer_phone) {
+                customer = await Customer.findOne({ phone: data.customer_phone });
+            }
+            if (!customer && (data.customer_email || data.customer_phone)) {
                 customer = await Customer.create({
                     name: data.customer_name,
-                    email: data.customer_email || undefined,
-                    phone: data.customer_phone
+                    email: data.customer_email ? data.customer_email.toLowerCase() : undefined,
+                    phone: data.customer_phone || undefined
                 });
-            } catch (error) {
-                // If duplicate key error, try to find the existing customer that caused the conflict
-                if (error.code === 11000) {
-                    console.warn('⚠️ Duplicate customer detected during creation, attempting lookup...');
-                    const lookup = [];
-                    if (data.customer_email) lookup.push({ email: data.customer_email.toLowerCase() });
-                    if (data.customer_phone) lookup.push({ phone: data.customer_phone });
-
-                    if (lookup.length > 0) {
-                        customer = await Customer.findOne({ $or: lookup });
-                    }
-
-                    // If still null after duplicate error, something is wrong, but we can proceed without linking if permissible
-                    if (!customer) throw error;
-                } else {
-                    throw error; // Rethrow other errors
-                }
             }
+        } catch (custErr) {
+            console.warn('⚠️ Customer handling failed, continuing:', custErr.message);
         }
 
-        // Get brand name
-        const brand = await Brand.findById(data.brand_id);
+        // === 2. BRAND NAME ===
+        let brandName = 'Brand';
+        try {
+            const brand = await Brand.findById(data.brand_id);
+            brandName = brand?.name || 'Brand';
+        } catch (e) { console.warn('Brand lookup failed'); }
 
-        // Process items and update stock
+        // === 3. PROCESS ITEMS ===
         const itemsWithDetails = [];
         for (const item of data.items || []) {
-            const product = await Product.findById(item.product_id);
-            if (product) {
-                product.stock = Math.max(0, product.stock - item.quantity);
-                await product.save();
-                itemsWithDetails.push({
-                    product_id: product._id,
-                    product_name: product.name,
-                    quantity: item.quantity,
-                    price: product.price,
-                    sku: product.sku
-                });
+            try {
+                const product = await Product.findById(item.product_id);
+                if (product) {
+                    product.stock = Math.max(0, product.stock - item.quantity);
+                    await product.save();
+                    itemsWithDetails.push({
+                        product_id: product._id,
+                        product_name: product.name,
+                        quantity: item.quantity,
+                        price: product.price,
+                        sku: product.sku
+                    });
+                }
+            } catch (prodErr) {
+                console.warn('⚠️ Product error:', prodErr.message);
             }
         }
 
+        if (itemsWithDetails.length === 0) {
+            return res.status(400).json({ error: 'No valid products found' });
+        }
+
+        // === 4. GENERATE ORDER NUMBER (Manual - bypass model hook) ===
+        const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, '');
+        const prefix = `ORD-${dateStr}`;
+        let orderNumber = `${prefix}-${Date.now().toString().slice(-4)}`;
+        try {
+            const lastOrder = await Order.findOne({ order_number: new RegExp(`^${prefix}`) }).sort({ order_number: -1 });
+            if (lastOrder?.order_number) {
+                const seq = parseInt(lastOrder.order_number.split('-').pop()) || 0;
+                orderNumber = `${prefix}-${String(seq + 1).padStart(4, '0')}`;
+            } else {
+                orderNumber = `${prefix}-0001`;
+            }
+        } catch (e) { console.warn('Order number fallback used'); }
+
+        // === 5. CREATE ORDER ===
         const newOrder = new Order({
-            ...data,
-            customer_id: customer?._id,
-            brand_name: brand?.name || 'Brand',
+            order_number: orderNumber,
+            customer_id: customer?._id || null,
+            customer_name: data.customer_name,
+            customer_email: data.customer_email || undefined,
+            customer_phone: data.customer_phone || undefined,
+            brand_id: data.brand_id,
+            brand_name: brandName,
             items: itemsWithDetails,
+            subtotal: data.subtotal || 0,
+            vat_amount: data.vat_amount || 0,
+            vat_rate: data.vat_rate || 0,
+            apply_vat: data.apply_vat !== false,
+            shipping_charges: data.shipping_charges || 0,
+            total: data.total || 0,
+            currency: data.currency || 'SAR',
+            status: data.status || 'pending',
+            payment_method: data.payment_method || 'Cash',
             created_by_user_id: req.user._id,
             attributed_employee_id: req.user.employee_id || null
         });
 
         await newOrder.save();
+        console.log('✅ Order saved:', newOrder.order_number);
 
-        // Update employee achievement if linked
-        if (req.user.employee_id) {
-            const employee = await Employee.findById(req.user.employee_id);
-            if (employee) {
-                employee.resetYearlyTarget();
-                employee.achieved = (employee.achieved || 0) + newOrder.total;
-                await employee.save();
+        // === 6. POST-SAVE UPDATES (won't block response) ===
+        setImmediate(async () => {
+            try {
+                if (req.user.employee_id) {
+                    const emp = await Employee.findById(req.user.employee_id);
+                    if (emp) {
+                        if (typeof emp.resetYearlyTarget === 'function') emp.resetYearlyTarget();
+                        emp.achieved = (emp.achieved || 0) + newOrder.total;
+                        await emp.save();
+                    }
+                }
+                if (customer) {
+                    customer.total_orders = (customer.total_orders || 0) + 1;
+                    customer.lifetime_value = (customer.lifetime_value || 0) + newOrder.total;
+                    customer.last_order_date = new Date();
+                    await customer.save();
+                }
+            } catch (postErr) {
+                console.warn('Post-save updates failed:', postErr.message);
             }
-        }
-
-        // Update customer stats
-        if (customer) {
-            customer.total_orders = (customer.total_orders || 0) + 1;
-            customer.lifetime_value = (customer.lifetime_value || 0) + newOrder.total;
-            customer.last_order_date = new Date();
-            await customer.save();
-        }
+        });
 
         res.status(201).json(newOrder);
     } catch (error) {
-        console.error('Order creation error:', error);
+        console.error('❌ Order creation error:', error);
         res.status(500).json({
             error: error.message || 'Failed to create order',
             details: error.errors
