@@ -60,7 +60,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: rihla-backend
-          region: us-central1
+          region: us-west1
           source: ./backend
           env_vars: |
             MONGO_URL=${{ secrets.MONGO_URL }}
