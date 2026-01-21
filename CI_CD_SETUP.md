@@ -1,206 +1,59 @@
-# 🔄 CI/CD Setup Guide
+# 🔄 CI/CD Setup Guide (Production)
 
-This guide explains how to set up automated deployments using GitHub Actions.
+This guide explains how to set up automated deployments to **Cloudflare Pages** (Frontend) and **Google Cloud Run** (Backend).
 
 ## Overview
 
 The CI/CD pipeline automatically:
-1. Runs tests on every push
-2. Deploys backend to Render
-3. Deploys frontend to Vercel
-4. Only deploys if tests pass
+1. Builds the React frontend
+2. Deploys it to Cloudflare Pages
+3. Deploys the Python backend to Google Cloud Run (Pending Configuration)
 
 ## Setup Instructions
 
-### 1. GitHub Secrets Configuration
+### 1. Cloudflare Pages (Frontend)
 
-Go to your GitHub repository → Settings → Secrets and variables → Actions
+You need two secrets in GitHub for Cloudflare deployment:
 
-Add the following secrets:
+#### A. Get Cloudflare API Token
+*(You likely already did this)*
+1. Go to **Cloudflare Dashboard** -> **My Profile** -> **API Tokens**.
+2. Click **Create Token**.
+3. Use the **"Edit Cloudflare Workers"** template (or creating a Custom Token with `Account.Cloudflare Pages:Edit`).
+4. Copy the token.
+5. Add to GitHub Secrets as: `CLOUDFLARE_API_TOKEN`.
 
-#### Vercel Secrets
+#### B. Get Cloudflare Account ID
+*(This is what you need now)*
+1. Log in to the Cloudflare Dashboard.
+2. Click on **Workers & Pages** in the sidebar.
+3. Look for **Account ID** on the right side of the page (in the "Account details" section).
+4. Copy the ID.
+5. Add to GitHub Secrets as: `CLOUDFLARE_ACCOUNT_ID`.
 
-**Get Vercel Token**:
-1. Go to [Vercel Account Settings](https://vercel.com/account/tokens)
-2. Create a new token
-3. Copy and save as `VERCEL_TOKEN`
+### 2. Google Cloud Run (Backend)
 
-**Get Vercel Org ID and Project ID**:
-```bash
-cd frontend
-npx vercel link
-# Follow the prompts
-# This creates .vercel/project.json
-cat .vercel/project.json
-```
+*(To be configured later)*
+- Requires `GCP_SA_KEY` (Service Account Key)
+- Requires `MONGO_URL`
 
-Add to GitHub Secrets:
-- `VERCEL_TOKEN` - Your Vercel token
-- `VERCEL_ORG_ID` - From project.json
-- `VERCEL_PROJECT_ID` - From project.json
+### 3. GitHub Secrets Configuration
 
-#### Render Secrets
+Go to your GitHub repository → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
 
-**Get Render Deploy Hook**:
-1. Go to Render Dashboard → Your Service
-2. Settings → Deploy Hook
-3. Create a new deploy hook
-4. Copy the URL
-
-Add to GitHub Secrets:
-- `RENDER_DEPLOY_HOOK_URL` - Your Render deploy hook URL
-
-### 2. Enable GitHub Actions
-
-1. Go to your repository
-2. Click "Actions" tab
-3. Enable workflows if prompted
-
-### 3. Test the Workflow
-
-```bash
-# Make a change
-echo "# Test" >> README.md
-
-# Commit and push
-git add .
-git commit -m "Test CI/CD pipeline"
-git push origin main
-```
-
-Go to Actions tab to see the workflow running.
+Add these:
+- `CLOUDFLARE_API_TOKEN`: Your API Token.
+- `CLOUDFLARE_ACCOUNT_ID`: Your Account ID.
+- `REACT_APP_API_URL`: Your backend URL (e.g., `https://rihla-backend-xyz.a.run.app/api`).
 
 ## Workflow Details
 
-### Triggers
+The workflow file is located at `.github/workflows/deploy-production.yml`.
 
-The workflow runs on:
-- Every push to `main` branch
-- Manual trigger (workflow_dispatch)
+### Triggers
+- Push to `main` branch.
+- Manual trigger (`workflow_dispatch`).
 
 ### Jobs
-
-1. **test-backend**: Runs Python tests
-2. **test-frontend**: Runs React tests and builds
-3. **deploy-backend**: Triggers Render deployment
-4. **deploy-frontend**: Deploys to Vercel
-
-### Customization
-
-Edit `.github/workflows/deploy.yml` to:
-- Add more test steps
-- Add linting
-- Add security scanning
-- Add notifications
-- Deploy to different environments
-
-## Advanced Configuration
-
-### Deploy to Staging First
-
-Create a staging workflow:
-
-```yaml
-name: Deploy to Staging
-
-on:
-  push:
-    branches:
-      - develop
-
-jobs:
-  deploy-staging:
-    # Similar to production but with staging secrets
-```
-
-### Add Slack Notifications
-
-```yaml
-- name: Notify Slack
-  uses: 8398a7/action-slack@v3
-  with:
-    status: ${{ job.status }}
-    webhook_url: ${{ secrets.SLACK_WEBHOOK }}
-```
-
-### Add Environment Protection
-
-1. Go to Settings → Environments
-2. Create "production" environment
-3. Add protection rules:
-   - Required reviewers
-   - Wait timer
-   - Deployment branches
-
-Update workflow:
-```yaml
-deploy-frontend:
-  environment: production
-  # ... rest of job
-```
-
-## Monitoring
-
-### View Deployment Status
-
-- **GitHub**: Actions tab
-- **Vercel**: Dashboard → Deployments
-- **Render**: Dashboard → Events
-
-### Rollback
-
-**Vercel**:
-1. Go to Deployments
-2. Find previous working deployment
-3. Click "Promote to Production"
-
-**Render**:
-1. Go to your service
-2. Manual Deploy → Deploy previous commit
-
-## Troubleshooting
-
-**Workflow fails on secrets**:
-- Verify all secrets are added
-- Check secret names match exactly
-- Secrets are case-sensitive
-
-**Tests fail**:
-- Run tests locally first
-- Check test configuration
-- Review test logs in Actions
-
-**Deployment succeeds but app broken**:
-- Check environment variables
-- Verify API URLs
-- Check deployment logs
-
-## Best Practices
-
-1. **Always test locally first**
-2. **Use staging environment** for testing
-3. **Review deployment logs**
-4. **Monitor error rates** after deployment
-5. **Keep secrets secure** - never commit them
-6. **Use environment protection** for production
-7. **Set up notifications** for failures
-
-## Security
-
-- Never commit secrets to repository
-- Use GitHub Secrets for sensitive data
-- Rotate tokens regularly
-- Use environment-specific secrets
-- Enable branch protection rules
-
-## Additional Resources
-
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [Vercel CLI Documentation](https://vercel.com/docs/cli)
-- [Render Deploy Hooks](https://render.com/docs/deploy-hooks)
-
----
-
-**Your CI/CD pipeline is now ready! 🚀**
-
-Every push to `main` will automatically deploy your changes.
+1. **deploy-frontend**: Builds and deploys to Cloudflare Pages.
+2. **deploy-backend**: Deploys to Cloud Run (Currently disabled).
