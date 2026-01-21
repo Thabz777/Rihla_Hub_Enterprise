@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout/Layout';
-import { Plus, AlertTriangle } from 'lucide-react';
+import { Plus, AlertTriangle, Pencil, Trash2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -17,6 +17,7 @@ export default function Inventory() {
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     sku: '',
     name: '',
@@ -60,14 +61,23 @@ export default function Inventory() {
     }
   };
 
-  const handleCreateProduct = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API}/products`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      toast.success('Product created successfully!');
+      if (editingId) {
+        await axios.put(`${API}/products/${editingId}`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        toast.success('Product updated successfully!');
+      } else {
+        await axios.post(`${API}/products`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        toast.success('Product created successfully!');
+      }
+
       setDialogOpen(false);
+      setEditingId(null);
       setFormData({
         sku: '',
         name: '',
@@ -79,8 +89,49 @@ export default function Inventory() {
       });
       fetchProducts();
     } catch (error) {
-      toast.error('Failed to create product');
+      toast.error(editingId ? 'Failed to update product' : 'Failed to create product');
     }
+  };
+
+  const handleDeleteProduct = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await axios.delete(`${API}/products/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Product deleted');
+      fetchProducts();
+    } catch (error) {
+      toast.error('Failed to delete product');
+    }
+  };
+
+  const handleEditClick = (product) => {
+    setEditingId(product._id || product.id);
+    setFormData({
+      sku: product.sku,
+      name: product.name,
+      brand_id: product.brand_id?._id || product.brand_id || '', // Handle populated vs string ID
+      category: product.category,
+      stock: product.stock,
+      price: product.price,
+      image_url: product.image_url || ''
+    });
+    setDialogOpen(true);
+  };
+
+  const handleAddNewClick = () => {
+    setEditingId(null);
+    setFormData({
+      sku: '',
+      name: '',
+      brand_id: '',
+      category: '',
+      stock: 0,
+      price: 0,
+      image_url: ''
+    });
+    setDialogOpen(true);
   };
 
   const handleUpdateStock = async (productId, newStock) => {
@@ -123,16 +174,19 @@ export default function Inventory() {
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <button className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200" data-testid="create-product-button">
+              <button
+                onClick={handleAddNewClick}
+                className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200" data-testid="create-product-button"
+              >
                 <Plus size={20} />
                 Add Product
               </button>
             </DialogTrigger>
             <DialogContent className="bg-popover border-border max-w-2xl">
               <DialogHeader>
-                <DialogTitle className="font-heading text-2xl">Add New Product</DialogTitle>
+                <DialogTitle className="font-heading text-2xl">{editingId ? 'Edit Product' : 'Add New Product'}</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleCreateProduct} className="space-y-4" data-testid="create-product-form">
+              <form onSubmit={handleSubmit} className="space-y-4" data-testid="create-product-form">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-heading font-medium text-foreground">SKU</label>
@@ -215,7 +269,7 @@ export default function Inventory() {
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-200 mt-6"
                   data-testid="submit-product-button"
                 >
-                  Add Product
+                  {editingId ? 'Update Product' : 'Add Product'}
                 </button>
               </form>
             </DialogContent>
@@ -234,18 +288,19 @@ export default function Inventory() {
                   <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">Stock</th>
                   <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">Price</th>
                   <th className="px-4 py-4 text-left text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+                  <th className="px-4 py-4 text-right text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="7" className="px-4 py-8 text-center">
+                    <td colSpan="8" className="px-4 py-8 text-center">
                       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
                     </td>
                   </tr>
                 ) : products.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="px-4 py-8 text-center text-muted-foreground font-body">
+                    <td colSpan="8" className="px-4 py-8 text-center text-muted-foreground font-body">
                       No products found. Add your first product!
                     </td>
                   </tr>
@@ -293,6 +348,24 @@ export default function Inventory() {
                             >
                               {stockStatus.label}
                             </span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handleEditClick(product)}
+                              className="p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors"
+                              title="Edit Product"
+                            >
+                              <Pencil size={16} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProduct(product._id || product.id)}
+                              className="p-2 hover:bg-destructive/10 rounded-lg text-muted-foreground hover:text-destructive transition-colors"
+                              title="Delete Product"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </div>
                         </td>
                       </tr>
