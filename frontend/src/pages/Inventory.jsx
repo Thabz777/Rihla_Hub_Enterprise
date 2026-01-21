@@ -277,7 +277,7 @@ export default function Inventory() {
                             data-testid={`stock-input-${product._id || product.id}`}
                           />
                         </td>
-                        <td className="px-4 py-3 text-sm font-body font-medium text-foreground">SAR {product.price.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm font-body font-medium text-foreground">SAR {(product.price || 0).toFixed(2)}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             {product.stock < 10 && product.stock > 0 && (

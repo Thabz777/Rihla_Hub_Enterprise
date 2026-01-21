@@ -519,9 +519,9 @@ export default function Orders() {
                       <td className="px-4 py-3 text-sm font-body text-foreground">{order.payment_method || '-'}</td>
                       <td className="px-4 py-3">
                         <div>
-                          <p className="text-sm font-body font-medium text-foreground">{order.currency} {order.total.toFixed(2)}</p>
-                          {order.vat_amount > 0 && (
-                            <p className="text-xs text-muted-foreground">VAT: {order.currency} {order.vat_amount.toFixed(2)}</p>
+                          <p className="text-sm font-body font-medium text-foreground">{order.currency} {(order.total || 0).toFixed(2)}</p>
+                          {(order.vat_amount || 0) > 0 && (
+                            <p className="text-xs text-muted-foreground">VAT: {order.currency} {(order.vat_amount || 0).toFixed(2)}</p>
                           )}
                         </div>
                       </td>
