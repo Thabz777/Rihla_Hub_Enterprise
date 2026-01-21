@@ -42,9 +42,9 @@ export const Header = () => {
           <SelectContent>
             <SelectItem value="all">All Brands</SelectItem>
             {brands.map((brand) => (
-              <SelectItem key={brand.id} value={brand.id}>
+              <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: brand.color }} />
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: brand.settings?.primary_color || brand.color || '#666' }} />
                   <span>{brand.name}</span>
                 </div>
               </SelectItem>
