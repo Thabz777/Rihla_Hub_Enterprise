@@ -101,6 +101,8 @@ export default function Orders() {
     try {
       await axios.post(`${API}/orders`, {
         ...formData,
+        customer_email: formData.customer_email || undefined, // Send undefined if empty to avoid DB unique constraint issues on empty strings
+        customer_phone: formData.customer_phone || undefined,
         items: validItems,
         subtotal,
         vat_amount: vat,

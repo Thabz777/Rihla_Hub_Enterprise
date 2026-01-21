@@ -43,6 +43,15 @@ export const connectDB = async () => {
         console.log('✅ MongoDB Atlas connected successfully');
         console.log(`📦 Database: ${DB_NAME}`);
 
+        // Sync indexes to ensure schema changes (like sparse: true) are applied
+        try {
+            const Customer = (await import('../models/Customer.js')).default;
+            await Customer.syncIndexes();
+            console.log('✅ Customer indexes synchronized');
+        } catch (idxError) {
+            console.warn('⚠️ Index sync warning:', idxError.message);
+        }
+
         // Handle connection events
         mongoose.connection.on('error', (err) => {
             console.error('❌ MongoDB connection error:', err);
