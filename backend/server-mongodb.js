@@ -28,7 +28,8 @@ app.get('/api/health', (req, res) => {
 
 // Middleware
 app.use(cors({
-    origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000', 'http://localhost:5173'],
+    // If CORS_ORIGINS is '*', allow all by reflecting origin (supports credentials)
+    origin: process.env.CORS_ORIGINS === '*' ? true : (process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000', 'http://localhost:5173']),
     credentials: true
 }));
 app.use(express.json());
