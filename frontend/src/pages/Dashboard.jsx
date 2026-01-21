@@ -112,28 +112,28 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <KPICard
             title="Total Revenue"
-            value={metrics?.total_revenue || 0}
-            change={metrics?.revenue_change}
+            value={metrics?.total_revenue ?? 0}
+            change={metrics?.revenue_change ?? '+0%'}
             icon={DollarSign}
             format="currency"
             brandColor="hsl(var(--success))"
           />
           <KPICard
             title="Total Orders"
-            value={metrics?.total_orders || 0}
-            change={metrics?.orders_change}
+            value={metrics?.total_orders ?? 0}
+            change={metrics?.orders_change ?? '+0%'}
             icon={ShoppingCart}
             brandColor="hsl(var(--chart-3))"
           />
           <KPICard
             title="Customers"
-            value={metrics?.total_customers || 0}
+            value={metrics?.total_customers ?? 0}
             icon={Users}
             brandColor="hsl(var(--chart-1))"
           />
           <KPICard
             title="Products"
-            value={metrics?.total_products || 0}
+            value={metrics?.total_products ?? 0}
             icon={Package}
             brandColor="hsl(var(--chart-2))"
           />
