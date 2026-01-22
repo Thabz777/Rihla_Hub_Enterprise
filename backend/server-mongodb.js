@@ -19,7 +19,7 @@ app.get('/api/health', (req, res) => {
 
     res.json({
         status: 'healthy',
-        version: '2.15.0 (Data Fix)',
+        version: '2.16.0 (Order Logic Fix + Debug)',
         database_status: dbStatus,
         error: global.dbError || null,
         timestamp: new Date().toISOString()
@@ -355,8 +355,8 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
     } catch (error) {
         console.error('❌ Order creation error:', error);
         res.status(500).json({
-            error: error.message || 'Failed to create order',
-            details: error.errors
+            error: `Order Creation Failed (v2.16): ${error.message || 'Unknown error'}`,
+            details: error.errors || error.stack
         });
     }
 });
