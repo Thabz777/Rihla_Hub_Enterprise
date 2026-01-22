@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy package files first (for caching)
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies - Force cache break v2.17.0
 RUN npm ci --only=production
 
 # Copy application code
