@@ -196,87 +196,100 @@ app.get('/api/orders', (req, res) => {
 });
 
 app.post('/api/orders', (req, res) => {
-    const data = req.body;
-    // Check if customer exists, else create mock customer
-    let customer = CUSTOMERS.find(c => c.email === data.customer_email);
-    if (!customer && data.customer_email) {
-        customer = {
-            id: `c${Date.now()}`,
-            name: data.customer_name,
-            email: data.customer_email,
-            phone: data.customer_phone,
-            created_at: new Date().toISOString()
-        };
-        CUSTOMERS.push(customer);
-    }
+    try {
+        const data = req.body;
+        console.log('📦 In-Memory Order Create:', JSON.stringify(data));
 
-    // Calculate total
-    let subtotal = 0;
-    const itemsWithNames = data.items.map(item => {
-        const p = PRODUCTS.find(prod => prod.id === item.product_id);
-        if (p) {
-            subtotal += p.price * item.quantity;
-            // Decrease stock
-            p.stock = Math.max(0, p.stock - item.quantity);
+        if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
+            return res.status(400).json({ error: 'Order must contain items' });
         }
-        return {
-            ...item,
-            product_name: p ? p.name : 'Unknown',
-            price: p ? p.price : 0
-        };
-    });
 
-    const vatRate = data.apply_vat ? (data.currency === 'SAR' ? 0.15 : 0.18) : 0;
-    const vat = subtotal * vatRate;
-    const total = subtotal + vat + (data.shipping_charges || 0);
+        // Check if customer exists, else create mock customer
+        let customer = CUSTOMERS.find(c => c.email === data.customer_email);
+        if (!customer && (data.customer_email || data.customer_phone)) {
+            customer = {
+                id: `c${Date.now()}`,
+                name: data.customer_name,
+                email: data.customer_email,
+                phone: data.customer_phone,
+                address: { street: data.customer_address || '' },
+                created_at: new Date().toISOString()
+            };
+            CUSTOMERS.push(customer);
+        }
 
-    // Identify User
-    const authHeader = req.headers.authorization;
-    let userId = null;
-    let employeeId = null;
-
-    if (authHeader) {
-        const token = authHeader.split(' ')[1];
-        if (token && token.startsWith('mock_token_')) {
-            userId = parseInt(token.replace('mock_token_', ''), 10);
-            const user = USERS.find(u => u.id === userId);
-            if (user && user.employee_id) {
-                employeeId = user.employee_id;
+        // Calculate total
+        let subtotal = 0;
+        const itemsWithNames = data.items.map(item => {
+            const p = PRODUCTS.find(prod => prod.id === item.product_id);
+            if (p) {
+                subtotal += p.price * item.quantity;
+                // Decrease stock
+                p.stock = Math.max(0, p.stock - item.quantity);
             }
-        }
-    }
+            return {
+                ...item,
+                product_name: p ? p.name : 'Unknown',
+                price: p ? p.price : 0
+            };
+        });
 
-    const newOrder = {
-        id: `ord_${Date.now()}`,
-        order_number: `ORD-${Date.now().toString().slice(-6)}`,
-        created_at: new Date().toISOString(),
-        ...data,
-        customer_id: customer ? customer.id : null,
-        brand_name: BRANDS.find(b => b.id === data.brand_id)?.name || 'Brand',
-        items: itemsWithNames,
-        total,
-        vat_amount: vat,
-        created_by_user_id: userId, // Track who created it
-        attributed_employee_id: employeeId
-    };
+        const vatRate = data.apply_vat ? (data.currency === 'SAR' ? 0.15 : 0.18) : 0;
+        const vat = subtotal * vatRate;
+        const total = subtotal + vat + (data.shipping_charges || 0);
 
-    // Credit Employee Achievement if linked
-    if (employeeId) {
-        const employee = EMPLOYEES.find(e => e.id === employeeId);
-        if (employee) {
-            const currentYear = new Date().getFullYear();
-            if (!employee.last_reset_year || employee.last_reset_year < currentYear) {
-                if (employee.last_reset_year && employee.last_reset_year < currentYear) {
-                    employee.achieved = 0;
+        // Identify User
+        const authHeader = req.headers.authorization;
+        let userId = null;
+        let employeeId = null;
+
+        if (authHeader) {
+            const token = authHeader.split(' ')[1];
+            if (token && token.startsWith('mock_token_')) {
+                userId = parseInt(token.replace('mock_token_', ''), 10);
+                const user = USERS.find(u => u.id === userId);
+                if (user && user.employee_id) {
+                    employeeId = user.employee_id;
                 }
-                employee.last_reset_year = currentYear;
             }
-            employee.achieved = (employee.achieved || 0) + total;
         }
-    }
 
-    ORDERS.unshift(newOrder);
-    res.status(201).json(newOrder);
+        const newOrder = {
+            id: `ord_${Date.now()}`,
+            order_number: `ORD-${Date.now().toString().slice(-6)}`,
+            created_at: new Date().toISOString(),
+            ...data,
+            customer_id: customer ? customer.id : null,
+            brand_name: BRANDS.find(b => b.id === data.brand_id)?.name || 'Brand',
+            items: itemsWithNames,
+            total,
+            vat_amount: vat,
+            created_by_user_id: userId, // Track who created it
+            attributed_employee_id: employeeId,
+            shipping_address: { street: data.customer_address || '' }
+        };
+
+        // Credit Employee Achievement if linked
+        if (employeeId) {
+            const employee = EMPLOYEES.find(e => e.id === employeeId);
+            if (employee) {
+                const currentYear = new Date().getFullYear();
+                if (!employee.last_reset_year || employee.last_reset_year < currentYear) {
+                    if (employee.last_reset_year && employee.last_reset_year < currentYear) {
+                        employee.achieved = 0;
+                    }
+                    employee.last_reset_year = currentYear;
+                }
+                employee.achieved = (employee.achieved || 0) + total;
+            }
+        }
+
+        ORDERS.unshift(newOrder);
+        res.status(201).json(newOrder);
+    } catch (error) {
+        console.error('Order creation error:', error);
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
 });
 
 app.get('/api/admin/orders-by-user', (req, res) => {

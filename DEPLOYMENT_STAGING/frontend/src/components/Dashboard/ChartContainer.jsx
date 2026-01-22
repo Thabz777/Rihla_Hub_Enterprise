@@ -22,7 +22,7 @@ export const ChartContainer = ({ title, type = 'line', data, dataKey, xKey = 'da
             <Line type="monotone" dataKey={dataKey} stroke={colors[0]} strokeWidth={2} dot={{ r: 4 }} />
           </LineChart>
         );
-
+      
       case 'area':
         return (
           <AreaChart data={data}>
@@ -41,7 +41,7 @@ export const ChartContainer = ({ title, type = 'line', data, dataKey, xKey = 'da
             <Area type="monotone" dataKey={dataKey} stroke={colors[0]} fill={colors[0]} fillOpacity={0.2} />
           </AreaChart>
         );
-
+      
       case 'bar':
         return (
           <BarChart data={data}>
@@ -60,7 +60,7 @@ export const ChartContainer = ({ title, type = 'line', data, dataKey, xKey = 'da
             <Bar dataKey={dataKey} fill={colors[0]} radius={[4, 4, 0, 0]} />
           </BarChart>
         );
-
+      
       case 'pie':
         return (
           <PieChart>
@@ -73,7 +73,7 @@ export const ChartContainer = ({ title, type = 'line', data, dataKey, xKey = 'da
               outerRadius={100}
               label
             >
-              {Array.isArray(data) && data.map((entry, index) => (
+              {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
               ))}
             </Pie>
@@ -88,7 +88,7 @@ export const ChartContainer = ({ title, type = 'line', data, dataKey, xKey = 'da
             <Legend />
           </PieChart>
         );
-
+      
       default:
         return null;
     }

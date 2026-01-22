@@ -9,8 +9,7 @@ import { KPICard } from '@/components/Dashboard/KPICard';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || '';
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export default function Employees() {
   const { token } = useAuth();
@@ -58,7 +57,9 @@ export default function Employees() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (selectedBrand !== 'all') params.append('brand_id', selectedBrand);
+      // Only add brand_id if it's valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      if (isValidBrand) params.append('brand_id', selectedBrand);
       if (departmentFilter !== 'all') params.append('department', departmentFilter);
       if (statusFilter !== 'all') params.append('status', statusFilter);
 
@@ -75,7 +76,9 @@ export default function Employees() {
 
   const fetchStats = async () => {
     try {
-      const params = selectedBrand !== 'all' ? `?brand_id=${selectedBrand}` : '';
+      // Only add brand_id if it's valid
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      const params = isValidBrand ? `?brand_id=${selectedBrand}` : '';
       const response = await axios.get(`${API}/employees/stats${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -121,7 +124,7 @@ export default function Employees() {
     if (!selectedEmployee) return;
 
     try {
-      await axios.put(`${API}/employees/${selectedEmployee.id}`, {
+      await axios.put(`${API}/employees/${selectedEmployee._id || selectedEmployee.id}`, {
         name: formData.name,
         phone: formData.phone,
         position: formData.position,
@@ -283,7 +286,7 @@ export default function Employees() {
                       </SelectTrigger>
                       <SelectContent>
                         {brands.map((brand) => (
-                          <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
+                          <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>{brand.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -436,7 +439,7 @@ export default function Employees() {
                     const achievementPercentage = rawPct.toFixed(1);
                     const widthPct = Math.min(rawPct || 0, 100); // Guard against NaN
                     return (
-                      <tr key={employee.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`employee-row-${employee.id}`}>
+                      <tr key={employee._id || employee.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`employee-row-${employee._id || employee.id}`}>
                         <td className="px-4 py-3">
                           <div>
                             <p className="text-sm font-body font-medium text-foreground">{employee.name}</p>
@@ -488,14 +491,14 @@ export default function Employees() {
                             <button
                               onClick={() => openEditDialog(employee)}
                               className="p-2 hover:bg-background rounded-lg transition-colors duration-200"
-                              data-testid={`edit-employee-${employee.id}`}
+                              data-testid={`edit-employee-${employee._id || employee.id}`}
                             >
                               <Edit2 size={16} className="text-chart-3" />
                             </button>
                             <button
-                              onClick={() => handleDeleteEmployee(employee.id)}
+                              onClick={() => handleDeleteEmployee(employee._id || employee.id)}
                               className="p-2 hover:bg-background rounded-lg transition-colors duration-200"
-                              data-testid={`delete-employee-${employee.id}`}
+                              data-testid={`delete-employee-${employee._id || employee.id}`}
                             >
                               <Trash2 size={16} className="text-destructive" />
                             </button>
@@ -568,7 +571,7 @@ export default function Employees() {
                     </SelectTrigger>
                     <SelectContent>
                       {brands.map((brand) => (
-                        <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
+                        <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>{brand.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

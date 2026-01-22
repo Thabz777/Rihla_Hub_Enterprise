@@ -8,8 +8,7 @@ import { useTheme } from '@/context/ThemeContext';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || '';
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export default function Dashboard() {
   const { token, user } = useAuth();
@@ -29,7 +28,9 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const brandParam = selectedBrand !== 'all' ? `?brand_id=${selectedBrand}` : '';
+      // Helper to check if brand is valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      const brandParam = isValidBrand ? `?brand_id=${selectedBrand}` : '';
 
       const requests = [
         axios.get(`${API}/dashboard/metrics${brandParam}`, {
@@ -38,7 +39,7 @@ export default function Dashboard() {
         axios.get(`${API}/dashboard/revenue-trend${brandParam}`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get(`${API}/orders?${new URLSearchParams({ ...(selectedBrand !== 'all' && { brand_id: selectedBrand }) })}`, {
+        axios.get(`${API}/orders${isValidBrand ? `?brand_id=${selectedBrand}` : ''}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ];
@@ -54,12 +55,11 @@ export default function Dashboard() {
       const responses = await Promise.all(requests);
 
       setMetrics(responses[0].data);
-      setRevenueTrend(Array.isArray(responses[1].data) ? responses[1].data : []);
-      const ordersData = Array.isArray(responses[2].data) ? responses[2].data : [];
-      setRecentOrders(ordersData.slice(0, 5));
+      setRevenueTrend(responses[1].data);
+      setRecentOrders(responses[2].data.slice(0, 5));
 
       if (isAdmin && responses[3]) {
-        setOrdersByUser(Array.isArray(responses[3].data) ? responses[3].data : []);
+        setOrdersByUser(responses[3].data);
       }
     } catch (error) {
       toast.error('Failed to load dashboard data');
@@ -96,6 +96,12 @@ export default function Dashboard() {
     );
   }
 
+  const parseChange = (val) => {
+    if (typeof val === 'number') return val;
+    if (!val) return 0;
+    return parseFloat(String(val).replace(/[^0-9.-]/g, ''));
+  };
+
   return (
     <Layout>
       <div className="space-y-8" data-testid="dashboard-page">
@@ -111,28 +117,28 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <KPICard
             title="Total Revenue"
-            value={metrics?.total_revenue || 0}
-            change={metrics?.revenue_change}
+            value={metrics?.total_revenue ?? 0}
+            change={parseChange(metrics?.revenue_change)}
             icon={DollarSign}
             format="currency"
             brandColor="hsl(var(--success))"
           />
           <KPICard
             title="Total Orders"
-            value={metrics?.total_orders || 0}
-            change={metrics?.orders_change}
+            value={metrics?.total_orders ?? 0}
+            change={parseChange(metrics?.orders_change)}
             icon={ShoppingCart}
             brandColor="hsl(var(--chart-3))"
           />
           <KPICard
             title="Customers"
-            value={metrics?.total_customers || 0}
+            value={metrics?.total_customers ?? 0}
             icon={Users}
             brandColor="hsl(var(--chart-1))"
           />
           <KPICard
             title="Products"
-            value={metrics?.total_products || 0}
+            value={metrics?.total_products ?? 0}
             icon={Package}
             brandColor="hsl(var(--chart-2))"
           />

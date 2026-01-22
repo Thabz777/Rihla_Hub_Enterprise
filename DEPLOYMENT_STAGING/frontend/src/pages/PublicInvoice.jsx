@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { CheckCircle, XCircle, Loader2, FileText, Calendar, User, Package, DollarSign } from 'lucide-react';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || '';
-const API = `${BACKEND_URL}/api`;
+// Use the same environment variable pattern as AuthContext
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const LOGO_URL = 'https://customer-assets.emergentagent.com/job_ecomm-command/artifacts/qa8d1hm5_RIHLA%20%281%29.png';
 
 export default function PublicInvoice() {
@@ -22,6 +22,7 @@ export default function PublicInvoice() {
             const response = await axios.get(`${API}/public/invoice-by-order/${orderId}`);
             setData(response.data);
         } catch (err) {
+            console.error('Invoice fetch error:', err);
             setError('Invoice not found or invalid.');
         } finally {
             setLoading(false);
@@ -91,6 +92,7 @@ export default function PublicInvoice() {
                                 <div>
                                     <p className="text-slate-400 text-xs uppercase tracking-wide">Customer</p>
                                     <p className="text-white font-medium">{customer?.name || order.customer_name}</p>
+                                    <p className="text-slate-400 text-xs mt-1">{order.shipping_address?.street || order.customer_address || ''}</p>
                                 </div>
                             </div>
                         </div>
@@ -142,9 +144,9 @@ export default function PublicInvoice() {
                             <FileText size={18} className="text-slate-400" />
                             <span className="text-slate-400">Status:</span>
                             <span className={`font-semibold uppercase text-sm px-3 py-1 rounded-full ${order.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
-                                    order.status === 'processing' ? 'bg-blue-500/20 text-blue-400' :
-                                        order.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
-                                            'bg-red-500/20 text-red-400'
+                                order.status === 'processing' ? 'bg-blue-500/20 text-blue-400' :
+                                    order.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                                        'bg-red-500/20 text-red-400'
                                 }`}>
                                 {order.status}
                             </span>
@@ -154,6 +156,7 @@ export default function PublicInvoice() {
                     {/* Footer */}
                     <div className="bg-slate-800/50 px-6 py-4 text-center">
                         <p className="text-slate-400 text-xs">Rihla Enterprise Cloud Platform</p>
+                        <p className="text-slate-400 text-xs mt-1">Contact: +91 7012568438 | Email: info@rihlatech.info</p>
                         <p className="text-slate-500 text-[10px] mt-1">This is an electronically generated invoice</p>
                     </div>
                 </div>

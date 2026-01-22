@@ -4,8 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Printer, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || '';
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const LOGO_URL = 'https://customer-assets.emergentagent.com/job_ecomm-command/artifacts/qa8d1hm5_RIHLA%20%281%29.png';
 
 export default function Invoice({ mode }) {
@@ -68,12 +67,18 @@ export default function Invoice({ mode }) {
 
   // Totals
   const totalAmount = isSingleOrder ? order.total : data.total_amount;
-  // Public URL for QR code - opens without login
-  // Uses /verify/:orderId route which is publicly accessible
-  const publicInvoiceUrl = isSingleOrder
-    ? `${window.location.origin}/verify/${order.order_number}`
-    : `${window.location.origin}/verify/${orders[0]?.order_number || customer.id}`;
-  const invoiceUrl = publicInvoiceUrl;
+  // Use a public URL format so it can be scanned "via internet"
+  // const invoiceUrl = `https://verify.rihla-enterprise.com/invoice?id=${invoice_id}&ref=${isSingleOrder ? order.order_number : customer.id}`;
+  const invoiceUrl = isSingleOrder
+    ? `${window.location.origin}/public/invoice/${order.order_number}`
+    : `${window.location.origin}/public/invoice/customer/${customer.id}`; // Fallback for customer statement if we add public route for it later, or just keep as is for now.
+
+  // Since we only really implemented /public/invoice/:orderId, let's stick to that for orders.
+  // For statements, we might not have a public view yet, but let's make it consistent.
+  const qrUrl = isSingleOrder
+    ? `https://rihlahub.rihlatech.info/public/invoice/${order.order_number}`
+    : `https://rihlahub.rihlatech.info`; // Point to home for now if no specific route
+
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -103,7 +108,7 @@ export default function Invoice({ mode }) {
               <div>
                 <h1 className="font-display text-4xl font-bold text-gray-900">Rihla</h1>
                 <p className="font-body text-sm text-gray-600 italic mt-1">Where every journey becomes a story worth telling</p>
-                <p className="text-xs text-gray-500 mt-1">Email: info@rihlatech.info</p>
+                <p className="text-xs text-gray-500 mt-1">Email: info@rihlatech.info | Contact: +91 7012568438</p>
               </div>
             </div>
             <div className="text-right">
@@ -138,6 +143,7 @@ export default function Invoice({ mode }) {
                 </p>
                 <p className="text-sm text-gray-600">Rihla Cloud Platform</p>
                 <p className="text-sm text-gray-600 mt-1">Email: info@rihlatech.info</p>
+                <p className="text-sm text-gray-600">Contact: +91 7012568438</p>
               </div>
             </div>
           </div>
@@ -232,7 +238,7 @@ export default function Invoice({ mode }) {
             <div className="flex-1">
               <p className="text-xs text-gray-500 mb-2">Scan for Digital Copy:</p>
               <div className="bg-white p-2 inline-block border border-gray-300 rounded">
-                <QRCodeSVG value={invoiceUrl} size={80} level="M" />
+                <QRCodeSVG value={qrUrl} size={80} level="M" />
               </div>
             </div>
             <div className="text-right">

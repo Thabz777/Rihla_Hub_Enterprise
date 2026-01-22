@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || '';
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export default function Customers() {
   const { token } = useAuth();
@@ -45,7 +44,17 @@ export default function Customers() {
 
     setSearching(true);
     try {
-      const response = await axios.get(`${API}/search/invoice?query=${encodeURIComponent(searchQuery)}`, {
+      // Robust client-side cleanup
+      let queryTerm = searchQuery
+        .replace(/[—–]/g, '-') // Replace en/em dashes with hyphens
+        .trim();
+
+      // Strip INV- prefix if present (handle case-insensitive)
+      if (queryTerm.toUpperCase().startsWith('INV-')) {
+        queryTerm = queryTerm.substring(4);
+      }
+
+      const response = await axios.get(`${API}/search/invoice?query=${encodeURIComponent(queryTerm)}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success(`Found Order for ${response.data.customer_name}`);
@@ -116,7 +125,7 @@ export default function Customers() {
                 const recentOrders = customer.recent_orders || [];
 
                 return (
-                  <div key={customer.id} className="bg-secondary border border-border/50 rounded-lg p-6 hover:border-border hover:shadow-lg transition-all duration-200" data-testid={`customer-card-${customer.id}`}>
+                  <div key={customer._id || customer.id} className="bg-secondary border border-border/50 rounded-lg p-6 hover:border-border hover:shadow-lg transition-all duration-200" data-testid={`customer-card-${customer._id || customer.id}`}>
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <h3 className="font-heading text-xl font-semibold text-foreground mb-1">{customer.name}</h3>
@@ -160,10 +169,10 @@ export default function Customers() {
                         <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground mb-2">Recent Invoices:</p>
                         <div className="space-y-2">
                           {recentOrders.map((order) => (
-                            <div key={order.id} className="flex items-center justify-between text-sm group">
+                            <div key={order._id || order.id} className="flex items-center justify-between text-sm group">
                               <span className="font-mono text-muted-foreground group-hover:text-foreground transition-colors">{order.order_number}</span>
                               <button
-                                onClick={() => navigate(`/invoice/order/${order.id}`)}
+                                onClick={() => navigate(`/invoice/order/${order._id || order.id}`)}
                                 className="text-xs flex items-center gap-1 text-primary hover:underline"
                               >
                                 <ExternalLink size={12} />
@@ -180,7 +189,7 @@ export default function Customers() {
                         Customer since {new Date(customer.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                       </p>
                       <button
-                        onClick={() => navigate(`/invoice/customer/${customer.id}`)}
+                        onClick={() => navigate(`/invoice/customer/${customer._id || customer.id}`)}
                         className="w-full flex items-center justify-center gap-2 bg-secondary hover:bg-muted text-foreground border border-border px-4 py-2 rounded-lg font-heading font-medium transition-all duration-200"
                       >
                         <FileText size={16} />

@@ -92,6 +92,7 @@ export default function PublicInvoice() {
                                 <div>
                                     <p className="text-slate-400 text-xs uppercase tracking-wide">Customer</p>
                                     <p className="text-white font-medium">{customer?.name || order.customer_name}</p>
+                                    <p className="text-slate-400 text-xs mt-1">{order.shipping_address?.street || order.customer_address || ''}</p>
                                 </div>
                             </div>
                         </div>

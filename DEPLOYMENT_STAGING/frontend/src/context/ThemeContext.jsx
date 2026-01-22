@@ -9,12 +9,16 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const savedBrand = localStorage.getItem('selectedBrand');
-    
+
     if (savedTheme) {
       setIsDark(savedTheme === 'dark');
     }
-    if (savedBrand) {
+    // Sanitize: ensure savedBrand is valid (not 'undefined', 'null', or empty)
+    if (savedBrand && savedBrand !== 'undefined' && savedBrand !== 'null') {
       setSelectedBrand(savedBrand);
+    } else {
+      // Clean up corrupted localStorage
+      localStorage.setItem('selectedBrand', 'all');
     }
   }, []);
 
@@ -31,8 +35,10 @@ export const ThemeProvider = ({ children }) => {
   const toggleTheme = () => setIsDark(!isDark);
 
   const changeBrand = (brandId) => {
-    setSelectedBrand(brandId);
-    localStorage.setItem('selectedBrand', brandId);
+    console.log("Changing brand to:", brandId);
+    const validId = brandId ? String(brandId) : 'all';
+    setSelectedBrand(validId);
+    localStorage.setItem('selectedBrand', validId);
   };
 
   return (

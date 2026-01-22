@@ -7,8 +7,7 @@ import { useTheme } from '@/context/ThemeContext';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || '';
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export default function Analytics() {
   const { token } = useAuth();
@@ -43,7 +42,9 @@ export default function Analytics() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (selectedBrand !== 'all') params.append('brand_id', selectedBrand);
+      // Only add brand_id if it's valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      if (isValidBrand) params.append('brand_id', selectedBrand);
       if (selectedYear !== 'all') params.append('year', selectedYear);
       if (selectedMonth !== 'all') params.append('month', selectedMonth);
 
@@ -61,11 +62,13 @@ export default function Analytics() {
     }
   };
 
-  // Mock data for other charts
-  const brandRevenueData = brands.map(brand => ({
-    name: brand.name,
-    revenue: Math.random() * 50000 + 20000
-  }));
+  // Derive brand revenue from actual user performance if available to avoid random numbers
+  const brandRevenueData = userPerformance.length > 0
+    ? userPerformance.map(u => ({ name: u.name, revenue: u.revenue }))
+    : brands.map(brand => ({
+      name: brand.name,
+      revenue: 0
+    }));
 
   const monthlyData = [
     { month: 'Jan', revenue: 45000, orders: 156 },
@@ -91,7 +94,7 @@ export default function Analytics() {
     { value: '12', label: 'December' }
   ];
 
-  const years = ['2023', '2024', '2025', '2026'];
+  const years = Array.from({ length: 2050 - 2023 + 1 }, (_, i) => (2023 + i).toString());
 
   return (
     <Layout>

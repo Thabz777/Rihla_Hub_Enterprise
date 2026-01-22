@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout/Layout';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
-import { Moon, Sun, User, Mail, Shield, Key, Settings as SettingsIcon, Plus, UserCheck, ShieldOff } from 'lucide-react';
+import { Moon, Sun, User, Mail, Shield, Key, Settings as SettingsIcon, Plus, UserCheck, Trash2, ShieldAlert } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || '';
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export default function Settings() {
   const { isDark, toggleTheme } = useTheme();
@@ -132,18 +131,40 @@ export default function Settings() {
     }
   };
 
-  const handleReset2FA = async (userItem) => {
-    if (!confirm(`Are you sure you want to reset 2FA for ${userItem.email}? They will need to set up 2FA again on next login.`)) return;
+  const handleReset2FA = async (userId) => {
+    console.log('Attempting to reset 2FA for User ID:', userId); // DEBUG LOG
+    if (!window.confirm('Are you sure you want to reset 2FA for this user? They will be required to set it up again on next login.')) return;
 
     try {
-      await axios.put(
-        `${API}/users/${userItem.email}/reset-2fa`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      toast.success(`2FA has been reset for ${userItem.email}`);
+      const res = await axios.put(`${API}/users/${userId}/reset-2fa`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('Reset response:', res.data); // DEBUG LOG
+      toast.success('2FA reset successfully');
+      fetchUsers();
     } catch (error) {
-      toast.error('Failed to reset 2FA');
+      console.error('Reset 2FA Error Full:', error); // DEBUG LOG
+      const errMsg = error.response?.data?.error || error.message || 'Failed to reset 2FA';
+      toast.error(`Error: ${errMsg}`);
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    if (user._id === userId || user.id === userId) {
+      toast.error("You cannot delete your own account.");
+      return;
+    }
+    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+
+    try {
+      await axios.delete(`${API}/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('User deleted successfully');
+      fetchUsers();
+    } catch (error) {
+      console.error('Delete user failed:', error);
+      toast.error(error.response?.data?.error || 'Failed to delete user');
     }
   };
 
@@ -313,12 +334,17 @@ export default function Settings() {
               </div>
               <div className="space-y-4">
                 {users.map((userItem) => (
-                  <div key={userItem.id} className="flex items-center justify-between p-4 bg-background rounded-lg border border-border/50">
+                  <div key={userItem.id || userItem._id} className="flex items-center justify-between p-4 bg-background rounded-lg border border-border/50">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <p className="text-base font-heading font-medium text-foreground">{userItem.full_name}</p>
                         {userItem.employee_id && (
                           <span className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">LINKED</span>
+                        )}
+                        {userItem.two_factor_enabled && (
+                          <span className="bg-success/10 text-success text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                            <Shield size={10} /> 2FA
+                          </span>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">{userItem.email}</p>
@@ -327,27 +353,31 @@ export default function Settings() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => openResetDialog(userItem)}
-                        className="flex items-center gap-2 px-4 py-2 bg-chart-3 text-white hover:bg-chart-3/90 rounded-lg font-heading font-medium transition-all duration-200"
-                        data-testid={`reset-password-${userItem.email}`}
+                        className="p-2 hover:bg-accent/50 rounded-lg text-chart-3 transition-colors duration-200"
+                        title="Reset Password"
                       >
-                        <Key size={16} />
-                        Reset Password
+                        <Key size={18} />
                       </button>
                       <button
                         onClick={() => openPermissionsDialog(userItem)}
-                        className="flex items-center gap-2 px-4 py-2 bg-chart-1 text-white hover:bg-chart-1/90 rounded-lg font-heading font-medium transition-all duration-200"
-                        data-testid={`manage-permissions-${userItem.email}`}
+                        className="p-2 hover:bg-accent/50 rounded-lg text-chart-1 transition-colors duration-200"
+                        title="Permissions"
                       >
-                        <SettingsIcon size={16} />
-                        Permissions
+                        <SettingsIcon size={18} />
                       </button>
                       <button
-                        onClick={() => handleReset2FA(userItem)}
-                        className="flex items-center gap-2 px-4 py-2 bg-destructive text-white hover:bg-destructive/90 rounded-lg font-heading font-medium transition-all duration-200"
-                        data-testid={`reset-2fa-${userItem.email}`}
+                        onClick={() => handleReset2FA(userItem._id || userItem.id)}
+                        className={`p-2 hover:bg-accent/50 rounded-lg transition-colors duration-200 ${userItem.two_factor_enabled ? 'text-warning' : 'text-muted-foreground/50'}`}
+                        title="Reset 2FA"
                       >
-                        <ShieldOff size={16} />
-                        Reset 2FA
+                        <ShieldAlert size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(userItem._id || userItem.id)}
+                        className="p-2 hover:bg-accent/50 rounded-lg text-destructive transition-colors duration-200"
+                        title="Delete User"
+                      >
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   </div>

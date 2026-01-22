@@ -8,8 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || '';
-const API = `${BACKEND_URL}/api`;
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export default function Orders() {
   const { token } = useAuth();
@@ -31,7 +30,7 @@ export default function Orders() {
     currency: 'SAR',
     apply_vat: true,
     shipping_charges: 0,
-    payment_method: 'Cash on delivery',
+    payment_method: 'Credit Card',
     status: 'pending'
   });
 
@@ -67,7 +66,9 @@ export default function Orders() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (selectedBrand !== 'all') params.append('brand_id', selectedBrand);
+      // Only add brand_id if it's valid (not 'all', undefined, or null)
+      const isValidBrand = selectedBrand && selectedBrand !== 'all' && selectedBrand !== 'undefined' && selectedBrand !== 'null';
+      if (isValidBrand) params.append('brand_id', selectedBrand);
       if (statusFilter !== 'all') params.append('status', statusFilter);
 
       const response = await axios.get(`${API}/orders?${params}`, {
@@ -95,8 +96,19 @@ export default function Orders() {
       return;
     }
 
+    const { subtotal, vat, total, vatRate } = calculateOrderTotal();
+
     try {
-      await axios.post(`${API}/orders`, { ...formData, items: validItems }, {
+      await axios.post(`${API}/orders`, {
+        ...formData,
+        customer_email: formData.customer_email || undefined, // Send undefined if empty to avoid DB unique constraint issues on empty strings
+        customer_phone: formData.customer_phone || undefined,
+        items: validItems,
+        subtotal,
+        vat_amount: vat,
+        total,
+        vat_rate: vatRate
+      }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Order created successfully!');
@@ -118,26 +130,53 @@ export default function Orders() {
       fetchOrders();
       fetchProducts();
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to create order');
+      console.error('Order creation failed:', error.response?.data || error);
+      let errorMsg = error.response?.data?.error || error.response?.data?.detail || 'Failed to create order';
+
+      // Clean up Mongoose validation errors for better UI
+      if (errorMsg.includes('Order validation failed:')) {
+        errorMsg = errorMsg.replace('Order validation failed:', '').trim();
+        // If specific path error, try to show just that
+        if (errorMsg.includes('payment_method:')) {
+          errorMsg = 'Invalid Payment Method selected';
+        }
+      }
+
+      toast.error(errorMsg);
     }
   };
 
   const handleUpdateStatus = async (orderId, newStatus) => {
+    // 1. Optimistic Update: Update local state immediately
+    const previousOrders = [...orders];
+    setOrders(orders.map(order =>
+      (order._id === orderId || order.id === orderId)
+        ? { ...order, status: newStatus }
+        : order
+    ));
+
     try {
+      // 2. Send request to server
       await axios.put(`${API}/orders/${orderId}?status=${newStatus}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      // 3. Success feedback (optional, or just silent success)
       toast.success('Order status updated');
-      fetchOrders();
+
+      // No need to re-fetch all orders, we already have the correct state
     } catch (error) {
-      toast.error('Failed to update order');
+      // 4. On Error: Revert to previous state
+      setOrders(previousOrders);
+      console.error('Update status failed:', error);
+      toast.error('Failed to update order status');
     }
   };
 
   const calculateOrderTotal = () => {
     let subtotal = 0;
     formData.items.forEach(item => {
-      const product = products.find(p => p.id === item.product_id);
+      const product = products.find(p => (p._id || p.id) === item.product_id);
       if (product) {
         subtotal += product.price * item.quantity;
       }
@@ -177,7 +216,7 @@ export default function Orders() {
   };
 
   const filteredProducts = formData.brand_id
-    ? products.filter(p => p.brand_id === formData.brand_id)
+    ? products.filter(p => (p.brand_id === formData.brand_id) || (p.brand_id?.toString() === formData.brand_id))
     : products;
 
   const statusColors = {
@@ -276,7 +315,7 @@ export default function Orders() {
                       </SelectTrigger>
                       <SelectContent>
                         {brands.map((brand) => (
-                          <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
+                          <SelectItem key={brand._id || brand.id} value={brand._id || brand.id}>{brand.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -311,7 +350,7 @@ export default function Orders() {
                             </SelectTrigger>
                             <SelectContent>
                               {filteredProducts.map((product) => (
-                                <SelectItem key={product.id} value={product.id}>
+                                <SelectItem key={product._id || product.id} value={product._id || product.id}>
                                   {product.name} - {product.currency || 'SAR'} {product.price} (Stock: {product.stock})
                                 </SelectItem>
                               ))}
@@ -355,6 +394,9 @@ export default function Orders() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="SAR">SAR (Saudi Riyal)</SelectItem>
+                          <SelectItem value="USD">USD (US Dollar)</SelectItem>
+                          <SelectItem value="AED">AED (UAE Dirham)</SelectItem>
+                          <SelectItem value="EUR">EUR (Euro)</SelectItem>
                           <SelectItem value="INR">INR (Indian Rupee)</SelectItem>
                         </SelectContent>
                       </Select>
@@ -369,9 +411,14 @@ export default function Orders() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="Credit Card">Credit Card</SelectItem>
+                          <SelectItem value="Mada">Mada</SelectItem>
+                          <SelectItem value="Apple Pay">Apple Pay</SelectItem>
+                          <SelectItem value="STC Pay">STC Pay</SelectItem>
+                          <SelectItem value="Bank Transfer">Bank Transfer</SelectItem>
+                          <SelectItem value="Cash">Cash</SelectItem>
+                          <SelectItem value="Cash on Delivery">Cash on Delivery</SelectItem>
                           <SelectItem value="UPI">UPI</SelectItem>
-                          <SelectItem value="Cash on delivery">Cash on Delivery</SelectItem>
-                          <SelectItem value="Bank transfer">Bank Transfer</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -492,7 +539,7 @@ export default function Orders() {
                   </tr>
                 ) : (
                   orders.map((order) => (
-                    <tr key={order.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`order-row-${order.id}`}>
+                    <tr key={order._id || order.id} className="border-b border-border/30 hover:bg-accent/50 transition-colors duration-150" data-testid={`order-row-${order._id || order.id}`}>
                       <td className="px-4 py-3 text-sm font-mono text-foreground">{order.order_number}</td>
                       <td className="px-4 py-3">
                         <div>
@@ -518,14 +565,14 @@ export default function Orders() {
                       <td className="px-4 py-3 text-sm font-body text-foreground">{order.payment_method || '-'}</td>
                       <td className="px-4 py-3">
                         <div>
-                          <p className="text-sm font-body font-medium text-foreground">{order.currency} {order.total.toFixed(2)}</p>
-                          {order.vat_amount > 0 && (
-                            <p className="text-xs text-muted-foreground">VAT: {order.currency} {order.vat_amount.toFixed(2)}</p>
+                          <p className="text-sm font-body font-medium text-foreground">{order.currency} {(order.total || 0).toFixed(2)}</p>
+                          {(order.vat_amount || 0) > 0 && (
+                            <p className="text-xs text-muted-foreground">VAT: {order.currency} {(order.vat_amount || 0).toFixed(2)}</p>
                           )}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <Select value={order.status} onValueChange={(value) => handleUpdateStatus(order.id, value)}>
+                        <Select value={order.status} onValueChange={(value) => handleUpdateStatus(order._id || order.id, value)}>
                           <SelectTrigger
                             className="w-32 h-8 text-xs"
                             style={{
@@ -545,7 +592,7 @@ export default function Orders() {
                         </Select>
                       </td>
                       <td className="px-4 py-3 text-sm text-muted-foreground font-mono">
-                        {new Date(order.created_at).toLocaleDateString()}
+                        {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '-'}
                       </td>
                     </tr>
                   ))
