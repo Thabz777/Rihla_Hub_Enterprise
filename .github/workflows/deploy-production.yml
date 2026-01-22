@@ -48,20 +48,10 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          version: '>= 363.0.0'
-          project_id: thabzn8nn
-
-      - name: Render GCP Key
-        run: |
-          echo "${{ secrets.GCP_SA_KEY }}" | base64 -d > gcp-key.json
-
       - name: Google Auth
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: 'gcp-key.json'
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
