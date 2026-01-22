@@ -6,8 +6,8 @@ WORKDIR /app
 # Copy package files first (for caching)
 COPY package*.json ./
 
-# Install dependencies - Force cache break v2.17.0
-RUN npm ci --only=production
+# Install dependencies - Use npm install to tolerate lockfile version mismatch
+RUN npm install --only=production
 
 # Copy application code
 COPY . .
