@@ -19,7 +19,7 @@ app.get('/api/health', (req, res) => {
 
     res.json({
         status: 'healthy',
-        version: '2.18.0 (Final Fix)',
+        version: '2.19.0 (Emergency Build)',
         database_status: dbStatus,
         error: global.dbError || null,
         timestamp: new Date().toISOString()

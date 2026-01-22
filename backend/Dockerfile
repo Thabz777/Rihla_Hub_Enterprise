@@ -3,11 +3,12 @@ FROM node:18-slim
 # Set working directory
 WORKDIR /app
 
-# Copy package files first (for caching)
-COPY package*.json ./
+# Copy package files
+COPY package.json ./
 
-# Install dependencies - Use npm install to tolerate lockfile version mismatch
-RUN npm install --only=production
+# Install dependencies WITHOUT lockfile (Ensures build succeeds even if lockfile is broken)
+# We strictly exclude package-lock.json from being used here
+RUN npm install --omit=dev --no-package-lock
 
 # Copy application code
 COPY . .
