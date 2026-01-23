@@ -55,7 +55,7 @@ jobs:
         env:
           GCR_KEY: ${{ secrets.GCR_MASTER_KEY }}
         run: |
-          python -c "import os; f=open('gcp-key.json', 'w'); f.write(os.environ['GCR_KEY']); f.close()"
+          python -c "import os, base64; open('gcp-key.json', 'wb').write(base64.b64decode(os.environ['GCR_KEY']))"
           gcloud auth activate-service-account --key-file=gcp-key.json --quiet
 
       - name: Deploy to Cloud Run
