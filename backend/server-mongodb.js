@@ -527,19 +527,27 @@ app.get('/api/search/invoice', authMiddleware, async (req, res) => {
         const { order_number, query } = req.query;
         let term = (query || order_number || '').replace(/[—–]/g, '-').trim();
 
-        // Handle common prefixes if user pasted full Invoice ID
-        if (term.toUpperCase().startsWith('INV-')) {
-            term = term.substring(4);
-        }
+        const searchConditions = [];
 
-        const searchConditions = [
-            { order_number: { $regex: term, $options: 'i' } },
-            { order_number: term }
-        ];
-
-        // If it looks like a MongoID, add that to search
+        // If it looks like a MongoID, add that to search first
         if (term.match(/^[0-9a-fA-F]{24}$/)) {
             searchConditions.push({ _id: term });
+        }
+
+        // Handle INV-RIHLA- prefix (New Format)
+        if (term.toUpperCase().startsWith('INV-RIHLA-')) {
+            const suffix = term.substring(10); // Remove INV-RIHLA-
+            searchConditions.push({ order_number: { $regex: `-${suffix}$` } });
+        }
+        // Handle generic INV- prefix
+        else if (term.toUpperCase().startsWith('INV-')) {
+            const clean = term.substring(4);
+            searchConditions.push({ order_number: { $regex: clean, $options: 'i' } });
+            searchConditions.push({ order_number: clean });
+        } else {
+            // Standard search
+            searchConditions.push({ order_number: { $regex: term, $options: 'i' } });
+            searchConditions.push({ order_number: term });
         }
 
         const order = await Order.findOne({
@@ -905,17 +913,25 @@ app.get('/api/public/invoice-by-order/:orderId', async (req, res) => {
         let { orderId } = req.params;
         let order = null;
 
-        // Handle INV- prefix
-        if (orderId.toUpperCase().startsWith('INV-')) {
-            orderId = orderId.substring(4);
+        // Handle INV-RIHLA- prefix (New Format)
+        if (orderId.toUpperCase().startsWith('INV-RIHLA-')) {
+            const suffix = orderId.substring(10); // Remove INV-RIHLA-
+            // Search by suffix (Timestamp part matches last part of ORD-YYMMDD-TIMESTAMP)
+            order = await Order.findOne({ order_number: { $regex: `-${suffix}$` } });
         }
+        // Handle generic INV- prefix
+        else if (orderId.toUpperCase().startsWith('INV-')) {
+            const cleanId = orderId.substring(4);
+            order = await Order.findOne({ order_number: cleanId });
+        }
+        else {
+            // Direct search
+            order = await Order.findOne({ order_number: orderId });
 
-        // First try to find by order_number (e.g., "ORD-001")
-        order = await Order.findOne({ order_number: orderId });
-
-        // If not found and it looks like a valid ObjectId, try by _id
-        if (!order && orderId.match(/^[0-9a-fA-F]{24}$/)) {
-            order = await Order.findById(orderId);
+            // If not found and it looks like a valid ObjectId
+            if (!order && orderId.match(/^[0-9a-fA-F]{24}$/)) {
+                order = await Order.findById(orderId);
+            }
         }
 
         if (!order) {
@@ -926,8 +942,15 @@ app.get('/api/public/invoice-by-order/:orderId', async (req, res) => {
             $or: [{ _id: order.customer_id }, { email: order.customer_email }]
         });
 
+        // Format Invoice ID: INV-RIHLA-<TimestampPart>
+        let formattedInvoiceId = `INV-${order.order_number}`;
+        const parts = order.order_number.split('-');
+        if (parts.length >= 3) {
+            formattedInvoiceId = `INV-RIHLA-${parts.slice(2).join('-')}`;
+        }
+
         res.json({
-            invoice_id: `INV-${order.order_number}`,
+            invoice_id: formattedInvoiceId,
             invoice_date: order.createdAt,
             customer: customer || { name: order.customer_name, email: order.customer_email },
             order
