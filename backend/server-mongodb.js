@@ -502,7 +502,7 @@ app.get('/api/customers/with-orders', authMiddleware, async (req, res) => {
 
             const orders = await Order.find(orderQuery)
                 .sort({ createdAt: -1 })
-                .limit(3);
+                .limit(10); // Show recent 10 invoices
 
             return {
                 ...c.toJSON(),

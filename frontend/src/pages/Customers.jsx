@@ -172,8 +172,8 @@ export default function Customers() {
 
                     {recentOrders.length > 0 && (
                       <div className="mt-4 pt-4 border-t border-border/50">
-                        <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground mb-2">Recent Invoices:</p>
-                        <div className="space-y-2">
+                        <p className="text-xs font-heading font-semibold uppercase tracking-wide text-muted-foreground mb-2">Recent Invoices ({recentOrders.length}):</p>
+                        <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
                           {recentOrders.map((order) => (
                             <div key={order._id || order.id} className="flex items-center justify-between text-sm group">
                               <span className="font-mono text-muted-foreground group-hover:text-foreground transition-colors">{order.order_number}</span>
