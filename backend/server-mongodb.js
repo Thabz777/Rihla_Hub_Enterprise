@@ -6,6 +6,7 @@ import { connectDB } from './config/database.js';
 import seedDatabase from './config/seed.js';
 import { User, Order, Product, Customer, Employee, Brand } from './models/index.js';
 import { generateToken, authMiddleware, optionalAuthMiddleware, requireRole, requirePermission } from './middleware/auth.js';
+import speakeasy from 'speakeasy';
 
 dotenv.config();
 
@@ -64,15 +65,21 @@ app.post('/api/auth/login', async (req, res) => {
 
         // First time 2FA setup
         if (!user.two_factor_secret) {
-            const secret = 'JBSWY3DPEHPK3PXP'; // In production, use speakeasy.generateSecret()
-            const otpauth = `otpauth://totp/Rihla:${user.email}?secret=${secret}&issuer=Rihla`;
-            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(otpauth)}`;
+            const secret = speakeasy.generateSecret({
+                length: 20,
+                name: `Rihla Enterprise (${user.email})`,
+                issuer: 'Rihla Enterprise'
+            });
+
+            // Generate QR Code URL
+            // Google Charts is deprecated but widely used example; widely compatible otpauth URL:
+            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(secret.otpauth_url)}`;
 
             return res.json({
                 status: 'setup_2fa',
                 email: user.email,
                 qr_code: qrCodeUrl,
-                temp_secret: secret
+                temp_secret: secret.base32 // Store base32 secret locally in frontend state or temp storage
             });
         }
 
@@ -105,8 +112,13 @@ app.post('/api/auth/verify-2fa', async (req, res) => {
             return res.status(400).json({ error: 'No 2FA secret available' });
         }
 
-        // In production, verify with speakeasy. For now, accept any 6-digit code
-        const isValid = /^\d{6}$/.test(token);
+        // Verify TOTP using Speakeasy
+        const isValid = speakeasy.totp.verify({
+            secret: secret,
+            encoding: 'base32',
+            token: token,
+            window: 1 // Allow 30sec time drift
+        });
 
         if (isValid) {
             // Save 2FA secret if first time setup
@@ -243,26 +255,38 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
         const data = req.body;
         console.log('📦 Creating order with data:', JSON.stringify(data, null, 2));
 
-        // === 1. CUSTOMER (Optional - errors won't block order) ===
+        // === 1. CUSTOMER SANITIZATION & CREATION ===
+        const sanitizeInput = (val) => {
+            if (!val || typeof val !== 'string') return undefined;
+            const clean = val.trim();
+            if (['-', 'n/a', 'none', 'null', 'undefined', ''].includes(clean.toLowerCase())) return undefined;
+            return clean;
+        };
+
+        const email = sanitizeInput(data.customer_email)?.toLowerCase();
+        const phone = sanitizeInput(data.customer_phone);
         let customer = null;
+
         try {
-            if (data.customer_email) {
-                customer = await Customer.findOne({ email: data.customer_email.toLowerCase() });
+            if (email) {
+                customer = await Customer.findOne({ email });
             }
-            if (!customer && data.customer_phone) {
-                customer = await Customer.findOne({ phone: data.customer_phone });
+            if (!customer && phone) {
+                customer = await Customer.findOne({ phone });
             }
 
-            if (!customer && (data.customer_email || data.customer_phone)) {
+            if (!customer && (email || phone)) {
                 customer = await Customer.create({
                     name: data.customer_name,
-                    email: data.customer_email ? data.customer_email.toLowerCase() : undefined,
-                    phone: data.customer_phone || undefined,
+                    email: email,
+                    phone: phone,
                     address: { street: data.customer_address || '' }
                 });
             }
         } catch (custErr) {
-            console.warn('⚠️ Customer handling failed, continuing:', custErr.message);
+            console.warn('⚠️ Customer handling failed:', custErr.message);
+            // Fallback: If creation failed (e.g. race condition), try finding one last time
+            if (email) customer = await Customer.findOne({ email });
         }
 
         // === 2. BRAND NAME ===
@@ -457,13 +481,28 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
 
 app.get('/api/customers/with-orders', authMiddleware, async (req, res) => {
     try {
-        const customers = await Customer.find();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 25;
+        const skip = (page - 1) * limit;
+
+        const [customers, total] = await Promise.all([
+            Customer.find()
+                .sort({ updatedAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Customer.countDocuments()
+        ]);
 
         // Enrich with order data
         const enriched = await Promise.all(customers.map(async (c) => {
-            const orders = await Order.find({
-                $or: [{ customer_id: c._id }, { customer_email: c.email }]
-            }).sort({ createdAt: -1 }).limit(3);
+            const orderQuery = {
+                $or: [{ customer_id: c._id }]
+            };
+            if (c.email) orderQuery.$or.push({ customer_email: c.email });
+
+            const orders = await Order.find(orderQuery)
+                .sort({ createdAt: -1 })
+                .limit(3);
 
             return {
                 ...c.toJSON(),
@@ -471,7 +510,12 @@ app.get('/api/customers/with-orders', authMiddleware, async (req, res) => {
             };
         }));
 
-        res.json(enriched);
+        res.json({
+            customers: enriched,
+            total,
+            page,
+            pages: Math.ceil(total / limit)
+        });
     } catch (error) {
         console.error('Customers fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch customers' });

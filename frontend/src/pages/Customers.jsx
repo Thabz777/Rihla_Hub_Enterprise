@@ -16,19 +16,27 @@ export default function Customers() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searching, setSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const customersPerPage = 25;
 
   useEffect(() => {
     fetchCustomers();
-  }, []);
+  }, [currentPage]);
 
   const fetchCustomers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API}/customers/with-orders`, {
+      const response = await axios.get(`${API}/customers/with-orders?page=${currentPage}&limit=${customersPerPage}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setCustomers(response.data);
+      // Backend now returns { customers, total, page, pages }
+      if (response.data.customers) {
+        setCustomers(response.data.customers);
+        setTotalPages(response.data.pages);
+      } else {
+        // Fallback for old API response (array)
+        setCustomers(response.data);
+      }
     } catch (error) {
       toast.error('Failed to load customers');
     } finally {
@@ -67,10 +75,8 @@ export default function Customers() {
     }
   };
 
-  const indexOfLastCustomer = currentPage * customersPerPage;
-  const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
-  const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
-  const totalPages = Math.ceil(customers.length / customersPerPage);
+  // Server-side pagination means 'customers' IS the current page
+  const currentCustomers = customers;
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
