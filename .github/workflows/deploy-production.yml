@@ -52,8 +52,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Authenticate to Google Cloud
+        env:
+          GCR_KEY: ${{ secrets.GCR_DEVOPS_KEY }}
         run: |
-          echo '${{ secrets.GCR_DEVOPS_KEY }}' | base64 -d > gcp-key.json
+          python -c "import os; f=open('gcp-key.json', 'w'); f.write(os.environ['GCR_KEY']); f.close()"
           gcloud auth activate-service-account --key-file=gcp-key.json --quiet
 
       - name: Deploy to Cloud Run
